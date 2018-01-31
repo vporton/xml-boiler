@@ -1,0 +1,15 @@
+Automatically transform between XML namespaces.
+
+https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces
+
+This is a work in progress. It does not work yet.
+
+This project supersedes failed project
+https://github.com/vporton/xml-boiler-java
+
+==
+
+The following organizations were asked to support this project:
+* Linux Foundation (2017 Nov 1)
+* Free Software Foundation (2017 Nov 1) [they don't provide funding]
+* http://www.osc.dial.community (2017 Nov 7)
