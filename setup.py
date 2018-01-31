@@ -8,5 +8,5 @@ setup(
     license='AGPLv3',
     author='Victor Porton',
     author_email='porton@narod.ru',
-    description='Automatically transform between XML namespaces￼'
+    description='Automatically transform between XML namespaces'
 )
