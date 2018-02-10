@@ -1,0 +1,2 @@
+rdflib
+dependency_injector
