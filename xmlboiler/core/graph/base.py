@@ -47,6 +47,10 @@ def compose(b, a):
     return result
 
 
+def square(graph):
+    return compose(graph, graph)
+
+
 def union(a, b):
     source = set()
     source |= a.adj.keys()
