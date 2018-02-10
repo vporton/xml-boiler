@@ -42,10 +42,29 @@ class SubclassRelation(Connectivity):
                      result.add_edge(subject, object)
              else:
                  were_errors = True
-                 msg = self.context.translations.gettext("Node %s should be an IRI." % str(object))
+                 msg = self.context.translations.gettext("Node %s should be an IRI.") % str(object)
                  self.context.logger.warning(msg)
         self.add_relation(result)
         return not were_errors
 
     def check_types(self, model, src, dst):
         return True
+
+
+class SubclassRelationForType(SubclassRelation):
+    def __init__(self,
+                 node_class,
+                 context=Contexts.execution_context(),
+                 model=None,
+                 relation=URIRef("http://www.w3.org/2000/01/rdf-schema#subClassOf")):
+        super(SubclassRelation, self).__init__(context=context, model=model, relation=relation)
+        self.node_class = node_class
+
+    def check_types(self, model, src, dst):
+        t = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+        src_ok = (src, t, self.node_class) in model
+        dst_ok = (dst, t, self.node_class) in model
+        if src_ok ^ dst_ok:
+            msg = self.context.translations.gettext("Both operands should be of type %s") % str(self.node_class)
+            self.context.logger.warning(msg)
+        return src_ok and dst_ok
