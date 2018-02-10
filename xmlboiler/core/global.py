@@ -2,7 +2,8 @@ import os
 import pkg_resources
 
 class Global:
-    def get_resource(self, filename):
+    @staticmethod
+    def get_resource(filename):
         if os.environ.get('XMLBOILER_PATH', "") != "":
             return open(os.environ['XMLBOILER_PATH'] + '/' + filename, 'r')
         else:
