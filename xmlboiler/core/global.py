@@ -1,5 +1,6 @@
 import os
 import pkg_resources
+import rdflib
 
 class Global:
     @staticmethod
@@ -8,3 +9,9 @@ class Global:
             return open(os.environ['XMLBOILER_PATH'] + '/' + filename, 'r')
         else:
             return pkg_resources.resource_stream('xmlboiler', filename)
+
+    @staticmethod
+    def load_rdf(filename):
+        g = rdflib.Graph()
+        g.load(Global.get_resource(filename), format='turtle')
+        return g
