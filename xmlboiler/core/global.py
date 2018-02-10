@@ -4,7 +4,7 @@ import rdflib
 
 class Global:
     @staticmethod
-    def get_resource(filename):
+    def get_resource_stream(filename):
         if os.environ.get('XMLBOILER_PATH', "") != "":
             return open(os.environ['XMLBOILER_PATH'] + '/' + filename, 'r')
         else:
@@ -13,5 +13,5 @@ class Global:
     @staticmethod
     def load_rdf(filename):
         g = rdflib.Graph()
-        g.load(Global.get_resource(filename), format='turtle')
+        g.load(Global.get_resource_stream(filename), format='turtle')
         return g
