@@ -31,3 +31,17 @@ class Graph(object):
             for y in value:
                 result.add_edge(y, key)
         return result
+
+
+def compose(b, a):
+    """
+    Note order of arguments!
+    """
+    result = Graph()
+    for x, s in a.adj.items():
+        for y in s:
+            s2 = b.adj.get(y, None)
+            if s2 is not None:
+                for z in s2:
+                    result.add_edge(x, z)
+    return result
