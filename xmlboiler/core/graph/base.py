@@ -18,7 +18,7 @@
 
 
 # Directed graph with at most one edge between vertices
-class Graph(object):
+class BinaryRelation(object):
     def __init__(self, adj=None):
         """
         :param adj: a dict from vertice to vertex set
@@ -45,7 +45,7 @@ class Graph(object):
         return dst in s
 
     def reverse(self):
-        result = Graph()
+        result = BinaryRelation()
         for key, value in self.adj.items():
             for y in value:
                 result.add_edge(y, key)
@@ -56,7 +56,7 @@ def compose(b, a):
     """
     Note order of arguments!
     """
-    result = Graph()
+    result = BinaryRelation()
     for x, s in a.adj.items():
         for y in s:
             s2 = b.adj.get(y, None)
@@ -85,4 +85,4 @@ def union(a, b):
             if not b is None:
                 s |= setB
             adj[x] = s
-    return Graph(adj)
+    return BinaryRelation(adj)

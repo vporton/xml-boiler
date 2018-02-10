@@ -17,7 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-from xmlboiler.core.graph.base import union, square, Graph
+from xmlboiler.core.graph.base import union, square, BinaryRelation
 
 
 def transitive_closure(graph):
@@ -30,10 +30,10 @@ def transitive_closure(graph):
 
 class Connectivity(object):
     def __init__(self):
-        self.connectivity = Graph()
+        self.connectivity = BinaryRelation()
 
     def is_connected(self, src, dst):
         return self.connectivity.adjanced(src, dst)
 
-    def add_graph(self, g):
+    def add_relation(self, g):
         self.connectivity = transitive_closure(union(self.connectivity, g))
