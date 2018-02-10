@@ -45,3 +45,21 @@ def compose(b, a):
                 for z in s2:
                     result.add_edge(x, z)
     return result
+
+
+def union(a, b):
+    source = set()
+    source |= a.adj.keys()
+    source |= b.adj.keys()
+    adj = dict()
+    for x in source:
+        setA = a.adj.get(x, None)
+        setB = b.adj.get(x, None)
+        if a is not None or b is not None:
+            s = dict()
+            if not a is None:
+                s |= setA
+            if not b is None:
+                s |= setB
+            adj[x] = s
+    return Graph(adj)
