@@ -64,7 +64,22 @@ class ParseContext(object):
             raise FatalParseException(str)
 
 
+class NodeParser(object):
+    """
+    Parses a node of RDF resource (and its "subnodes")
+    """
+
+    @abstractmethod
+    def parse(self, parse_context, graph, node):
+        pass
+
+
 class PredicateParser(object):
+    """
+    Parses a given predicate (which may participate in several relationships)
+    of a given RDF node.
+    """
+
     def __init__(self, predicate):
         self.predicate = predicate
 
