@@ -17,7 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from dependency_injector import containers, providers
-from rdflib import URIRef, Graph
+from rdflib import URIRef, Graph, RDFS, RDF
 
 from xmlboiler.core.data import Global
 from xmlboiler.core.graph.base import BinaryRelation
@@ -29,7 +29,7 @@ class SubclassRelation(Connectivity):
     def __init__(self,
                  context=Contexts.execution_context(),
                  graph=None,
-                 relation=URIRef("http://www.w3.org/2000/01/rdf-schema#subClassOf")):
+                 relation=RDFS.subClassOf):
         self.context = context
         self.relation = relation
         self.add_graph(graph)
@@ -57,14 +57,13 @@ class SubclassRelationForType(SubclassRelation):
                  node_class,
                  context=Contexts.execution_context(),
                  graph=None,
-                 relation=URIRef("http://www.w3.org/2000/01/rdf-schema#subClassOf")):
+                 relation=RDFS.subClassOf):
         super(SubclassRelation, self).__init__(context=context, graph=graph, relation=relation)
         self.node_class = node_class
 
     def check_types(self, graph, src, dst):
-        t = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
-        src_ok = (src, t, self.node_class) in graph
-        dst_ok = (dst, t, self.node_class) in graph
+        src_ok = (src, RDF.type, self.node_class) in graph
+        dst_ok = (dst, RDF.type, self.node_class) in graph
         if src_ok ^ dst_ok:
             msg = self.context.translations.gettext("Both operands should be of type {type}").format(type=self.node_class)
             self.context.logger.warning(msg)
