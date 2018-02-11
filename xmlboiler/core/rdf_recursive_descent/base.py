@@ -15,6 +15,8 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+from abc import abstractmethod
+from enum import Enum, auto
 
 
 class BaseParseException(Exception):
@@ -32,3 +34,40 @@ class ParseException(BaseParseException):
 
 class FatalParseException(BaseParseException):
     pass
+
+
+class ErrorHandler(Enum):
+    """
+    TODO: rename?
+    """
+    IGNORE  = auto()
+    WARNING = auto()
+    FATAL   = auto()
+
+
+class ParseContext(object):
+    def __init__(self, execution_context):
+        self.execution_context = execution_context
+
+    def throw(self, handler: ErrorHandler, str):
+        if handler == ErrorHandler.IGNORE:
+            raise ParseException()
+        elif handler == ErrorHandler.WARNING:
+            if callable(str):
+                str = str()
+            self.execution_context.logger.warning(str)
+            raise ParseException(str)
+        elif handler == ErrorHandler.FATAL:
+            if callable(str):
+                str = str()
+            self.execution_context.logger.error(str)
+            raise FatalParseException(str)
+
+
+class PredicateParser(object):
+    def __init__(self, predicate):
+        self.predicate = predicate
+
+    @abstractmethod
+    def parse(self, parse_context, graph, node):
+        pass
