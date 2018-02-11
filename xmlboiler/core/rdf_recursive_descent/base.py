@@ -64,12 +64,18 @@ class ParseContext(object):
             self.execution_context.logger.error(str)
             raise FatalParseException(str)
 
+    # to shorten code
+    def translate(self, str):
+        return self.execution_context.translate.gettext(str)
 
 class NodeParser(object, metaclass=ABCMeta):
     """
     Parses a node of RDF resource (and its "subnodes").
 
     Usually NodeParser and Predicate parser call each other (as in mutual recursion)
+
+    WARNING: Don't use this parser to parse recursive data structures,
+    because it may lead to infinite recursion on circular RDF.
     """
 
     @abstractmethod
