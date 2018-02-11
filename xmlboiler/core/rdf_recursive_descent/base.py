@@ -15,7 +15,8 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-from abc import abstractmethod
+
+from abc import abstractmethod, ABCMeta
 from enum import Enum, auto
 
 
@@ -64,9 +65,11 @@ class ParseContext(object):
             raise FatalParseException(str)
 
 
-class NodeParser(object):
+class NodeParser(object, metaclass=ABCMeta):
     """
-    Parses a node of RDF resource (and its "subnodes")
+    Parses a node of RDF resource (and its "subnodes").
+
+    Usually NodeParser and Predicate parser call each other (as in mutual recursion)
     """
 
     @abstractmethod
@@ -74,10 +77,12 @@ class NodeParser(object):
         pass
 
 
-class PredicateParser(object):
+class PredicateParser(object, metaclass=ABCMeta):
     """
     Parses a given predicate (which may participate in several relationships)
     of a given RDF node.
+
+    Usually NodeParser and Predicate parser call each other (as in mutual recursion)
     """
 
     def __init__(self, predicate):
