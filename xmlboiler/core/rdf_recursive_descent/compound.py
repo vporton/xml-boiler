@@ -75,3 +75,21 @@ class OnePredicate(PredicateParserWithError):
                     format(pred=self.predicate, node=node)
             self.throw(s)
         return self.child.parse(parse_context, graph, node)
+
+
+class ZeroOnePredicate(PredicateParserWithError):
+    def __init__(self, predicate, child, on_error, default_value=None):
+        super(PredicateParserWithError, self).__init__(predicate, on_error)
+        self.child = child
+        self.default = default_value
+
+    def parse(self, parse_context, graph, node):
+        v = list(graph.objects(node, self.predicate))
+        if not v:
+            return self.default
+        if len(v) > 1:
+            def s():
+                self.parse_context.translate("Cannot be more than one predicate {pred} for node {node}.").\
+                    format(pred=self.predicate, node=node)
+            self.throw(s)
+        return self.child.parse(parse_context, graph, node)
