@@ -43,7 +43,7 @@ class SubclassRelation(Connectivity):
                      result.add_edge(subject, object)
              else:
                  were_errors = True
-                 msg = self.context.translations.gettext("Node %s should be an IRI.") % str(object)
+                 msg = self.context.translations.gettext("Node {node} should be an IRI.").format(node=object)
                  self.context.logger.warning(msg)
         self.add_relation(result)
         return not were_errors
@@ -66,7 +66,7 @@ class SubclassRelationForType(SubclassRelation):
         src_ok = (src, t, self.node_class) in graph
         dst_ok = (dst, t, self.node_class) in graph
         if src_ok ^ dst_ok:
-            msg = self.context.translations.gettext("Both operands should be of type %s") % str(self.node_class)
+            msg = self.context.translations.gettext("Both operands should be of type {type}").format(type=self.node_class)
             self.context.logger.warning(msg)
         return src_ok and dst_ok
 
