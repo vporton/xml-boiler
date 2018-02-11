@@ -91,3 +91,21 @@ class PredicateParser(object, metaclass=ABCMeta):
     @abstractmethod
     def parse(self, parse_context, graph, node):
         pass
+
+
+class NodeParserWithError(NodeParser):
+    def __init__(self, on_error):
+        super(NodeParser, self).__init__()
+        self.on_error = on_error
+
+    def throw(self, str):
+        self.execution_context.throw(self.on_error, str)
+
+
+class PredicateParserWithError(PredicateParser):
+    def __init__(self, on_error):
+        super(PredicateParser, self).__init__()
+        self.on_error = on_error
+
+    def throw(self, str):
+        self.execution_context.throw(self.on_error, str)
