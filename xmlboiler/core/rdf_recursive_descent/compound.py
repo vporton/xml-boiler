@@ -34,3 +34,27 @@ class Choice(NodeParser):
                 return p.parse(parse_context, graph, node)
             except ParseException:
                 pass
+
+
+class ZeroOrMorePredicate(PredicateParser):
+    def __init__(self, predicate, child):
+        super(PredicateParserWithError, self).__init__(predicate, on_error)
+        self.child = child
+
+    def parse(self, parse_context, graph, node):
+        iter = graph.objects(node, self.predicate)
+        return [self.child.parse(parse_context, graph, elt) for elt in iter]
+
+
+class OneOrMorePredicate(PredicateParserWithError):
+    def __init__(self, predicate, child, on_error):
+        super(PredicateParserWithError, self).__init__(predicate, on_error)
+        self.child = child
+
+    def parse(self, parse_context, graph, node):
+        parent = ZeroOrMorePredicate(self.predicate, self.child)
+        value = parent.parse(parse_context, graph, node)
+        if len(value) == 0:
+            self.throw(self.parse_context.translate("Must have at least one predicate {pred} for node {node}.")
+                       .format(pred=self.predicate, node=node))
+        return value
