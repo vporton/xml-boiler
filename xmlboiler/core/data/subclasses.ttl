@@ -1,0 +1,6 @@
+@prefix : <http://portonvictor.org/ns/trans/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+:Command rdfs:subClassOf :Script .
+:CommandLine rdfs:subClassOf :Script .
+:WebService rdfs:subClassOf :Script .
