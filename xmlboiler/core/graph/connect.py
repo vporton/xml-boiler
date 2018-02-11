@@ -1,4 +1,4 @@
-#  Copyright (c) 2017 Victor Porton,
+#  Copyright (c) 2018 Victor Porton,
 #  XML Boiler - http://freesoft.portonvictor.org
 #
 #  This file is part of XML Boiler.

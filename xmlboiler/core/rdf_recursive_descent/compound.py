@@ -1,4 +1,4 @@
-#  Copyright (c) 2017 Victor Porton,
+#  Copyright (c) 2018 Victor Porton,
 #  XML Boiler - http://freesoft.portonvictor.org
 #
 #  This file is part of XML Boiler.
@@ -16,3 +16,21 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from xmlboiler.core.rdf_recursive_descent.base import *
+
+
+class Choice(NodeParser):
+    """
+    TODO: If the node conforms to more than one choice, this class does
+    not conform to the specification.
+    """
+
+    def __init__(self, choices):
+        self.choices = choices
+
+    def parse(self, parse_context, graph, node):
+        for p in self.choices:
+            try:
+                return p.parse(parse_context, graph, node)
+            except ParseException:
+                pass
