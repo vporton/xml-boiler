@@ -16,9 +16,54 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from rdflib import Literal, XSD, URIRef
+
 from xmlboiler.core.rdf_recursive_descent.base import *
+
+
+class IRILiteral(NodeParserWithError):
+    def parse(self, parse_context, graph, node):
+        if node in URIRef:
+            return node
+        else:
+            self.throw(lambda: self.parse_context.translate("Node {node} should be an IRI.").format(node=node))
+
+
+class StringLiteral(NodeParserWithError):
+    def parse(self, parse_context, graph, node):
+        # TODO: xsd:normalizedString support
+        if node not in Literal or node.datatype != XSD.string:
+            self.throw(lambda: self.parse_context.translate("Node {node} is not a string literal.").format(node=node))
+        return str(node)
 
 
 class BooleanLiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
-        TODO
+        if node in Literal and node.datatype == XSD.boolean:
+            if node.value in ("0", "false"):
+                return False
+            if node.value in ("1", "true"):
+                return True
+        self.throw(lambda: self.parse_context.translate("Node {node} is not a boolean literal.").format(node=node))
+
+
+class IntegerLiteral(NodeParserWithError):
+    def parse(self, parse_context, graph, node):
+        if node in Literal and node.datatype == XSD.integer and \
+                len(node.value) != 0 and node.value[0] != ' ' and node.value[-1] != ' ':
+            try:
+                return int(node.value)
+            except ValueError:
+                pass
+        self.throw(lambda: self.parse_context.translate("Node {node} is not an integer literal.").format(node=node))
+
+
+class FloatLiteral(NodeParserWithError):
+    def parse(self, parse_context, graph, node):
+        if node in Literal and node.datatype in (XSD.integer, XSD.float, XSD.double, XSD.decimal) and \
+                len(node.value) != 0 and node.value[0] != ' ' and node.value[-1] != ' ':
+            try:
+                return float(node.value)
+            except ValueError:
+                pass
+        self.throw(lambda: self.parse_context.translate("Node {node} is not a float literal.").format(node=node))
