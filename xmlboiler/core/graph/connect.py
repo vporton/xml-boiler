@@ -35,5 +35,5 @@ class Connectivity(object):
     def is_connected(self, src, dst):
         return self.connectivity.adjanced(src, dst)
 
-    def add_relation(self, g):
-        self.connectivity = transitive_closure(union(self.connectivity, g))
+    def add_relation(self, relation):
+        self.connectivity = transitive_closure(union(self.connectivity, relation))
