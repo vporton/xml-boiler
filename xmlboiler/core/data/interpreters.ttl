@@ -10,8 +10,8 @@
         :langMinVersion "1.0" ;
         :langMaxVersion "1.0" ;
         :command ("xsltproc"
-                 [ :params ("--param" :name :value) ]
-                 :script) ;
+                  [ :params ("--param" :name :value) ]
+                  :script) ;
         :debianPackage "xsltproc"
     ]
 ) .
