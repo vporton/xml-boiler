@@ -39,6 +39,6 @@ def init_locale(lang=locale.getlocale()[0][0:2]):
 
 
 class Contexts(containers.DeclarativeContainer):
-    default_logger = providers.Singleton(logging.getLogger)
-    default_translations = providers.Singleton(init_locale)
+    default_logger = providers.ThreadSafeSingleton(logging.getLogger)
+    default_translations = providers.ThreadSafeSingleton(init_locale)
     execution_context = providers.Provider(logging=default_logger, translations=default_translations)

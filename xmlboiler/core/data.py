@@ -21,7 +21,7 @@ import os
 import pkg_resources
 import rdflib
 
-class Global:
+class Global(object):
     @staticmethod
     def get_resource_stream(filename):
         if os.environ.get('XMLBOILER_PATH', "") != "":

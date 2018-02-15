@@ -17,13 +17,12 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from dependency_injector import containers, providers
-from rdflib import URIRef, Graph, RDFS, RDF
+from rdflib import URIRef, RDFS, RDF
 
 from xmlboiler.core.data import Global
 from xmlboiler.core.graph.base import BinaryRelation
 from xmlboiler.core.graph.connect import Connectivity
 from xmlboiler.core.execution_context_builders import Contexts
-
 
 class SubclassRelation(Connectivity):
     def __init__(self,
@@ -71,4 +70,4 @@ class SubclassRelationForType(SubclassRelation):
 
 
 class SubclassContainers(containers.DeclarativeContainer):
-    basic_subclasses = providers.Singleton(Global.load_rdf, filename='xmlboiler/core/data/subclasses.ttl')
+    basic_subclasses = providers.ThreadSafeSingleton(Global.load_rdf, filename='xmlboiler/core/data/subclasses.ttl')
