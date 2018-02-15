@@ -90,6 +90,7 @@ class BaseScriptInfoParser(NodeParser):
                                             ok_result_node_parser,
                                             ErrorHandler.WARNING)
         result.ok_result = ok_result_parser.parse(parse_context, graph, node)
+        return result
 
 
 class CommandScriptInfoParser(NodeParser):
@@ -134,7 +135,20 @@ class WebServiceScriptInfoParser(NodeParser):
         self.script_kind = script_kind
 
     def parse(self, parse_context, graph, node):
-       TODO
+        klass = URIRef(MAIN_NAMESPACE + "WebService")
+        check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorHandler.IGNORE)
+
+        base = BaseScriptInfoParser(self.script_kind).parse(parse_context, graph, node)
+        more = CommandScriptInfo()
+
+        action_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "action"), IRILiteral(ErrorHandler.WARNING))
+        more.action = action_parser.parse(parse_context, graph, node)
+        method_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "method"), IRILiteral(ErrorHandler.WARNING))
+        more.method = method_parser.parse(parse_context, graph, node)
+        xml_field_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "xmlField"), IRILiteral(ErrorHandler.WARNING))
+        more.xml_field = xml_field_parser.parse(parse_context, graph, node)
+
+        return ScriptInfo(base=base, more=more)
 
 
 class Providers(DeclarativeContainer):
