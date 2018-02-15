@@ -17,7 +17,10 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from abc import abstractmethod, ABCMeta
+from dependency_injector import providers
 from enum import Enum, auto
+
+from xmlboiler.core.execution_context_builders import Contexts
 
 
 class BaseParseException(Exception):
@@ -115,3 +118,6 @@ class PredicateParserWithError(PredicateParser):
 
     def throw(self, str):
         self.execution_context.throw(self.on_error, str)
+
+
+default_parse_context = providers.Provider(ParseContext, execution_context=Contexts.execution_context)
