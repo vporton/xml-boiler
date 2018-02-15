@@ -84,4 +84,3 @@ class AssetInfo(NamedTuple):
     see_also_validate : List[URIRef]
     precedences_subclasses: BinaryRelation
     precedences_higher    : BinaryRelation
-

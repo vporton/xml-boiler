@@ -25,7 +25,7 @@ from xmlboiler.core.rdf_recursive_descent.base import NodeParser, ErrorHandler
 from xmlboiler.core.rdf_recursive_descent.compound import Choice, ZeroOnePredicate, OnePredicate
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_format.asset import AssetInfo, TransformerKindEnum, ValidatorKindEnum, BaseScriptInfo, \
-    ScriptKindEnum
+    ScriptKindEnum, ScriptInfo, CommandScriptInfo
 from xmlboiler.core.rdf_recursive_descent.literal import FloatLiteral, StringLiteral
 
 
@@ -91,14 +91,25 @@ class BaseScriptInfoParser(NodeParser):
         result.ok_result = ok_result_parser.parse(parse_context, graph, node)
 
 
-# TODO
 class CommandScriptInfoParser(NodeParser):
-    pass
+    def __init__(self, subclasses, script_kind):
+        self.subclasses = subclasses
+        self.script_kind = script_kind
+
+    def parse(self, parse_context, graph, node):
+        base = BaseScriptInfoParser(self.script_kind).parse(parse_context, graph, node)
+        more = CommandScriptInfo()
+        # TODO
+        return ScriptInfo(base=base, more=more)
 
 
-# TODO
 class WebServiceScriptInfoParser(NodeParser):
-    pass
+    def __init__(self, subclasses, script_kind):
+        self.subclasses = subclasses
+        self.script_kind = script_kind
+
+    def parse(self, parse_context, graph, node):
+       TODO
 
 
 class Providers(DeclarativeContainer):
