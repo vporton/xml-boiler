@@ -41,13 +41,13 @@ class ValidatorKindEnum(Enum):
 
 # TODO: Distinguishing transformer and validator scripts does not conform to the specification
 class BaseScriptInfo(NamedTuple):
-        preservance : float
-        stability   : float
-        preference  : float
-        script_kind: ScriptKindEnum
-        transformer_kind: TransformerKindEnum
-        validator_kind  : ValidatorKindEnum
-        okResult: Optional[str]
+    preservance : float
+    stability   : float
+    preference  : float
+    script_kind: ScriptKindEnum
+    transformer_kind: TransformerKindEnum
+    validator_kind  : ValidatorKindEnum
+    okResult: Optional[str]
 
 class CommandScriptInfo(NamedTuple):
     language: URIRef

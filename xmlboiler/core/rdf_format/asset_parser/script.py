@@ -18,22 +18,27 @@
 
 from dependency_injector.providers import ThreadLocalSingleton
 from dependency_injector.containers import DeclarativeContainer
+from rdflib import URIRef
+
 from xmlboiler.core.rdf_format.base import MAIN_NAMESPACE
-from xmlboiler.core.rdf_recursive_descent.base import NodeParser
-from xmlboiler.core.rdf_recursive_descent.compound import Choice
+from xmlboiler.core.rdf_recursive_descent.base import NodeParser, ErrorHandler
+from xmlboiler.core.rdf_recursive_descent.compound import Choice, ZeroOnePredicate, OnePredicate
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
-from xmlboiler.core.rdf_format.asset import AssetInfo, TransformerKindEnum, ValidatorKindEnum
+from xmlboiler.core.rdf_format.asset import AssetInfo, TransformerKindEnum, ValidatorKindEnum, BaseScriptInfo, \
+    ScriptKindEnum
+from xmlboiler.core.rdf_recursive_descent.literal import FloatLiteral, StringLiteral
 
 
 class ScriptInfoParser(Choice):
     def __init__(self, subclasses, script_kind: AssetInfo.ScriptKindEnum):
         # Intentionally not using dependency injection pattern
-        super(Choice, self).__init__([CommandScriptInfoParser(subclasses, script_kind),
+        super(Choice, self).__init__([CommandScriptInfoParser   (subclasses, script_kind),
                                       WebServiceScriptInfoParser(subclasses, script_kind)])
         # self.subclasses = subclasses
         # self.script_kind = script_kind
 
     # def parse(self, parse_context, graph, node):
+
 
 class BaseScriptInfoParser(NodeParser):
     def __init__(self, script_kind):
@@ -53,15 +58,48 @@ class BaseScriptInfoParser(NodeParser):
                MAIN_NAMESPACE + "parts": ValidatorKindEnum.PARTS}
         return EnumParser(map)
 
-    # TODO
+    def parse(self, parse_context, graph, node):
+        result = BaseScriptInfo(script_kind=self.script_kind)
+        # TODO: Check 0..1 range
+        float_parser = FloatLiteral(ErrorHandler.WARNING)
+        preservance_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "preservance"),
+                                              float_parser,
+                                              1.0,
+                                              ErrorHandler.WARNING)
+        stability_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "stability"),
+                                            float_parser,
+                                            1.0,
+                                            ErrorHandler.WARNING)
+        preference_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "preference"),
+                                             float_parser,
+                                             1.0,
+                                             ErrorHandler.WARNING)
+        result.preservance = preservance_parser.parse(parse_context, graph, node)
+        result.stability   = stability_parser.parse  (parse_context, graph, node)
+        result.preference  = preference_parser.parse (parse_context, graph, node)
+        if self.script_kind == ScriptKindEnum.TRANSFORMER:
+            transformer_kind_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "transformerKind"),
+                                                   Providers.transformer_kind_parser(),
+                                                   ErrorHandler.WARNING)
+            result.transformer_kind = transformer_kind_parser.parse(parse_context, graph, node)
+        elif self.script_kind == ScriptKindEnum.VALIDATOR:
+            result.validator_kind = Providers.validator_kind_parser().parse(parse_context, graph, node)
+        ok_result_node_parser = StringLiteral(ErrorHandler.WARNING)
+        ok_result_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "okResult"),
+                                            ok_result_node_parser,
+                                            ErrorHandler.WARNING)
+        result.ok_result = ok_result_parser.parse(parse_context, graph, node)
+
 
 # TODO
 class CommandScriptInfoParser(NodeParser):
     pass
 
+
 # TODO
 class WebServiceScriptInfoParser(NodeParser):
     pass
+
 
 class Providers(DeclarativeContainer):
     # What is more efficient: thread-local or thread-safe?
