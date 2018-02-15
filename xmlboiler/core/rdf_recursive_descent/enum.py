@@ -22,7 +22,7 @@ from .base import *
 
 
 class EnumParser(NodeParserWithError):
-    def __init__(self, map, on_error):
+    def __init__(self, map, on_error=ErrorHandler.IGNORE):
         super(NodeParserWithError, self).__init__(on_error)
         self.map = map
 
