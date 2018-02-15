@@ -1,0 +1,17 @@
+@prefix : <http://portonvictor.org/ns/trans/internal/> .
+@prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+
+# The list of all interpreters in order of precedence (these interpreters which
+# are earlier in the list "win").
+:boiler :interpretersList
+(
+    [
+        :lang lang:xsltproc ;
+        :langMinVersion "1.0" ;
+        :langMaxVersion "1.0" ;
+        :command ("xsltproc"
+                 [ :params ("--param" :name :value) ]
+                 :script) ;
+        :debianPackage "xsltproc"
+    ]
+) .
