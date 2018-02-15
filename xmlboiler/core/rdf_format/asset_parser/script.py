@@ -26,7 +26,8 @@ from xmlboiler.core.rdf_recursive_descent.compound import Choice, ZeroOnePredica
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_format.asset import AssetInfo, TransformerKindEnum, ValidatorKindEnum, BaseScriptInfo, \
     ScriptKindEnum, ScriptInfo, CommandScriptInfo
-from xmlboiler.core.rdf_recursive_descent.literal import FloatLiteral, StringLiteral
+from xmlboiler.core.rdf_recursive_descent.literal import FloatLiteral, StringLiteral, IRILiteral
+from xmlboiler.core.rdf_recursive_descent.types import check_node_class
 
 
 class ScriptInfoParser(Choice):
@@ -97,9 +98,33 @@ class CommandScriptInfoParser(NodeParser):
         self.script_kind = script_kind
 
     def parse(self, parse_context, graph, node):
+        klass = URIRef(MAIN_NAMESPACE + "Command")
+        check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorHandler.IGNORE)
+
         base = BaseScriptInfoParser(self.script_kind).parse(parse_context, graph, node)
         more = CommandScriptInfo()
-        # TODO
+
+        str1_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "scriptURL"), StringLiteral(), ErrorHandler.WARNING)
+        str1 = str1_parser.parse(parse_context, graph, node)
+        str2_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "commandString"), StringLiteral(), ErrorHandler.WARNING)
+        str2 = str2_parser.parse(parse_context, graph, node)
+        if str1 is None and str2 is None:
+            msg = parse_context.translate("Both :scriptURL and :commandString can't be missing in node {node}.").format(node=node)
+            parse_context.throw(ErrorHandler.WARNING, msg)
+        if str1 is not None and str2 is not None:
+            msg = parse_context.translate("Both :scriptURL and :commandString can't be present in node {node}.").format(node=node)
+            parse_context.throw(ErrorHandler.WARNING, msg)
+        more.scriptURL     = str1
+        more.commandString = str2
+
+        min_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "minVersion"), StringLiteral(ErrorHandler.WARNING))
+        more.minVersion = min_parser.parse(parse_context, graph, node)
+        max_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "maxVersion"), StringLiteral(ErrorHandler.WARNING))
+        more.maxVersion = max_parser.parse(parse_context, graph, node)
+
+        language_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "language"), IRILiteral(ErrorHandler.WARNING))
+        more.language = language_parser.parse(parse_context, graph, node)
+
         return ScriptInfo(base=base, more=more)
 
 
