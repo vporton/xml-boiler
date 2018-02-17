@@ -51,6 +51,7 @@ class Interpeters(object):
             lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", StringLiteral, ErrorHandler.FATAL).\
                 parse(self.parse_context, self.graph, main_node)
             # FIXME: "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
+            # FIXME: lang_min_version/lang_max_version may be None
             if version is None or (\
                             ThePackageManaging.VersionClass(lang_min_version) <= \
                             ThePackageManaging.VersionClass(version) <= \
