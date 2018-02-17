@@ -46,8 +46,10 @@ class Interpeters(object):
         main_nodes = sorted(main_nodes, lambda u: self.order[u])
         for main_node in main_nodes:
             # FIXME: :fromPackageVersion
-            lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", StringLiteral, ErrorHandler.FATAL)
-            lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", StringLiteral, ErrorHandler.FATAL)
+            lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", StringLiteral, ErrorHandler.FATAL).\
+                parse(self.parse_context, self.graph, main_node)
+            lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", StringLiteral, ErrorHandler.FATAL).\
+                parse(self.parse_context, self.graph, main_node)
             # FIXME: "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
             if version is None or (\
                             ThePackageManaging.VersionClass(lang_min_version) <= \
