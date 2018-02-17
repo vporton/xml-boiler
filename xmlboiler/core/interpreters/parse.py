@@ -19,14 +19,19 @@
 from rdflib import URIRef
 
 from xmlboiler.core.packages.base import ThePackageManaging
-from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler
-from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate
+from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException
+from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
 
 PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
 _Version = ThePackageManaging.VersionClass
+
+
+class _FromPackageVersion:
+    pass
+
 
 class Interpeters(object):
     def __init__(self, graph, parse_context):
@@ -40,18 +45,33 @@ class Interpeters(object):
     def check_version(self, version, main_node):
         if version is None:  # any version is OK
             return True
-        # FIXME: :fromPackageVersion
-        lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", StringLiteral, ErrorHandler.FATAL). \
+        version_parser = Choice([StringLiteral(), Enum({PREFIX + ':fromPackageVersion': _FromPackageVersion()})])
+        lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", version_parser, ErrorHandler.FATAL). \
             parse(self.parse_context, self.graph, main_node)
-        lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", StringLiteral, ErrorHandler.FATAL). \
+        lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", version_parser, ErrorHandler.FATAL). \
             parse(self.parse_context, self.graph, main_node)
-        # FIXME: "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
-        # FIXME: lang_min_version/lang_max_version may be None
-        if _Version(version) < _Version(lang_min_version):
+        if lang_min_version is str and _Version(version) < _Version(lang_min_version):
             return False
-        if _Version(version) > _Version(lang_max_version):
-            return False
-        TODO
+        if lang_max_version is str:  # "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
+            if lang_max_version[-2:] == '.*':
+                if _Version(version) > _Version(lang_max_version[:-2]) and \
+                        not version.startswith(lang_max_version[:-2] + '.'):
+                    return False
+            elif _Version(version) > _Version(lang_max_version):
+                return False
+        if lang_min_version is _FromPackageVersion or lang_max_version is _FromPackageVersion:
+            try:
+                package = OnePredicate(StringLiteral(), ErrorHandler.IGNORE)
+            except ParseException:  # no such Debian package
+                return False
+            pver = ThePackageManaging.determine_package_version(package)
+            if lang_min_version is _FromPackageVersion:
+                if _Version(version) < _Version(pver):
+                    return False
+            if lang_max_version is _FromPackageVersion:
+                if _Version(version) > _Version(pver):
+                    return False
+        return True
 
     # TODO: Cache the results
     def find_interpreter(self, language, version):
