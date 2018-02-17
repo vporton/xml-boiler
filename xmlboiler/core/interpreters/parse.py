@@ -48,9 +48,10 @@ class Interpeters(object):
             # FIXME: :fromPackageVersion
             lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", StringLiteral, ErrorHandler.FATAL)
             lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", StringLiteral, ErrorHandler.FATAL)
+            # FIXME: "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
             if version is None or (\
-                            ThePackageManaging.VersionClass(version) \
-                            >= ThePackageManaging.VersionClass(lang_min_version) \
-                            <= ThePackageManaging.VersionClass(lang_max_version)):
+                            ThePackageManaging.VersionClass(lang_min_version) <= \
+                            ThePackageManaging.VersionClass(version) <= \
+                            ThePackageManaging.VersionClass(lang_max_version)):
                 return main_node
 
