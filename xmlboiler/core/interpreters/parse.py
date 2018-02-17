@@ -26,6 +26,7 @@ from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
 
 PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
+_Version = ThePackageManaging.VersionClass
 
 class Interpeters(object):
     def __init__(self, graph, parse_context):
@@ -36,6 +37,22 @@ class Interpeters(object):
         the_list = ListParser(ErrorHandler.FATAL).parse(parse_context, graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
+    def check_version(self, version, main_node):
+        if version is None:  # any version is OK
+            return True
+        # FIXME: :fromPackageVersion
+        lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", StringLiteral, ErrorHandler.FATAL). \
+            parse(self.parse_context, self.graph, main_node)
+        lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", StringLiteral, ErrorHandler.FATAL). \
+            parse(self.parse_context, self.graph, main_node)
+        # FIXME: "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
+        # FIXME: lang_min_version/lang_max_version may be None
+        if _Version(version) < _Version(lang_min_version):
+            return False
+        if _Version(version) > _Version(lang_max_version):
+            return False
+        TODO
+
     # TODO: Cache the results
     def find_interpreter(self, language, version):
         """
@@ -45,16 +62,6 @@ class Interpeters(object):
         main_nodes = list(self.graph.subjects(PREFIX + "lang", language))
         main_nodes = sorted(main_nodes, lambda u: self.order[u])
         for main_node in main_nodes:
-            # FIXME: :fromPackageVersion
-            lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", StringLiteral, ErrorHandler.FATAL).\
-                parse(self.parse_context, self.graph, main_node)
-            lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", StringLiteral, ErrorHandler.FATAL).\
-                parse(self.parse_context, self.graph, main_node)
-            # FIXME: "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
-            # FIXME: lang_min_version/lang_max_version may be None
-            if version is None or (\
-                            ThePackageManaging.VersionClass(lang_min_version) <= \
-                            ThePackageManaging.VersionClass(version) <= \
-                            ThePackageManaging.VersionClass(lang_max_version)):
+            if self.check_version(version, main_node):
                 return main_node
 
