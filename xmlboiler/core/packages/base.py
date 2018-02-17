@@ -26,3 +26,5 @@ class BasePackageManaging(object, metaclass=ABCMeta):
         Return `None` if not installed.
         """
         pass
+
+    VersionClass = None
