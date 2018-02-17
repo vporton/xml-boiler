@@ -42,7 +42,6 @@ class Interpeters(object):
         the_list = ListParser(ErrorHandler.FATAL).parse(parse_context, graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
-    # FIXME: `:packageMinVersion` and `:packageMaxVersion`
     def check_version(self, version, main_node):
         if version is None:  # any version is OK
             return True
@@ -60,18 +59,28 @@ class Interpeters(object):
                     return False
             elif _Version(version) > _Version(lang_max_version):
                 return False
-        if lang_min_version is _FromPackageVersion or lang_max_version is _FromPackageVersion:
+        pmin_version = ZeroOnePredicate(PREFIX + "packageMinVersion", StringLiteral(), ErrorHandler.FATAL). \
+            parse(self.parse_context, self.graph, main_node)
+        pmax_version = ZeroOnePredicate(PREFIX + "packageMaxVersion", StringLiteral(), ErrorHandler.FATAL). \
+            parse(self.parse_context, self.graph, main_node)
+        if lang_min_version is _FromPackageVersion or lang_max_version is _FromPackageVersion or \
+                pmin_version is not None or pmax_version is not None:
             try:
                 package = OnePredicate(StringLiteral(), ErrorHandler.IGNORE)
-            except ParseException:  # no such Debian package
+            except ParseException:
                 return False
-            pver = ThePackageManaging.determine_package_version(package)
+            real_version = ThePackageManaging.determine_package_version(package)
+            if real_version is None:  # no such Debian package
+                return False
             if lang_min_version is _FromPackageVersion:
-                if _Version(version) < _Version(pver):
+                if _Version(version) < _Version(real_version):
                     return False
             if lang_max_version is _FromPackageVersion:
-                if _Version(version) > _Version(pver):
+                if _Version(version) > _Version(real_version):
                     return False
+            if (pmin_version is not None and _Version(real_version) < _Version(pmin_version)) or \
+                    (pmax_version is not None and _Version(real_version) > _Version(pmax_version)):
+                return False
         return True
 
     # TODO: Cache the results
