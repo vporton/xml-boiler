@@ -1,3 +1,4 @@
 rdflib
 dependency_injector
 ordered-set
+deb-pkg-tools
