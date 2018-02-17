@@ -5,13 +5,32 @@
 # are earlier in the list "win").
 :boiler :interpretersList
 (
-    [
-        :lang lang:xsltproc ;
-        :langMinVersion "1.0" ;
-        :langMaxVersion "1.0" ;
-        :command ("xsltproc"
-                  [ :params ("--param" :name :value) ]
-                  :script) ;
-        :debianPackage "xsltproc"
-    ]
+    lang:xsltproc
+    lang:Saxon
 ) .
+
+# Don't confuse language version and package version.
+# The language version is specified either as with `:langMinVersion` and `:langMaxVersion`.
+# Also possible `:langMaxVersion :fromPackageVersion`.
+# Package versions are specified as `:packageMinVersion` and `:packageMaxVersion`.
+
+lang:xsltproc
+    :lang lang:XSLT ;
+    :langMinVersion "1.0" ;
+    :langMaxVersion "1.0" ;
+    :command ("xsltproc"
+              [ :params ("--param" :name :value) ]
+              :script) ;
+    :debianPackage "xsltproc" .
+
+# We don't support Saxon 6.5.5. Saxon PE and EE are also currently not supported.
+lang:Saxon
+    :lang lang:XSLT ;
+    :langMinVersion "1.0" ;
+    :langMaxVersion "2.0" ;
+    :command ("saxonb-xslt"
+              [ :concat "-xsl:" :script ]
+              "-s:-"
+              [ :params [ :concat (:name "=" :value) ]]) ;
+    :debianPackage "libsaxonhe-java" ;
+    :packageMinVersion "9.5" .
