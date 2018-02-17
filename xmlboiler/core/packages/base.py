@@ -18,6 +18,8 @@
 
 from abc import abstractclassmethod, ABCMeta
 
+from .debian import DebianPackageManaging
+
 
 class BasePackageManaging(object, metaclass=ABCMeta):
     @abstractclassmethod
@@ -28,3 +30,6 @@ class BasePackageManaging(object, metaclass=ABCMeta):
         pass
 
     VersionClass = None
+
+# Need to support other OSes
+ThePackageManaging = DebianPackageManaging

@@ -1,12 +1,13 @@
 @prefix : <http://portonvictor.org/ns/trans/internal/> .
+@prefix :int <http://portonvictor.org/ns/trans/internal/interpreters/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
 
 # The list of all interpreters in order of precedence (these interpreters which
 # are earlier in the list "win").
 :boiler :interpretersList
 (
-    lang:xsltproc
-    lang:Saxon
+    int:xsltproc
+    int:Saxon
 ) .
 
 # Don't confuse language version and package version.
@@ -14,7 +15,7 @@
 # Also possible `:langMaxVersion :fromPackageVersion`.
 # Package versions are specified as `:packageMinVersion` and `:packageMaxVersion`.
 
-lang:xsltproc
+int:xsltproc
     :lang lang:XSLT ;
     :langMinVersion "1.0" ;
     :langMaxVersion "1.0" ;
@@ -24,7 +25,7 @@ lang:xsltproc
     :debianPackage "xsltproc" .
 
 # We don't support Saxon 6.5.5. Saxon PE and EE are also currently not supported.
-lang:Saxon
+int:Saxon
     :lang lang:XSLT ;
     :langMinVersion "1.0" ;
     :langMaxVersion "2.0" ;
