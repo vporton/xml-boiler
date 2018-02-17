@@ -26,6 +26,7 @@ class BasePackageManaging(object, metaclass=ABCMeta):
     def determine_package_version(cls, package_name):
         """
         Return `None` if not installed.
+        The version is stripped any distro-specifics. So it is "1.1.29" not "1.1.29-5".
         """
         pass
 

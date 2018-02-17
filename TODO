@@ -1,9 +1,4 @@
 * How to "import" in Python through the network:
   https://docs.python.org/3/reference/import.html#replacing-the-standard-import-system
 
-* The upstream version of a Debian package can be deterministically
-  extracted from the package version, see https://www.debian.org/doc/debian-policy/#s-f-version
-  for the format.
-  Also https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=883133
-
 * https://deb-pkg-tools.readthedocs.io/en/latest/

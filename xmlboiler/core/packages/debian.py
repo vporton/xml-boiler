@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import re
 import deb_pkg_tools
 
 from .base import BasePackageManaging
@@ -23,6 +24,9 @@ from .base import BasePackageManaging
 
 class DebianPackageManaging(BasePackageManaging):
     def determine_package_version(cls, package_name):
-        return deb_pkg_tools.utils.find_installed_version(package_name)
+        version = deb_pkg_tools.utils.find_installed_version(package_name)
+        # https://www.debian.org/doc/debian-policy/#s-f-version
+        version = re.match(r'^([0-9]+:)?(.*)(-[a-zA-Z0-9+.~]+)?$', version)[2]
+        return version
 
     VersionClass = deb_pkg_tools.version.Version
