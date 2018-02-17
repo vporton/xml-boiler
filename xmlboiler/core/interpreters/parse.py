@@ -77,7 +77,7 @@ class Interpeters(object):
     def find_interpreter(self, language, version):
         """
         :param language: the URI of the language
-        :param version: string
+        :param version: string or None
         """
         main_nodes = list(self.graph.subjects(PREFIX + "lang", language))
         main_nodes = sorted(main_nodes, lambda u: self.order[u])
