@@ -22,7 +22,7 @@ from .base import BasePackageManaging
 
 
 class DebianPackageManaging(BasePackageManaging):
-    def determine_package_version(cls):
+    def determine_package_version(cls, package_name):
         return deb_pkg_tools.utils.find_installed_version(package_name)
 
     # See https://deb-pkg-tools.readthedocs.io/en/latest/ about version comparison.

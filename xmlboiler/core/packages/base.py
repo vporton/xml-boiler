@@ -21,7 +21,7 @@ from abc import abstractclassmethod, ABCMeta
 
 class BasePackageManaging(object, metaclass=ABCMeta):
     @abstractclassmethod
-    def determine_package_version(cls):
+    def determine_package_version(cls, package_name):
         """
         Return `None` if not installed.
         """
