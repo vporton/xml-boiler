@@ -23,6 +23,7 @@ from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseExcepti
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
+from .parse_impl import MainParser, InterpreterParseContext
 
 PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
@@ -96,4 +97,13 @@ class Interpeters(object):
             if self.check_version(version, main_node):
                 return main_node
 
-    # TODO: User parse_impl.py
+    def construct_command_line(self, node, script_url, params):
+        """
+        :param node:
+        :param script_url:
+        :param params: script params, a list of 2-tuples
+        :return: a list of strings
+        """
+        parse_context = InterpreterParseContext(self.execution_context, script_url, params)
+        parser = MainParser()
+        return parser.parse(parse_context, self.graph, node)
