@@ -21,6 +21,7 @@ from subprocess import PIPE, DEVNULL
 
 from .base import Timeout
 
+
 class RegularCommandRunner(object):
     @classmethod
     def run_pipe(cls, args, input, timeout=None):

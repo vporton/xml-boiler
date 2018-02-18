@@ -26,5 +26,7 @@ class BaseCommandRunner(object):
         :param args: like `["ls", "-l"]`
         :param input: input string
         :return: output string
+
+        May raise OSError
         """
         pass
