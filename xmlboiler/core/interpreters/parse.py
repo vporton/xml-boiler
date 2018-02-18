@@ -19,7 +19,7 @@
 from rdflib import URIRef
 
 from xmlboiler.core.packages.base import ThePackageManaging
-from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException
+from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
@@ -34,9 +34,9 @@ class _FromPackageVersion:
 
 
 class Interpeters(object):
-    def __init__(self, graph, parse_context):
+    def __init__(self, graph, execution_context):
         self.graph = graph
-        self.parse_context = parse_context
+        self.execution_context = execution_context
 
         list_node = graph[:URIRef(PREFIX + "interpretersList")][0]
         the_list = ListParser(ErrorHandler.FATAL).parse(parse_context, graph, list_node)
@@ -45,11 +45,12 @@ class Interpeters(object):
     def check_version(self, version, main_node):
         if version is None:  # any version is OK
             return True
+        parse_context = ParseContext(self.execution_context)
         version_parser = Choice([StringLiteral(), Enum({PREFIX + ':fromPackageVersion': _FromPackageVersion()})])
         lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", version_parser, ErrorHandler.FATAL). \
-            parse(self.parse_context, self.graph, main_node)
+            parse(parse_context, self.graph, main_node)
         lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", version_parser, ErrorHandler.FATAL). \
-            parse(self.parse_context, self.graph, main_node)
+            parse(parse_context, self.graph, main_node)
         if lang_min_version is str and _Version(version) < _Version(lang_min_version):
             return False
         if lang_max_version is str:  # "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
@@ -60,9 +61,9 @@ class Interpeters(object):
             elif _Version(version) > _Version(lang_max_version):
                 return False
         pmin_version = ZeroOnePredicate(PREFIX + "packageMinVersion", StringLiteral(), ErrorHandler.FATAL). \
-            parse(self.parse_context, self.graph, main_node)
+            parse(parse_context, self.graph, main_node)
         pmax_version = ZeroOnePredicate(PREFIX + "packageMaxVersion", StringLiteral(), ErrorHandler.FATAL). \
-            parse(self.parse_context, self.graph, main_node)
+            parse(parse_context, self.graph, main_node)
         if lang_min_version is _FromPackageVersion or lang_max_version is _FromPackageVersion or \
                 pmin_version is not None or pmax_version is not None:
             try:
@@ -95,3 +96,4 @@ class Interpeters(object):
             if self.check_version(version, main_node):
                 return main_node
 
+    # TODO: User parse_impl.py
