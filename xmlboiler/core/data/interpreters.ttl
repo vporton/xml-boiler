@@ -30,7 +30,7 @@ int:Saxon
     :langMinVersion "1.0" ;
     :langMaxVersion "2.0" ;
     :command ("saxonb-xslt"
-              [ :concat "-xsl:" :script ]
+              [ :concat ("-xsl:" :script) ]
               "-s:-"
               [ :params [ :concat (:name "=" :value) ]]) ;
     :debianPackage "libsaxonhe-java" ;

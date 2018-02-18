@@ -39,7 +39,7 @@ class Interpeters(object):
         self.execution_context = execution_context
 
         list_node = graph[:URIRef(PREFIX + "interpretersList")][0]
-        the_list = ListParser(ErrorHandler.FATAL).parse(parse_context, graph, list_node)
+        the_list = ListParser(ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
     def check_version(self, version, main_node):

@@ -30,6 +30,7 @@ class InterpreterParseContext(ParseContext):
         super(ParseContext, self).__init__(execution_context)
         self.script_url = script_url
         self.params = params
+        self.current_param = None
 
 
 class MainParser(Choice):
@@ -55,10 +56,24 @@ class ArgumentListParser(NodeParser):
 
 class ConcatParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        sub_parser = OnePredicate(PREFIX + ':concat', ArgumentListParser(), ErrorHandler.IGNORE)
+        sub_parser = OnePredicate(PREFIX + ':concat', MainParser(), ErrorHandler.IGNORE)
         return ''.join(sub_parser.parse(parse_context, graph, node))
 
 
 class ConstantParser(EnumParser):
     def __init__(self):
-        super(EnumParser, self).__init__({PREFIX + ':script': [parse_context.script_url]})
+        # FIXME: Move parse_context to the constructor (instead of parse())
+        super(EnumParser, self).__init__({PREFIX + ':script': [parse_context.script_url],
+                                          PREFIX + ':name'  : [parse_context.current_param.get(0)],
+                                          PREFIX + ':value' : [parse_context.current_param.get(1)]})
+
+
+class ParamsParser(NodeParser):
+    def parse(self, parse_context, graph, node):
+        sub_parser = OnePredicate(PREFIX + ':params', MainParser(), ErrorHandler.IGNORE)
+        try:
+            for i in self.params:
+                self.current_param = i
+                l = sub_parser.parse(parse_context, graph, node)
+        finally:
+            self.current_param = None  # cleanup after ourselves
