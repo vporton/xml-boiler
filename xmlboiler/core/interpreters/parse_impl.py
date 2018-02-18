@@ -16,9 +16,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from xmlboiler.core.rdf_recursive_descent.base import ParseContext, NodeParser
-from xmlboiler.core.rdf_recursive_descent.compound import Choice
+from xmlboiler.core.rdf_recursive_descent.base import ParseContext, NodeParser, ErrorHandler
+from xmlboiler.core.rdf_recursive_descent.compound import Choice, OnePredicate
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
+
+
+PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
 
 class InterpreterParseContext(ParseContext):
@@ -33,10 +36,16 @@ class MainParser(Choice):
         """
         Every of these parsers returns a list (probably one-element) of strings.
         """
-        super(Choice, self).__init__([ArgumentListParser()])
+        super(Choice, self).__init__([ArgumentListParser(), ConcatParser()])
 
 
 class ArgumentListParser(NodeParser):
     def parse(self, parse_context, graph, node):
         l = ListParser(MainParser()).parse(parse_context, graph, node)
         return [item for sublist in l for item in sublist]  # flatten the list
+
+
+class ConcatParser(NodeParser):
+    def parse(self, parse_context, graph, node):
+        sub_parser = OnePredicate(PREFIX + ':concat', ArgumentListParser(), ErrorHandler.IGNORE)
+        return ''.join(sub_parser.parse(parse_context, graph, node))
