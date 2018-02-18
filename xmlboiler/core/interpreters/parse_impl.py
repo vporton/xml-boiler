@@ -18,6 +18,7 @@
 
 from xmlboiler.core.rdf_recursive_descent.base import ParseContext, NodeParser, ErrorHandler
 from xmlboiler.core.rdf_recursive_descent.compound import Choice, OnePredicate
+from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
 
@@ -38,7 +39,8 @@ class MainParser(Choice):
         """
         super(Choice, self).__init__([ArgumentLiteralParser(),
                                       ArgumentListParser(),
-                                      ConcatParser()])
+                                      ConcatParser(),
+                                      ConstantParser()])
 
 
 class ArgumentLiteralParser(NodeParser):
@@ -55,3 +57,8 @@ class ConcatParser(NodeParser):
     def parse(self, parse_context, graph, node):
         sub_parser = OnePredicate(PREFIX + ':concat', ArgumentListParser(), ErrorHandler.IGNORE)
         return ''.join(sub_parser.parse(parse_context, graph, node))
+
+
+class ConstantParser(EnumParser):
+    def __init__(self):
+        super(EnumParser, self).__init__({PREFIX + ':script': [parse_context.script_url]})
