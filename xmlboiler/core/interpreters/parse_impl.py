@@ -19,7 +19,7 @@
 from xmlboiler.core.rdf_recursive_descent.base import ParseContext, NodeParser, ErrorHandler
 from xmlboiler.core.rdf_recursive_descent.compound import Choice, OnePredicate
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
-
+from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
 
 PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
@@ -36,8 +36,14 @@ class MainParser(Choice):
         """
         Every of these parsers returns a list (probably one-element) of strings.
         """
-        super(Choice, self).__init__([ArgumentListParser(), ConcatParser()])
+        super(Choice, self).__init__([ArgumentLiteralParser(),
+                                      ArgumentListParser(),
+                                      ConcatParser()])
 
+
+class ArgumentLiteralParser(NodeParser):
+    def parse(self, parse_context, graph, node):
+        return [StringLiteral().parse(parse_context, graph, node)]
 
 class ArgumentListParser(NodeParser):
     def parse(self, parse_context, graph, node):
