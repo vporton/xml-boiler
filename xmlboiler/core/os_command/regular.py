@@ -34,3 +34,4 @@ class RegularCommandRunner(object):
         return out
 
     # TODO: Kill the subprocess if we are terminated.
+    # TODO: SIGKILL if necessary
