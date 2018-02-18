@@ -120,4 +120,5 @@ class PredicateParserWithError(PredicateParser):
         self.execution_context.throw(self.on_error, str)
 
 
-default_parse_context = providers.Provider(ParseContext, execution_context=Contexts.execution_context)
+# We instead create parse contexts on as-needed basis without DI
+#default_parse_context = providers.Provider(ParseContext, execution_context=Contexts.execution_context)
