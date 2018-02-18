@@ -38,7 +38,7 @@ class Interpeters(object):
         self.graph = graph
         self.parse_context = parse_context
 
-        list_node = graph[:URIRef("http://portonvictor.org/ns/trans/internal/interpretersList")][0]
+        list_node = graph[:URIRef(PREFIX + "interpretersList")][0]
         the_list = ListParser(ErrorHandler.FATAL).parse(parse_context, graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
