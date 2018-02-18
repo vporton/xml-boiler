@@ -60,12 +60,12 @@ class ConcatParser(NodeParser):
         return ''.join(sub_parser.parse(parse_context, graph, node))
 
 
-class ConstantParser(EnumParser):
-    def __init__(self):
-        # FIXME: Move parse_context to the constructor (instead of parse())
-        super(EnumParser, self).__init__({PREFIX + ':script': [parse_context.script_url],
-                                          PREFIX + ':name'  : [parse_context.current_param.get(0)],
-                                          PREFIX + ':value' : [parse_context.current_param.get(1)]})
+class ConstantParser(NodeParser):
+    def parse(self, parse_context, graph, node):
+        sub_parser = EnumParser({PREFIX + ':script': parse_context.script_url,
+                                 PREFIX + ':name'  : parse_context.current_param.get(0),
+                                 PREFIX + ':value' : parse_context.current_param.get(1)})
+        return [sub_parser.parse(parse_context, graph, node)]
 
 
 class ParamsParser(NodeParser):
