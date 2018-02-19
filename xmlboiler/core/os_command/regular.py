@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess
+import asyncio
 from subprocess import PIPE, DEVNULL
 
 from .base import Timeout
@@ -24,17 +24,24 @@ from .base import Timeout
 
 class RegularCommandRunner(object):
     @classmethod
-    def run_pipe(cls, args, input, timeout=None):
-        # TODO: Use https://docs.python.org/3/library/asyncio-subprocess.html#asyncio.asyncio.subprocess.Process instead
-        # TODO: check exit status (check=True)
-        try:
-            p = subprocess.run(args, stdin=PIPE, input=input, stdout=PIPE, stderr=DEVNULL, timeout=timeout, check=False)
-            out, = p.communicate()
-        except subprocess.TimeoutExpired:
-            p.terminate()
-            # p.kill()
-            raise Timeout()
-        return out
+    def run_pipe(cls, args, input, timeout=None, timeout2=None):
+        loop = asyncio.get_event_loop()
+        future = asyncio.Future(cls.run_pipe_impl(args, input, timeout, timeout2))
+        loop.run_until_complete(future)
+        res = future.result()
+        loop.close()
+        return res
 
-    # TODO: Kill the subprocess if we are terminated.
-    # TODO: SIGKILL if necessary
+    async def run_pipe_impl(cls, args, input, timeout=None, timeout2=None):
+        t = asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE, stderr=DEVNULL)
+        try:
+            stdout, = asyncio.wait_for(t.communicate, timeout)
+            # TODO: check exit status (check=True)
+            return stdout
+        except asyncio.TimeoutError:
+            t.terminate()
+            try:
+                asyncio.wait_for(t.wait, timeout2)
+            except asyncio.TimeoutError:
+                t.kill()
+            raise Timeout()

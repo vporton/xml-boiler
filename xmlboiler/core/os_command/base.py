@@ -21,10 +21,12 @@ class Timeout(Exception):
 
 class BaseCommandRunner(object):
     @classmethod
-    def run_pipe(cls, args, input, timeout=None):
+    def run_pipe(cls, args, input, timeout=None, timeout2=None):
         """
         :param args: like `["ls", "-l"]`
         :param input: input string
+        :param timeout: before sending SIGTERM
+        :param timeout2: additional timeout before sending SIGKILL
         :return: output string
 
         May raise OSError
