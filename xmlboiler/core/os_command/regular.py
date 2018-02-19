@@ -26,14 +26,14 @@ class RegularCommandRunner(object):
     # TODO: Terminate the subprocesses on terminating our program.
     @classmethod
     def run_pipe(cls, args, input, timeout=None, timeout2=None):
-        loop = asyncio.new_event_loop()
+        loop = asyncio.get_event_loop()
         try:
-            asyncio.set_event_loop(loop)
+            # asyncio.set_event_loop(loop)
             # future = asyncio.Future()
             res = loop.run_until_complete(cls.run_pipe_impl(cls, args, input, timeout, timeout2))
             # res = future.result()
         finally:
-            loop.close()
+            pass  # loop.close()
         return res
 
     async def run_pipe_impl(cls, args, input, timeout=None, timeout2=None):
