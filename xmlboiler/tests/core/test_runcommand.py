@@ -22,3 +22,7 @@ class TestRunCommand(unittest.TestCase):
 
     def test_dd_long(self):
         self.do_test_ok(["dd", "bs=100000", "count=10", "iflag=fullblock"], self.long)
+
+    def test_sleep(self):
+        with self.assertRaises(Timeout):
+            RegularCommandRunner.run_pipe(['sleep', '1000000'], b"", timeout=0.1, timeout2=1)
