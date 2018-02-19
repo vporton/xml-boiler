@@ -16,3 +16,9 @@ class TestRunCommand(unittest.TestCase):
 
     def test_cat_long(self):
         self.do_test_ok(['cat'], self.long)
+
+    def test_dd_short(self):
+        self.do_test_ok(["dd", "bs=100000", "count=10", "iflag=fullblock"], b"qwe")
+
+    def test_dd_long(self):
+        self.do_test_ok(["dd", "bs=100000", "count=10", "iflag=fullblock"], self.long)
