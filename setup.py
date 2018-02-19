@@ -11,4 +11,5 @@ setup(
 
     packages = ['xmlboiler'],
     package_data={'xmlboiler': ['*.ttl']},
+    test_suite="xmlboiler.tests",
 )
