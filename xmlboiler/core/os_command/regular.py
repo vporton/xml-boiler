@@ -27,10 +27,12 @@ class RegularCommandRunner(object):
     @classmethod
     def run_pipe(cls, args, input, timeout=None, timeout2=None):
         loop = asyncio.get_event_loop()
-        future = asyncio.Future(cls.run_pipe_impl(args, input, timeout, timeout2))
-        loop.run_until_complete(future)
-        res = future.result()
-        loop.close()
+        try:
+            future = asyncio.Future(cls.run_pipe_impl(args, input, timeout, timeout2))
+            loop.run_until_complete(future)
+            res = future.result()
+        finally:
+            loop.close()
         return res
 
     async def run_pipe_impl(cls, args, input, timeout=None, timeout2=None):
