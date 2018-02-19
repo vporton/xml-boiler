@@ -28,7 +28,7 @@ class RegularCommandRunner(object):
     def run_pipe(cls, args, input, timeout=None, timeout2=None):
         loop = asyncio.get_event_loop()
         try:
-            future = asyncio.Future()
+            # future = asyncio.Future()
             res = loop.run_until_complete(cls.run_pipe_impl(cls, args, input, timeout, timeout2))
             # res = future.result()
         finally:
@@ -43,7 +43,7 @@ class RegularCommandRunner(object):
         except asyncio.TimeoutError:
             t.terminate()
             try:
-                asyncio.wait_for(t.wait(), timeout2)
+                await asyncio.wait_for(t.wait(), timeout2)
             except asyncio.TimeoutError:
                 t.kill()
             raise Timeout()
