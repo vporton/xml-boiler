@@ -28,17 +28,17 @@ class RegularCommandRunner(object):
     def run_pipe(cls, args, input, timeout=None, timeout2=None):
         loop = asyncio.get_event_loop()
         try:
-            future = asyncio.Future(cls.run_pipe_impl(args, input, timeout, timeout2))
-            loop.run_until_complete(future)
-            res = future.result()
+            future = asyncio.Future()
+            res = loop.run_until_complete(cls.run_pipe_impl(cls, args, input, timeout, timeout2))
+            # res = future.result()
         finally:
             loop.close()
         return res
 
     async def run_pipe_impl(cls, args, input, timeout=None, timeout2=None):
-        t = asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE, stderr=DEVNULL)
+        t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE, stderr=DEVNULL)
         try:
-            stdout, = asyncio.wait_for(t.communicate(), timeout)
+            stdout, = asyncio.wait_for(t.communicate(input), timeout)
             return t.returncode, stdout
         except asyncio.TimeoutError:
             t.terminate()
