@@ -35,15 +35,14 @@ class RegularCommandRunner(object):
 
     async def run_pipe_impl(cls, args, input, timeout=None, timeout2=None):
         t = asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE, stderr=DEVNULL)
-        # FIXME: t.communicate -> t.communicate() and t.wait -> t.wait()?
         try:
-            stdout, = asyncio.wait_for(t.communicate, timeout)
+            stdout, = asyncio.wait_for(t.communicate(), timeout)
             # TODO: check exit status (check=True)
             return stdout
         except asyncio.TimeoutError:
             t.terminate()
             try:
-                asyncio.wait_for(t.wait, timeout2)
+                asyncio.wait_for(t.wait(), timeout2)
             except asyncio.TimeoutError:
                 t.kill()
             raise Timeout()
