@@ -25,11 +25,14 @@ from .base import Timeout
 class RegularCommandRunner(object):
     @classmethod
     def run_pipe(cls, args, input, timeout=None):
+        # TODO: Use https://docs.python.org/3/library/asyncio-subprocess.html#asyncio.asyncio.subprocess.Process instead
         # TODO: check exit status (check=True)
         try:
             p = subprocess.run(args, stdin=PIPE, input=input, stdout=PIPE, stderr=DEVNULL, timeout=timeout, check=False)
             out, = p.communicate()
         except subprocess.TimeoutExpired:
+            p.terminate()
+            # p.kill()
             raise Timeout()
         return out
 
