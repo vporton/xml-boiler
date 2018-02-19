@@ -38,7 +38,7 @@ class RegularCommandRunner(object):
     async def run_pipe_impl(cls, args, input, timeout=None, timeout2=None):
         t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE, stderr=DEVNULL)
         try:
-            stdout, = asyncio.wait_for(t.communicate(input), timeout)
+            stdout, stderr = await asyncio.wait_for(t.communicate(input), timeout)
             return t.returncode, stdout
         except asyncio.TimeoutError:
             t.terminate()
