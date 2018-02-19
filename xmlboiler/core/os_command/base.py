@@ -27,7 +27,7 @@ class BaseCommandRunner(object):
         :param input: input string
         :param timeout: before sending SIGTERM
         :param timeout2: additional timeout before sending SIGKILL
-        :return: output string
+        :return: return code, output string
 
         May raise OSError
         """

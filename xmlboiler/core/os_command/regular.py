@@ -39,8 +39,7 @@ class RegularCommandRunner(object):
         t = asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE, stderr=DEVNULL)
         try:
             stdout, = asyncio.wait_for(t.communicate(), timeout)
-            # TODO: check exit status (check=True)
-            return stdout
+            return t.returncode, stdout
         except asyncio.TimeoutError:
             t.terminate()
             try:
