@@ -23,6 +23,7 @@ from .base import Timeout
 
 
 class RegularCommandRunner(object):
+    # TODO: Terminate the subprocesses on terminating our program.
     @classmethod
     def run_pipe(cls, args, input, timeout=None, timeout2=None):
         loop = asyncio.get_event_loop()
