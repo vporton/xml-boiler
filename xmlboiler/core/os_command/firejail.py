@@ -20,11 +20,13 @@ from .regular import RegularCommandRunner
 
 
 class FirejailCommandRunner(object):
-    @classmethod
-    def run_pipe(cls, args, input, timeout=None, timeout2=None):
+    def __init__(self, timeout=None, timeout2=None):
+        self.base = RegularCommandRunner(timeout=timeout, timeout2=timeout2)
+
+    def run_pipe(self, args, input):
         # TODO: --rlimit-* Use an object (not class method), also store timeout and timeout2 in the object
         # FIXME: X11 is not blocked! --net=eth0 or --netfilter=... --netfilter6=...
         fj = ['firejail', '--shell=none', '-c', '--quiet', '--private', '--caps.drop=all', '--disable-mnt',
               '--netfilter', '--nodvd', '--nonewprivs', '--nosound', '--notv', '--novideo', '--x11=none',
               '--blacklist=/home']
-        return RegularCommandRunner.run_pipe(fj + args, input, timeout, timeout2)
+        return self.base.run_pipe(fj + args, input)

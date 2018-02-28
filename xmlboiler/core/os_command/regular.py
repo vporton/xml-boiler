@@ -23,28 +23,31 @@ from .base import Timeout
 
 
 class RegularCommandRunner(object):
+    def __init__(self, timeout=None, timeout2=None):
+        self.timeout = timeout
+        self.timeout2 = timeout2
+
     # TODO: Terminate the subprocesses on terminating our program.
-    @classmethod
-    def run_pipe(cls, args, input, timeout=None, timeout2=None):
+    def run_pipe(self, args, input):
         loop = asyncio.get_event_loop()
         try:
             # asyncio.set_event_loop(loop)
             # future = asyncio.Future()
-            res = loop.run_until_complete(cls.run_pipe_impl(cls, args, input, timeout, timeout2))
+            res = loop.run_until_complete(self.run_pipe_impl(args, input))
             # res = future.result()
         finally:
             pass  # loop.close()
         return res
 
-    async def run_pipe_impl(cls, args, input, timeout=None, timeout2=None):
+    async def run_pipe_impl(self, args, input):
         t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE, stderr=DEVNULL)
         try:
-            stdout, stderr = await asyncio.wait_for(t.communicate(input), timeout)
+            stdout, stderr = await asyncio.wait_for(t.communicate(input), self.timeout)
             return t.returncode, stdout
         except asyncio.TimeoutError:
             t.terminate()
             try:
-                await asyncio.wait_for(t.wait(), timeout2)
+                await asyncio.wait_for(t.wait(), self.timeout2)
             except asyncio.TimeoutError:
                 t.kill()
             raise Timeout()
