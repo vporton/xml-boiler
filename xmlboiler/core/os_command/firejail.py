@@ -24,8 +24,8 @@ class FirejailCommandRunner(object):
         self.base = RegularCommandRunner(timeout=timeout, timeout2=timeout2)
 
     def run_pipe(self, args, input):
-        # TODO: --rlimit-* Use an object (not class method), also store timeout and timeout2 in the object
-        # FIXME: X11 is not blocked! --net=eth0 or --netfilter=... --netfilter6=...
+        # TODO: --rlimit-*
+        # FIXME: X11 is not blocked! Use --netfilter=... and --netfilter6=...
         fj = ['firejail', '--shell=none', '-c', '--quiet', '--private', '--caps.drop=all', '--disable-mnt',
               '--netfilter', '--nodvd', '--nonewprivs', '--nosound', '--notv', '--novideo', '--x11=none',
               '--blacklist=/home']
