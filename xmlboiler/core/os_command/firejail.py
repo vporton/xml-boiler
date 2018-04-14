@@ -33,11 +33,11 @@ class FirejailCommandRunner(object):
               '--netfilter=' + self.netfilter,
               '--hostname=none', '--machine-id', '--name=xmlboiler',
               '--nogroups', '--private', '--private-tmp', '--seccomp',
-              '--nodvd', '--nonewprivs', '--nosound', '--notv', '--novideo', '--x11=none',
+              '--nodvd', '--nonewprivs', '--nosound', '--notv', '--novideo', #'--x11=none',
               '--blacklist=/home', '--blacklist=/root']
         return self.base.run_pipe(fj + args, input)
 
 firejail_provider = providers.Factory(FirejailCommandRunner,
-                                      netfilter=Global.get_filename('xmlboiler/core/data/mynolocal.net'),
+                                      netfilter=Global.get_filename('core/data/mynolocal.net'),
                                       timeout=None,
                                       timeout2=None)
