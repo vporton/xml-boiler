@@ -86,6 +86,7 @@ class Interpeters(object):
         return True
 
     # TODO: Cache the results
+    # TODO: Allow to use the URI of the interpreter directly instead of the language name
     def find_interpreter(self, language, version):
         """
         :param language: the URI of the language
