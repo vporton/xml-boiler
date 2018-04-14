@@ -17,6 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
+from dependency_injector import providers
 from subprocess import PIPE, DEVNULL
 
 from .base import Timeout
@@ -51,3 +52,8 @@ class RegularCommandRunner(object):
             except asyncio.TimeoutError:
                 t.kill()
             raise Timeout()
+
+
+regular_provider = providers.Factory(RegularCommandRunner,
+                                     timeout=None,
+                                     timeout2=None)

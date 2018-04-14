@@ -7,7 +7,7 @@ class TestRunCommand(unittest.TestCase):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
 
     def do_test_ok(self, command, input):
-        runner = RegularCommandRunner(timeout=None, timeout2=None)
+        runner = regular_provider(timeout=None, timeout2=None)
         code, output = runner.run_pipe(command, input)
         self.assertEqual(code, 0)
         self.assertEqual(input, output)
@@ -26,5 +26,5 @@ class TestRunCommand(unittest.TestCase):
 
     def test_sleep(self):
         with self.assertRaises(Timeout):
-            runner = RegularCommandRunner(timeout=0.1, timeout2=1)
+            runner = regular_provider(timeout=0.1, timeout2=1)
             runner.run_pipe(['sleep', '1000000'], b"")
