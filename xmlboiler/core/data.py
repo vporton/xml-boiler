@@ -21,6 +21,7 @@ import os
 import pkg_resources
 import rdflib
 
+
 class Global(object):
     @staticmethod
     def get_filename(filename):
