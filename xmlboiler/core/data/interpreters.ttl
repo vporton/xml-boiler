@@ -1,5 +1,5 @@
 @prefix : <http://portonvictor.org/ns/trans/internal/> .
-@prefix :int <http://portonvictor.org/ns/trans/internal/interpreters/> .
+@prefix int: <http://portonvictor.org/ns/trans/internal/interpreters/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
 
 # The list of all interpreters in order of precedence (these interpreters which
