@@ -27,12 +27,14 @@ class FirejailCommandRunner(object):
         self.netfilter = netfilter
 
     def run_pipe(self, args, input):
-        # TODO: --rlimit-*
-        fj = ['firejail', '--shell=none', '-c', '--quiet', '--private', '--caps.drop=all', '--disable-mnt',
+        # TODO: --rlimit-* --timeout
+        fj = ['firejail', '--shell=none', '-c', '--quiet', '--caps.drop=all', '--disable-mnt',
               '--protocol=unix,inet',  # TODO: Also enable IPv6 (after creating the firewall)
               '--netfilter=' + self.netfilter,
+              '--hostname=none', '--machine-id', '--name=xmlboiler',
+              '--nogroups', '--private', '--private-tmp', '--seccomp',
               '--nodvd', '--nonewprivs', '--nosound', '--notv', '--novideo', '--x11=none',
-              '--blacklist=/home']
+              '--blacklist=/home', '--blacklist=/root']
         return self.base.run_pipe(fj + args, input)
 
 firejail_provider = providers.Factory(FirejailCommandRunner,
