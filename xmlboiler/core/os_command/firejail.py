@@ -15,18 +15,28 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+from dependency_injector import providers
 
+from xmlboiler.core.data import Global
 from .regular import RegularCommandRunner
 
 
 class FirejailCommandRunner(object):
-    def __init__(self, timeout=None, timeout2=None):
-        self.base = RegularCommandRunner(timeout=timeout, timeout2=timeout2)
+    def __init__(self, netfilter, timeout=None, timeout2=None):
+        self.base = RegularCommandRunner(timeout=timeout, timeout2=timeout2)  # TODO: Use provider
+        self.netfilter = netfilter
 
     def run_pipe(self, args, input):
         # TODO: --rlimit-*
-        # FIXME: X11 is not blocked! Use --netfilter=... and --netfilter6=...
         fj = ['firejail', '--shell=none', '-c', '--quiet', '--private', '--caps.drop=all', '--disable-mnt',
-              '--netfilter', '--nodvd', '--nonewprivs', '--nosound', '--notv', '--novideo', '--x11=none',
+              '--protocol=unix,inet',  # TODO: Also enable IPv6 (after creating the firewall)
+              '--netfilter=' + self.netfilter,
+              '--nodvd', '--nonewprivs', '--nosound', '--notv', '--novideo', '--x11=none',
               '--blacklist=/home']
         return self.base.run_pipe(fj + args, input)
+
+# TODO: also provider for RegularCommandRunner
+firejail_provider = providers.Provider(FirejailCommandRunner,
+                                       netfilter=Global.get_filename('xmlboiler/core/data/mynolocal.net'),
+                                       timeout=None,
+                                       timeout2=None)

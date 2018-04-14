@@ -23,6 +23,13 @@ import rdflib
 
 class Global(object):
     @staticmethod
+    def get_filename(filename):
+        if os.environ.get('XMLBOILER_PATH', "") != "":
+            return os.environ['XMLBOILER_PATH'] + '/' + filename
+        else:
+            return pkg_resources.resource_filename('xmlboiler', filename)
+
+    @staticmethod
     def get_resource_stream(filename):
         if os.environ.get('XMLBOILER_PATH', "") != "":
             return open(os.environ['XMLBOILER_PATH'] + '/' + filename, 'r')
