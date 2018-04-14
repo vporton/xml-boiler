@@ -35,8 +35,7 @@ class FirejailCommandRunner(object):
               '--blacklist=/home']
         return self.base.run_pipe(fj + args, input)
 
-# TODO: also provider for RegularCommandRunner
-firejail_provider = providers.Provider(FirejailCommandRunner,
-                                       netfilter=Global.get_filename('xmlboiler/core/data/mynolocal.net'),
-                                       timeout=None,
-                                       timeout2=None)
+firejail_provider = providers.Factory(FirejailCommandRunner,
+                                      netfilter=Global.get_filename('xmlboiler/core/data/mynolocal.net'),
+                                      timeout=None,
+                                      timeout2=None)

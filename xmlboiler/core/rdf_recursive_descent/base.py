@@ -121,4 +121,4 @@ class PredicateParserWithError(PredicateParser):
 
 
 # We instead create parse contexts on as-needed basis without DI
-#default_parse_context = providers.Provider(ParseContext, execution_context=Contexts.execution_context)
+#default_parse_context = providers.Factory(ParseContext, execution_context=Contexts.execution_context)

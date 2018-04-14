@@ -68,6 +68,6 @@ class AssetParser(object):
         return ListParser(IRILiteral()).parse(self.parse_context, graph, nodes[0])
 
 
-asset_parser_provider = providers.Provider(AssetParser,
-                                           parse_context=default_parse_context,
-                                           subclasses=SubclassContainers.basic_subclasses)
+asset_parser_provider = providers.Factory(AssetParser,
+                                          parse_context=default_parse_context,
+                                          subclasses=SubclassContainers.basic_subclasses)
