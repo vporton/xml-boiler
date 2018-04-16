@@ -52,6 +52,29 @@ class BinaryRelation(object):
         return result
 
 
+class UniversalSet(object):
+    def __contains__(self, item):
+        return True
+
+    def __eq__(self, other):
+        return other is UniversalSet
+
+    def __hash__(self):
+        return 0xadd93fbf4230655a  # was randomly generated
+
+    def append(self, value):
+        pass
+
+    # Enumeration deliberately not implemented
+    # (It is not used in our algorithm when the set of targets is universal,
+    # because in this case we have already reached the destination namespace.)
+
+
+class BinaryRelationWithUniversalDestination(BinaryRelation):
+    def add_universal_desination(self, src):
+        self.adj[src] = UniversalSet()
+
+
 def compose(b, a):
     """
     Note order of arguments!
