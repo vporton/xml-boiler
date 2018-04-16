@@ -17,8 +17,11 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-# Directed graph with at most one edge between vertices
 class BinaryRelation(object):
+    """
+    Directed graph with at most one edge between vertices
+    """
+
     def __init__(self, adj=None):
         """
         :param adj: a dict from vertice to vertex set
@@ -71,6 +74,11 @@ class UniversalSet(object):
 
 
 class BinaryRelationWithUniversalDestination(BinaryRelation):
+    """
+    Like binary relation but with possibility to map a source element into
+    universal set of destinations.
+    """
+
     def add_universal_desination(self, src):
         self.adj[src] = UniversalSet()
 
