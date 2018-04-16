@@ -23,7 +23,7 @@ class BinaryRelation(object):
         """
         :param adj: a dict from vertice to vertex set
         """
-        adj = dict() if adj is None else adj
+        self.adj = dict() if adj is None else adj
 
     def __eq__(self, other):
         return self.adj == other.adj
