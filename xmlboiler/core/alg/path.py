@@ -21,3 +21,8 @@
 
 # For now we re-run the search completely (Dijkstra’s Algorithm) if new edges are added.
 # See also https://softwareengineering.stackexchange.com/q/369649/45576
+
+
+class Search(object):
+    def __init__(self, enriched_scripts):
+        pass  # TODO

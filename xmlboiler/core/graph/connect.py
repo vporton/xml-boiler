@@ -17,7 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-from xmlboiler.core.graph.base import union, square, BinaryRelation
+from xmlboiler.core.graph.relation import union, square, BinaryRelation
 
 
 def transitive_closure(graph):

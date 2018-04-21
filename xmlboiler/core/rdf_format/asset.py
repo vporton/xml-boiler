@@ -21,7 +21,7 @@ from typing import NamedTuple, Optional, AbstractSet, List
 
 from rdflib import URIRef
 
-from xmlboiler.core.graph.base import BinaryRelation
+from xmlboiler.core.graph.relation import BinaryRelation
 from xmlboiler.core.graph.connect import Connectivity
 
 

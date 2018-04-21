@@ -20,7 +20,7 @@ from dependency_injector import containers, providers
 from rdflib import URIRef, RDFS, RDF
 
 from xmlboiler.core.data import Global
-from xmlboiler.core.graph.base import BinaryRelation
+from xmlboiler.core.graph.relation import BinaryRelation
 from xmlboiler.core.graph.connect import Connectivity
 from xmlboiler.core.execution_context_builders import Contexts
 
