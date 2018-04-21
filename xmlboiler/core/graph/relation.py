@@ -55,6 +55,7 @@ class BinaryRelation(object):
         return result
 
 
+# TODO: Do we need UniversalSet and BinaryRelationWithUniversalDestination?
 class UniversalSet(object):
     def __contains__(self, item):
         return True
