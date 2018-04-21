@@ -21,6 +21,7 @@ from typing import NamedTuple
 from enum import Enum, auto
 from ordered_set import OrderedSet
 
+from rdflib import URIRef
 
 ### Base ###
 
@@ -75,3 +76,4 @@ class NotInTargetNamespace(Enum):
 
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     notInTargetNamespace: NotInTargetNamespace
+    universalPrecendence: URIRef  # TODO: Find a better name for this option
