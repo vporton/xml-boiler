@@ -79,7 +79,7 @@ class BinaryRelationWithUniversalDestination(BinaryRelation):
     universal set of destinations.
     """
 
-    def add_universal_desination(self, src):
+    def add_universal_destination(self, src):
         self.adj[src] = UniversalSet()
 
 
