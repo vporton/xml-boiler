@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+
+import argparse
+
+parser = argparse.ArgumentParser(description='Automatically process XML')
+
+
+args = parser.parse_args()

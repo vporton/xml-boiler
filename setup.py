@@ -11,6 +11,7 @@ setup(
 
     packages = ['xmlboiler'],
     package_data={'xmlboiler': ['*.ttl']},
+    scripts=['bin/boiler'],
     data_files = [
         ('/etc/xmlboiler', ['etc/config-cli.ttl'])
     ],
