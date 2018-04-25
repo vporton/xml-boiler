@@ -3,6 +3,9 @@
 import argparse
 
 parser = argparse.ArgumentParser(description='Automatically process XML')
+subparsers = parser.add_subparsers(title='subcommands')
 
+chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
+chain_parser.add_argument('-t', '--target', nargs='*', help='Target namespace(s)', action='append', metavar='NAMESPACE')
 
 args = parser.parse_args()
