@@ -1,4 +1,5 @@
 rdflib
 dependency_injector
 ordered-set
+networkx
 deb-pkg-tools

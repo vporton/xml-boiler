@@ -19,12 +19,31 @@
 # Finding shortest paths in (weighted) digraph of enriched scripts.
 # Vertices are finite sets of namespaces.
 
-# For now we re-run the search completely (Dijkstra’s Algorithm) if new edges are added.
-# See also https://softwareengineering.stackexchange.com/q/369649/45576
+# For now we re-run the search completely if new edges are added.
+# We also add to the graph nodes (i, j, weight=0) where i<=j are sets of namespaces.
 
+import networkx as nx
 
-# TODO: Use NetworkX
 
 class Search(object):
     def __init__(self, enriched_scripts):
-        pass  # TODO
+        self.graph = nx.MultiDiGraph()
+        for scr in enriched_scripts:
+            source = frozenset(scr.transfomer.source_namespaces)
+            target = frozenset(scr.transfomer.target_namespaces)
+            # TODO: There are two proposed formulas for weight in the specification
+            weight = 1 / (scr.script.base.preservance + scr.script.base.stability + scr.script.base.preference)
+            self.graph.add_node(source, target, script=scr, weight=weight)
+        # TODO: The below is inefficient
+        for i in self.graph.nodes:
+            for j in self.graph.nodes:
+                if i <= j:
+                    self.graph.add_node(i, j, weight=0)
+
+    def first_edges_for_shortest_path(self, source, target):
+        paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')
+        edges = []
+        for path in paths:
+            # TODO: remove zero-weight interset nodes
+            pass  # FIXME
+        # TODO
