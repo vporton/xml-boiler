@@ -43,7 +43,12 @@ class Search(object):
     def first_edges_for_shortest_path(self, source, target):
         paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')
         edges = []
+        # FIXME: What if path is empty (or empty after removing interset edges)?
         for path in paths:
             # TODO: remove zero-weight interset nodes
+            for i in range(len(path) - 1):
+                for u, v in self.graph.edges[path[i], path[i+1]]:
+                    if self.graph.get_edge_data(u, v, 'script') is not None:
+                        pass  # FIXME
             pass  # FIXME
         # TODO
