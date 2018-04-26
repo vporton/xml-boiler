@@ -2,7 +2,12 @@
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Automatically process XML')
+parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 description="""Automatically process XML.\n
+To support this project:
+- Send money to PayPal porton@narod.ru
+- Send Ether to 0x36A0356d43EE4168ED24EFA1CAe3198708667ac0
+- Buy tokens at https://crypto4ngo.org/project/view/4""")
 subparsers = parser.add_subparsers(title='subcommands')
 
 parser.add_argument('-p', '--preload', help='Preload asset', action='append', metavar='NAMESPACE')
