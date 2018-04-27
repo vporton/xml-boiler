@@ -48,7 +48,9 @@ class Search(object):
             # TODO: remove zero-weight interset nodes
             for i in range(len(path) - 1):
                 for u, v in self.graph.edges[path[i], path[i+1]]:
-                    if self.graph.get_edge_data(u, v, 'script') is not None:
-                        pass  # FIXME
+                    script = self.graph.get_edge_data(u, v, 'script')
+                    if script is not None:
+                        edges.append(script)
+                        break  # FIXME: two levels
             pass  # FIXME
         # TODO
