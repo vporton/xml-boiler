@@ -45,12 +45,14 @@ class Search(object):
         edges = []
         # FIXME: What if path is empty (or empty after removing interset edges)?
         for path in paths:
-            # TODO: remove zero-weight interset nodes
+            script_found = False
             for i in range(len(path) - 1):
+                if script_found:
+                    break
                 for u, v in self.graph.edges[path[i], path[i+1]]:
                     script = self.graph.get_edge_data(u, v, 'script')
                     if script is not None:
                         edges.append(script)
-                        break  # FIXME: two levels
-            pass  # FIXME
-        # TODO
+                        script_found = True
+                        break
+        return edges
