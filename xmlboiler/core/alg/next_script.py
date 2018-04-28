@@ -48,6 +48,7 @@ class ScriptsIterator(object):
                     edges = executed.first_edges_for_shortest_path(self, source, target)
                     first_edges2.extend(edges)
             if len(first_edges2) > 1:
+                # TODO: Option to make it fatal
                 self.state.execution_context.warning("More than one possible executed scripts.")
         # TODO
 
