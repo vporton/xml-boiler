@@ -37,7 +37,6 @@ class BaseState(object):
 
 
 class PipelineState(BaseState):
-    xml_text: str
     all_namespaces: frozenset[URIRef]
     scripts: list[EnrichedScript]
     executed_scripts: list[EnrichedScript]
