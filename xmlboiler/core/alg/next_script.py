@@ -16,6 +16,11 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import networkx as nx
+
+from xmlboiler.core.alg.path import GraphOfScripts
+
+
 class ScriptsIterator(object):
     def __init__(self, state):
         self.state = state
@@ -24,4 +29,23 @@ class ScriptsIterator(object):
         return self
 
     def __next__(self):
-        available_chains = 
+        self.available_chains = GraphOfScripts(self.state.scripts)  # inefficient?
+        first_edges = []
+        for source in self.state.all_namespaces:
+            for target in self.state.opts.targetNamespaces:  # FIXME: Check for the right var
+                # FIXME: Does not work with universal edges
+                edges = self.available_chains.first_edges_for_shortest_path(self, source, target)
+                first_edges.extend(edges)
+        if not first_edges:
+            raise StopIteration
+        executed = GraphOfScripts(self.state.executed_scripts)
+        if self.check_has_executed(executed):
+            self.available_chains = executed
+        # TODO
+
+    def check_has_executed(self, executed):
+        for source in self.state.all_namespaces:
+            for target in self.state.opts.targetNamespaces:  # FIXME: Check for the right var
+                if nx.has_path(executed, source, target):
+                    return True
+        return False

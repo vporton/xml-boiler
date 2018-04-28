@@ -25,9 +25,11 @@
 import networkx as nx
 
 
-class Search(object):
-    def __init__(self, enriched_scripts):
-        self.graph = nx.MultiDiGraph()
+class GraphOfScripts(object):
+    def __init__(self, graph=None):
+        self.graph = graph or nx.MultiDiGraph()
+
+    def add_scripts(self, enriched_scripts):
         for scr in enriched_scripts:
             source = frozenset(scr.transfomer.source_namespaces)
             target = frozenset(scr.transfomer.target_namespaces)
@@ -38,7 +40,8 @@ class Search(object):
         for i in self.graph.nodes:
             for j in self.graph.nodes:
                 if i <= j:
-                    self.graph.add_node(i, j, weight=0)
+                    if not self.graph.has_edge(i, j):
+                        self.graph.add_node(i, j, weight=0)
 
     def first_edges_for_shortest_path(self, source, target):
         paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')

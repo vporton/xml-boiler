@@ -18,6 +18,7 @@
 
 from typing import NamedTuple
 
+from rdflib import URIRef
 from rdflib.resource import Resource
 
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
@@ -36,4 +37,7 @@ class BaseState(object):
 
 
 class PipelineState(BaseState):
+    xml_text: str
+    all_namespaces: frozenset[URIRef]
     scripts: list[EnrichedScript]
+    executed_scripts: list[EnrichedScript]

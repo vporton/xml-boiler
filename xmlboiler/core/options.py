@@ -77,3 +77,4 @@ class NotInTargetNamespace(Enum):
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     notInTargetNamespace: NotInTargetNamespace
     universalPrecendence: URIRef  # TODO: Find a better name for this option
+    targetNamespaces: frozenset[URIRef]
