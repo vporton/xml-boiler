@@ -41,6 +41,14 @@ class ScriptsIterator(object):
         executed = GraphOfScripts(self.state.executed_scripts)
         if self.check_has_executed(executed):
             self.available_chains = executed
+            first_edges2 = []
+            for source in self.state.all_namespaces:
+                for target in self.state.opts.targetNamespaces:  # FIXME: Check for the right var
+                    # FIXME: Does not work with universal edges
+                    edges = executed.first_edges_for_shortest_path(self, source, target)
+                    first_edges2.extend(edges)
+            if len(first_edges2) > 1:
+                self.state.execution_context.warning("More than one possible executed scripts.")
         # TODO
 
     def check_has_executed(self, executed):

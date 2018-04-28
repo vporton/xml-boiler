@@ -24,6 +24,8 @@ from ordered_set import OrderedSet
 from rdflib import URIRef
 
 ### Base ###
+from xmlboiler.core.execution_context import ExecutionContext
+
 
 class WorklowKind(Enum):
     TRANSFORMATION = auto()
@@ -54,6 +56,7 @@ class RecursiveDownloadOptions(NamedTuple):
 # workflow, but in future we may increase "granularity" to have different
 # options for different elements.
 class BaseAutomaticWorkflowElementOptions(NamedTuple):
+    execution_context: ExecutionContext
     kind: WorklowKind
     recursiveOptions: RecursiveDownloadOptions
 
