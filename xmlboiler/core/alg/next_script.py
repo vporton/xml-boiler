@@ -21,6 +21,9 @@ import networkx as nx
 from xmlboiler.core.alg.path import GraphOfScripts
 
 
+def _precedence(edge):
+    return edge['script'].transformer.precedence
+
 class ScriptsIterator(object):
     def __init__(self, state):
         self.state = state
@@ -38,18 +41,26 @@ class ScriptsIterator(object):
                 first_edges.extend(edges)
         if not first_edges:
             raise StopIteration
+
         executed = GraphOfScripts(self.state.executed_scripts)
         if self.check_has_executed(executed):
             self.available_chains = executed
-            first_edges2 = []
+            first_edges = []
             for source in self.state.all_namespaces:
                 for target in self.state.opts.targetNamespaces:  # FIXME: Check for the right var
                     # FIXME: Does not work with universal edges
                     edges = executed.first_edges_for_shortest_path(self, source, target)
-                    first_edges2.extend(edges)
-            if len(first_edges2) > 1:
+                    first_edges.extend(edges)
+            if len(first_edges) > 1:
                 # TODO: Option to make it fatal
                 self.state.execution_context.warning("More than one possible executed scripts.")
+
+        # Choose the script among first_edges with highest precedence
+        highest_precedence = max(first_edges, key=lambda e: _precedence(self.available_chains.edges[e]))
+        highest_precedence_scripts = filter(lambda e: _precedence(self.available_chains.edges[e]) == highest_precedence,
+                                            first_edges)
+        if len(highest_precedence_scripts) == 1:
+            return highest_precedence_scripts[0]  # FIXME: add to enriched scripts
         # TODO
 
     def check_has_executed(self, executed):
