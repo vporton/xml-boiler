@@ -32,7 +32,7 @@ class ScriptsIterator(object):
         return self
 
     def __next__(self):
-        self.available_chains = GraphOfScripts(self.state.scripts)  # inefficient?
+        self.available_chains = GraphOfScripts(self.state.scripts)  # TODO: inefficient? should hold the graph, not re-create it
         first_edges = []
         for source in self.state.all_namespaces:
             for target in self.state.opts.targetNamespaces:  # FIXME: Check for the right var
