@@ -58,10 +58,14 @@ class ScriptsIterator(object):
         # Choose the script among first_edges with highest precedence
         highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
         highest_precedence_scripts = filter(lambda e: _precedence(e) == highest_precedences[0], first_edges)
-        if len(highest_precedence_scripts) != 1:
+        if len(highest_precedence_scripts) == 0:
             raise StopIteration
-        self.state.executed_scripts.add(highest_precedence_scripts[0])
-        return highest_precedence_scripts[0]
+        if len(highest_precedence_scripts) == 1:
+            self.state.executed_scripts.add(highest_precedence_scripts[0])
+            return highest_precedence_scripts[0]
+        if highest_precedence_scripts in self.state.singletons:
+            pass  # TODO
+        raise StopIteration
 
     def check_has_executed(self, executed):
         for source in self.state.all_namespaces:
