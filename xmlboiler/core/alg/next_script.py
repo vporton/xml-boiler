@@ -56,13 +56,12 @@ class ScriptsIterator(object):
                 self.state.execution_context.warning("More than one possible executed scripts.")
 
         # Choose the script among first_edges with highest precedence
-        # FIXME: 1. Precedences is not a linearly ordered set. 2. The order of precedences is not <=
-        highest_precedence = max(first_edges, key=lambda e: _precedence(self.available_chains.edges[e]))
-        highest_precedence_scripts = filter(lambda e: _precedence(self.available_chains.edges[e]) == highest_precedence,
-                                            first_edges)
-        if len(highest_precedence_scripts) == 1:
-            return highest_precedence_scripts[0]  # FIXME: add to enriched scripts
-        # TODO
+        highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
+        highest_precedence_scripts = filter(lambda e: _precedence(e) == highest_precedences[0], first_edges)
+        if len(highest_precedence_scripts) != 1:
+            raise StopIteration
+        self.state.executed_scripts.add(highest_precedence_scripts[0])
+        return highest_precedence_scripts[0]
 
     def check_has_executed(self, executed):
         for source in self.state.all_namespaces:

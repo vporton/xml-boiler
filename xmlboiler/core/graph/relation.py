@@ -54,6 +54,17 @@ class BinaryRelation(object):
                 result.add_edge(y, key)
         return result
 
+    def maxima(self, elements, key=lambda v: v):
+        s = set(elements)
+        were_changes = True
+        while were_changes:
+            were_changes = False
+            for e in list(s):
+                if self.adj[key(e)]:
+                    s.remove(e)
+                    were_changes = True
+        return s
+
 
 # TODO: Do we need UniversalSet and BinaryRelationWithUniversalDestination?
 class UniversalSet(object):
