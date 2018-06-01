@@ -37,6 +37,7 @@ class ScriptsIterator(object):
         for source in self.state.all_namespaces:
             for target in self.state.opts.targetNamespaces:  # FIXME: Check for the right var
                 # FIXME: Does not work with universal edges
+                # FIXME: target may be a composite object (not a single namespace)
                 edges = self.available_chains.first_edges_for_shortest_path(self, source, target)
                 first_edges.extend(edges)
         if not first_edges:
@@ -60,10 +61,16 @@ class ScriptsIterator(object):
         highest_precedence_scripts = filter(lambda e: _precedence(e) == highest_precedences[0], first_edges)
         if len(highest_precedence_scripts) == 0:
             raise StopIteration
-        if len(highest_precedence_scripts) == 1:
+        if len(highest_precedence_scripts) == 1:  # TODO: right decision?
             self.state.executed_scripts.add(highest_precedence_scripts[0])
             return highest_precedence_scripts[0]
-        if highest_precedence_scripts in self.state.singletons:
+
+        # There are several highest_precedence_scripts - choose the minimal preservance and maximal priority
+        minimal_preservance_paths = TODO # Use graph.minmax module FIXME: What if there is zero such paths?
+        minimal_preservance = min([max([s.base.preservance for s in path]) for path in minimal_preservance_paths])  # FIXME
+        for path in minimal_preservance_paths:
+
+        if highest_precedence_scripts in self.state.singletons:  # FIXME
             pass  # TODO
         raise StopIteration
 
