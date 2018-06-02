@@ -55,8 +55,8 @@ class GraphOfScripts(object):
             for i in range(len(path) - 1):
                 if script_found:
                     break
-                for u, v in self.graph.edges[path[i], path[i+1]]:
-                    script = self.graph.get_edge_data(u, v, 'script')  # FIXME: Seems wrong: there may be multiple edges
+                for _, edge in self.graph.edges[path[i]][path[i+1]].items():
+                    script = edge.get('script')
                     if script is not None:
                         edges.append(script)
                         script_found = True
