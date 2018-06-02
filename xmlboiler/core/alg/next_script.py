@@ -50,10 +50,10 @@ class ScriptsIterator(object):
             self.available_chains = executed
             first_edges = []
             for source in self.state.all_namespaces:
-                for target in self.state.opts.targetNamespaces:  # FIXME: Check for the right var
-                    # FIXME: Does not work with universal edges
-                    edges = executed.first_edges_for_shortest_path(self, source, target)
-                    first_edges.extend(edges)
+                # FIXME: Does not work with universal edges
+                # FIXME: source should be a frozenset, not a single namespace?
+                edges = executed.first_edges_for_shortest_path(self, source, self.state.opts.targetNamespaces)
+                first_edges.extend(edges)
             if len(first_edges) > 1:
                 # TODO: Option to make it fatal
                 self.state.execution_context.warning("More than one possible executed scripts.")
