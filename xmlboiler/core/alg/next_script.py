@@ -15,6 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+import math
 
 import networkx as nx
 
@@ -68,7 +69,9 @@ class ScriptsIterator(object):
             return highest_precedence_scripts[0]
 
         # There are several highest_precedence_scripts - choose the minimal preservance and maximal priority
-        minimal_preservance_paths = TODO # Use graph.minmax module FIXME: What if there is zero such paths?
+        minimal_preservance = math.inf
+        for source in self.state.all_namespaces:
+            minimal_preservance_paths = TODO # Use graph.minmax module FIXME: What if there is zero such paths?
         minimal_preservance = min([max([s.base.preservance for s in path]) for path in minimal_preservance_paths])  # FIXME
         for path in minimal_preservance_paths:
 
