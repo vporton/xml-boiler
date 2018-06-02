@@ -34,7 +34,7 @@ class ScriptsIterator(object):
     def __next__(self):
         self.available_chains = GraphOfScripts()  # TODO: inefficient? should hold the graph, not re-create it
         self.available_chains.add_scripts(self.state.scripts)
-        self.available_chains.graph.add_node(self.state.opts.targetNamespaces, weight=0)
+        self.available_chains.graph.add_node(self.state.opts.targetNamespaces, weight=0)  # FIXME: Check set vs frozenset
         self.available_chains.adjust()
         first_edges = []
         for source in self.state.all_namespaces:
