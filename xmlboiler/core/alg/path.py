@@ -42,7 +42,7 @@ class GraphOfScripts(object):
         # TODO: The below is inefficient
         for i in self.graph.nodes:
             for j in self.graph.nodes:
-                if i <= j:
+                if i < j:
                     if not self.graph.has_edge(i, j):
                         self.graph.add_edge(i, j, weight=0)
 
