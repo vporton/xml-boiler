@@ -31,6 +31,8 @@ def shortest_pathes_to_edges(pathes, weight):
         new_lists_of_edges = shortest_path_to_edges(path)
         for new_edges in new_lists_of_edges:
             weight = itertools.reduce(filter(weight, new_edges), 0)
+            if weight < last_weight:
+                result = []
             if weight <= last_weight:
                 last_weight = weight
                 result.append(new_edges)
