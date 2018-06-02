@@ -77,7 +77,7 @@ class ScriptsIterator(object):
         for source in self.state.all_namespaces:
             minimal_preservance_paths.extend(nx.all_shortest_paths(frozenset([source]), self.state.opts.targetNamespaces,
                                                                    lambda v,u,e: Supremum(-e.script.base.preservance)))
-        minimal_preservance_scripts = shortest_pathes_to_edges(minimal_preservance_paths)
+        minimal_preservance_scripts = shortest_pathes_to_edges(minimal_preservance_paths)  # a list of lists
         # FIXME: What if there is zero such paths?
 
         if highest_precedence_scripts in self.state.singletons:  # FIXME
