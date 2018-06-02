@@ -60,7 +60,7 @@ class ScriptsIterator(object):
 
         # Choose the script among first_edges with highest precedence
         highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
-        highest_precedence_scripts = filter(lambda e: _precedence(e) == highest_precedences[0], first_edges)  # FIXME: highest_precedences may be empty of multiple
+        highest_precedence_scripts = filter(lambda e: _precedence(e) in highest_precedences, first_edges)
         if len(highest_precedence_scripts) == 0:
             raise StopIteration
         if len(highest_precedence_scripts) == 1:  # TODO: right decision?
