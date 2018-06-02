@@ -36,6 +36,9 @@ class GraphOfScripts(object):
             # TODO: There are two proposed formulas for weight in the specification
             weight = 1 / (scr.script.base.preservance + scr.script.base.stability + scr.script.base.preference)
             self.graph.add_node(source, target, script=scr, weight=weight)
+
+    # to be called before use
+    def adjust(self):
         # TODO: The below is inefficient
         for i in self.graph.nodes:
             for j in self.graph.nodes:
