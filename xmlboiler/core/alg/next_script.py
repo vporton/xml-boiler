@@ -71,13 +71,15 @@ class ScriptsIterator(object):
             self.state.executed_scripts.add(highest_precedence_scripts[0])
             return highest_precedence_scripts[0]
 
-        # There are several highest_precedence_scripts - choose the minimal preservance and maximal priority
-        # minimal_preservance = math.inf
+        # There are several highest_precedence_scripts - choose the maximal preservance and maximal priority
         minimal_preservance_paths = []
         for source in self.state.all_namespaces:
             minimal_preservance_paths.extend(nx.all_shortest_paths(frozenset([source]), self.state.opts.targetNamespaces,
                                                                    lambda v,u,e: Supremum(-e.script.base.preservance)))
-        minimal_preservance_scripts = shortest_pathes_to_edges(minimal_preservance_paths)  # a list of lists
+        # a list of lists
+        minimal_preservance_scripts = shortest_pathes_to_edges(self.available_chains.graph,
+                                                               minimal_preservance_paths,
+                                                               lambda e: Supremum(-e.script.base.preservance))
         # FIXME: What if there is zero such paths?
 
         if highest_precedence_scripts in self.state.singletons:  # FIXME
