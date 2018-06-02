@@ -15,12 +15,14 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-import math
+
+# import math
 
 import networkx as nx
 
 from xmlboiler.core.alg.path import GraphOfScripts
 from xmlboiler.core.graph.minmax import Supremum
+from xmlboiler.core.graph.path import shortest_pathes_to_edges
 
 
 def _precedence(edge):
@@ -70,13 +72,13 @@ class ScriptsIterator(object):
             return highest_precedence_scripts[0]
 
         # There are several highest_precedence_scripts - choose the minimal preservance and maximal priority
-        minimal_preservance = math.inf
+        # minimal_preservance = math.inf
+        minimal_preservance_paths = []
         for source in self.state.all_namespaces:
-            minimal_preservance_paths = nx.all_shortest_paths(frozenset([source]), self.state.opts.targetNamespaces,
-                                                              lambda v,u,e: Supremum(-e.script.base.preservance))
+            minimal_preservance_paths.extend(nx.all_shortest_paths(frozenset([source]), self.state.opts.targetNamespaces,
+                                                                   lambda v,u,e: Supremum(-e.script.base.preservance)))
+        minimal_preservance_scripts = shortest_pathes_to_edges(minimal_preservance_paths)
         # FIXME: What if there is zero such paths?
-        minimal_preservance = FIXME
-        for path in minimal_preservance_paths:
 
         if highest_precedence_scripts in self.state.singletons:  # FIXME
             pass  # TODO
