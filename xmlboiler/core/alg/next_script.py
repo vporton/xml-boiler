@@ -20,6 +20,7 @@ import math
 import networkx as nx
 
 from xmlboiler.core.alg.path import GraphOfScripts
+from xmlboiler.core.graph.minmax import Supremum
 
 
 def _precedence(edge):
@@ -71,8 +72,10 @@ class ScriptsIterator(object):
         # There are several highest_precedence_scripts - choose the minimal preservance and maximal priority
         minimal_preservance = math.inf
         for source in self.state.all_namespaces:
-            minimal_preservance_paths = TODO # Use graph.minmax module FIXME: What if there is zero such paths?
-        minimal_preservance = min([max([s.base.preservance for s in path]) for path in minimal_preservance_paths])  # FIXME
+            minimal_preservance_paths = nx.all_shortest_paths(frozenset([source]), self.state.opts.targetNamespaces,
+                                                              lambda v,u,e: Supremum(-e.script.base.preservance))
+        # FIXME: What if there is zero such paths?
+        minimal_preservance = FIXME
         for path in minimal_preservance_paths:
 
         if highest_precedence_scripts in self.state.singletons:  # FIXME
