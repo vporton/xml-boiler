@@ -44,7 +44,7 @@ class GraphOfScripts(object):
             for j in self.graph.nodes:
                 if i <= j:
                     if not self.graph.has_edge(i, j):
-                        self.graph.add_node(i, j, weight=0)
+                        self.graph.add_edge(i, j, weight=0)
 
     def first_edges_for_shortest_path(self, source, target):
         paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')
