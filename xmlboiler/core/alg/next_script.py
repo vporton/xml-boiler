@@ -80,7 +80,7 @@ class ScriptsIterator(object):
         minimal_preservance_scripts = shortest_pathes_to_edges(self.available_chains.graph,
                                                                minimal_preservance_paths,
                                                                lambda e: Supremum(-e.script.base.preservance))
-        minimal_preservance_scripts = [s.script for s in minimal_preservance_paths if 'script' in s]
+        minimal_preservance_scripts = [[s.script for s in l if 'script' in s] for l in minimal_preservance_scripts]
         # FIXME: What if there is zero such paths?
 
         if highest_precedence_scripts in self.state.singletons:  # FIXME
