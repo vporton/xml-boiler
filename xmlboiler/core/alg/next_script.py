@@ -34,13 +34,14 @@ class ScriptsIterator(object):
     def __next__(self):
         self.available_chains = GraphOfScripts()  # TODO: inefficient? should hold the graph, not re-create it
         self.available_chains.add_scripts(self.state.scripts)
-        self.available_chains.graph.add_node(self.state.opts.targetNamespaces, weight=0)
+        self.available_chains.graph.add_node(self.state.opts.targetNamespaces)
+        for source in self.state.all_namespaces:
+            self.available_chains.graph.add_node(frozenset([source]))
         self.available_chains.adjust()
         first_edges = []
         for source in self.state.all_namespaces:
             # FIXME: Does not work with universal edges
-            # FIXME: source should be a frozenset, not a single namespace?
-            edges = self.available_chains.first_edges_for_shortest_path(self, source, self.state.opts.targetNamespaces)
+            edges = self.available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
             first_edges.extend(edges)
         if not first_edges:
             raise StopIteration
@@ -51,8 +52,7 @@ class ScriptsIterator(object):
             first_edges = []
             for source in self.state.all_namespaces:
                 # FIXME: Does not work with universal edges
-                # FIXME: source should be a frozenset, not a single namespace?
-                edges = executed.first_edges_for_shortest_path(self, source, self.state.opts.targetNamespaces)
+                edges = executed.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
                 first_edges.extend(edges)
             if len(first_edges) > 1:
                 # TODO: Option to make it fatal
