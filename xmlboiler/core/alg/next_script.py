@@ -54,6 +54,7 @@ class ScriptsIterator(object):
         if self.check_has_executed(executed):
             self.available_chains = executed
             first_edges = []
+            # TODO: May be more efficient with multi_source_dijkstra()
             for source in self.state.all_namespaces:
                 # FIXME: Does not work with universal edges
                 edges = executed.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
