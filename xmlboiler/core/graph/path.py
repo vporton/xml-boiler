@@ -17,11 +17,21 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import itertools
+import math
 
 
 def shortest_path_to_edges(path):
     TODO
 
-def shortest_pathes_to_edges(pathes):
-    # TODO: Need to convert to list?
-    return list(itertools.chain.from_iterable([shortest_path_to_edges(path) for path in pathes]))
+
+def shortest_pathes_to_edges(pathes, weight):
+    result = []
+    last_weight = math.inf
+    for path in pathes:
+        new_lists_of_edges = shortest_path_to_edges(path)
+        for new_edges in new_lists_of_edges:
+            weight = itertools.reduce(filter(weight, new_edges), 0)
+            if weight <= last_weight:
+                last_weight = weight
+                result.append(new_edges)
+    return result
