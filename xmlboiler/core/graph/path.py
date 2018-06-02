@@ -20,20 +20,44 @@ import itertools
 import math
 
 
-def shortest_path_to_edges(path):
-    TODO
+def shortest_path_to_edges(graph, path, weight):
+    r"""
+    :param graph:
+    :param path: a list of nodes
+    :param weight: a function
+    :return: a list of lists of edges
+    """
+    result = []
+    for i in range(len(path) - 1):
+        last_weight = math.inf
+        last_edges = []
+        for e in graph[path[i]][path[i+1]]:
+            new_weight = weight(e)
+            if new_weight < last_weight:
+                last_edges = []
+            if new_weight <= last_weight:
+                last_weight = new_weight
+                last_edges.append(e)
+        result.append(last_edges)
+    return result
 
 
-def shortest_pathes_to_edges(pathes, weight):
+def shortest_pathes_to_edges(graph, pathes, weight):
+    r"""
+    :param graph:
+    :param pathes: a list of lists of nodes
+    :param weight: a function
+    :return: a list of lists of edges
+    """
     result = []
     last_weight = math.inf
     for path in pathes:
-        new_lists_of_edges = shortest_path_to_edges(path)
+        new_lists_of_edges = shortest_path_to_edges(graph, path, weight)
         for new_edges in new_lists_of_edges:
-            weight = itertools.reduce(filter(weight, new_edges), 0)
-            if weight < last_weight:
+            new_weight = itertools.reduce(filter(weight, new_edges), 0)
+            if new_weight < last_weight:
                 result = []
-            if weight <= last_weight:
-                last_weight = weight
+            if new_weight <= last_weight:
+                last_weight = new_weight
                 result.append(new_edges)
     return result
