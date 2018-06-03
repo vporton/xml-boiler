@@ -42,16 +42,16 @@ def shortest_path_to_edges(graph, path, weight):
     return result
 
 
-def shortest_pathes_to_edges(graph, pathes, weight):
+def shortest_paths_to_edges(graph, paths, weight):
     r"""
     :param graph:
-    :param pathes: a list of lists of nodes
+    :param paths: a list of lists of nodes
     :param weight: a function
     :return: a list of lists of edges
     """
     result = []
     last_weight = math.inf
-    for path in pathes:
+    for path in paths:
         new_lists_of_edges = shortest_path_to_edges(graph, path, weight)
         for new_edges in new_lists_of_edges:
             new_weight = itertools.reduce(filter(weight, new_edges), 0)
@@ -60,4 +60,23 @@ def shortest_pathes_to_edges(graph, pathes, weight):
             if new_weight <= last_weight:
                 last_weight = new_weight
                 result.append(new_edges)
+    return result
+
+
+def shortest_lists_of_edges(edges, weight):
+    r"""
+    :param graph:
+    :param edges: a list of lists of edges
+    :param weight: a function
+    :return: a list of lists of edges
+    """
+    result = []
+    last_weight = math.inf
+    for cur_edges in edges:
+        new_weight = itertools.reduce(filter(weight, cur_edges), 0)
+        if new_weight < last_weight:
+            result = []
+        if new_weight <= last_weight:
+            last_weight = new_weight
+            result.append(cur_edges)
     return result

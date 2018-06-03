@@ -22,7 +22,7 @@ import networkx as nx
 
 from xmlboiler.core.alg.path import GraphOfScripts
 from xmlboiler.core.graph.minmax import Supremum
-from xmlboiler.core.graph.path import shortest_pathes_to_edges
+from xmlboiler.core.graph.path import shortest_pathes_to_edges, shortest_lists_of_edges
 
 
 def _precedence(edge):
@@ -81,7 +81,8 @@ class ScriptsIterator(object):
         minimal_preservance_scripts = shortest_pathes_to_edges(self.available_chains.graph,
                                                                minimal_preservance_paths,
                                                                lambda e: Supremum(-e['script'].base.preservance))
-        minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
+        # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
+        maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_scripts, lambda e: e['weight'])
         # FIXME: What if there is zero such paths?
 
         if highest_precedence_scripts in self.state.singletons:  # FIXME
