@@ -85,8 +85,10 @@ class ScriptsIterator(object):
         maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_scripts, lambda e: e['weight'])
         # FIXME: What if there is zero such paths?
 
-        if highest_precedence_scripts in self.state.singletons:  # FIXME
-            pass  # TODO
+        for edges in maximal_priority_edges:
+            if edges[0] in self.state.singletons:
+                return edges[0]
+        # TODO
         raise StopIteration
 
     def check_has_executed(self, executed):
