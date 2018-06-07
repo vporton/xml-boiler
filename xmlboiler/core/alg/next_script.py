@@ -86,7 +86,7 @@ class ScriptsIterator(object):
         # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
         maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_scripts, lambda e: e['weight'])
 
-        return maximal_priority_edges[0][0]
+        return maximal_priority_edges[0][0]  # TODO: Add it to the list of exextued scripts
 
     def check_has_executed(self, executed):
         for source in self.state.all_namespaces:
