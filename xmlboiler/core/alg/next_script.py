@@ -70,7 +70,7 @@ class ScriptsIterator(object):
         highest_precedence = highest_precedences[0]
         highest_precedence_scripts = filter(lambda e: _precedence(e) == highest_precedence, first_edges)
         if len(highest_precedence_scripts) == 1:
-            return highest_precedence_scripts[0]  # TODO: Add it to the list of exextued scripts
+            return highest_precedence_scripts[0]  # TODO: Add it to the list of executed scripts
 
         if highest_precedence not in self.state.singletons:
             raise StopIteration
@@ -83,7 +83,7 @@ class ScriptsIterator(object):
         # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
         maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])
 
-        return maximal_priority_edges[0][0]  # TODO: Add it to the list of exextued scripts
+        return maximal_priority_edges[0][0]  # TODO: Add it to the list of executed scripts
 
     def check_has_executed(self, executed):
         for source in self.state.all_namespaces:
