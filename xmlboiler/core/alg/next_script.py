@@ -65,31 +65,28 @@ class ScriptsIterator(object):
 
         # Choose the script among first_edges with highest precedence
         highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
-        highest_precedence_scripts = filter(lambda e: _precedence(e) in highest_precedences, first_edges)
-        if len(highest_precedence_scripts) == 0:
+        if len(highest_precedences) != 1:  # don't know how to choose
             raise StopIteration
-        if len(highest_precedence_scripts) == 1:  # TODO: right decision?
-            self.state.executed_scripts.add(highest_precedence_scripts[0])
-            return highest_precedence_scripts[0]
+        highest_precedence = highest_precedences[0]
+        highest_precedence_scripts = filter(lambda e: _precedence(e) == highest_precedence, first_edges)
+        if len(highest_precedence_scripts) == 1:
+            return highest_precedence_scripts[0]  # TODO: Add it to the list of exextued scripts
+
+        if highest_precedence not in self.state.singletons:
+            raise StopIteration
 
         # There are several highest_precedence_scripts - choose the maximal preservance and maximal priority
         minimal_preservance_paths = []
-        for source in self.state.all_namespaces:
-            minimal_preservance_paths.extend(nx.all_shortest_paths(frozenset([source]), self.state.opts.targetNamespaces,
-                                                                   lambda v,u,e: Supremum(-e['script'].base.preservance)))
+        minimal_preservance_paths.extend(shortest_lists_of_edges(highest_precedence_scripts,
+                                                                 lambda e: Supremum(-e['script'].base.preservance)))
         # a list of lists
         minimal_preservance_scripts = shortest_pathes_to_edges(self.available_chains.graph,
                                                                minimal_preservance_paths,
                                                                lambda e: Supremum(-e['script'].base.preservance))
         # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
         maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_scripts, lambda e: e['weight'])
-        # FIXME: What if there is zero such paths?
 
-        for edges in maximal_priority_edges:
-            if edges[0] in self.state.singletons:
-                return edges[0]
-        # TODO
-        raise StopIteration
+        return maximal_priority_edges[0][0]
 
     def check_has_executed(self, executed):
         for source in self.state.all_namespaces:

@@ -42,3 +42,4 @@ class PipelineState(BaseState):
     all_namespaces: frozenset[URIRef]
     scripts: list[EnrichedScript]
     executed_scripts: list[EnrichedScript]
+    singletons: set(URIRef)
