@@ -76,15 +76,12 @@ class ScriptsIterator(object):
             raise StopIteration
 
         # There are several highest_precedence_scripts - choose the maximal preservance and maximal priority
+        # a list of lists
         minimal_preservance_paths = []
         minimal_preservance_paths.extend(shortest_lists_of_edges(highest_precedence_scripts,
                                                                  lambda e: Supremum(-e['script'].base.preservance)))
-        # a list of lists
-        minimal_preservance_scripts = shortest_pathes_to_edges(self.available_chains.graph,
-                                                               minimal_preservance_paths,
-                                                               lambda e: Supremum(-e['script'].base.preservance))
         # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
-        maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_scripts, lambda e: e['weight'])
+        maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])
 
         return maximal_priority_edges[0][0]  # TODO: Add it to the list of exextued scripts
 
