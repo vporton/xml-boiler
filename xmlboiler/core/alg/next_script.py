@@ -64,6 +64,7 @@ class ScriptsIterator(object):
                 self.state.execution_context.warning("More than one possible executed scripts.")
 
         # Choose the script among first_edges with highest precedence
+        first_edges = filter(lambda e: _precedence(e) is not None, first_edges)
         highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
         if len(highest_precedences) != 1:  # don't know how to choose
             raise StopIteration
