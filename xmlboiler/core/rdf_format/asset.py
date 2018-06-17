@@ -71,6 +71,7 @@ class Transformer(NamedTuple):
     target_namespaces: AbstractSet[URIRef]
     ignore_target: bool
     precedence: Optional[URIRef]
+    inwardness: Optional[bool]
     scripts: List[ScriptInfo]
 
 class Namespace(NamedTuple):

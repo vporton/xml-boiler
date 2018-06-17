@@ -50,6 +50,10 @@ class TransformerParser(NodeParser):
                                              IRILiteral(ErrorHandler.WARNING),
                                              ErrorHandler.WARNING)
         result.precedence = precedence_parser.parse(parse_context, graph, node)
+        inwardness_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "inward"),
+                                             BooleanLiteral(ErrorHandler.WARNING),
+                                             ErrorHandler.WARNING)
+        result.inward = inwardness_parser.parse(parse_context, graph, node)
         ignore_target_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "ignoreTarget"),
                                                 BooleanLiteral(ErrorHandler.WARNING),
                                                 ErrorHandler.WARNING)
