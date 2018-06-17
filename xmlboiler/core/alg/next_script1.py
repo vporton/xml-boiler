@@ -22,7 +22,7 @@ import networkx as nx
 
 from xmlboiler.core.alg.path import GraphOfScripts
 from xmlboiler.core.graph.minmax import Supremum
-from xmlboiler.core.graph.path import shortest_pathes_to_edges, shortest_lists_of_edges
+from xmlboiler.core.graph.path import shortest_lists_of_edges
 
 
 def _precedence(edge):
