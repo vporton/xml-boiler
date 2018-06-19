@@ -40,7 +40,7 @@ class BaseState(object):
 
 
 class PipelineState(BaseState):
-    xml: defusedxml.ElementTree
+    xml: defusedxml.minidom
     all_namespaces: frozenset[URIRef]
     scripts: list[EnrichedScript]
     executed_scripts: list[EnrichedScript]

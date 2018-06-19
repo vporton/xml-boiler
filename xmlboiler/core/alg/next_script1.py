@@ -29,4 +29,13 @@ class ScriptsIterator(object):
         return self
 
     def __next__(self):
+        parents = []
+        elt = self.state.xml.documentElement
+        # depth-first search
+        parents.append(elt)
+        while parents.childNodes:
+            v = parents.pop()
+            for w in v:
+                parents.append(v)
+                # FIXME
         pass  # TODO
