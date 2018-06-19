@@ -18,7 +18,7 @@
 
 # the first algorithm from https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/Transformations/Automatic_transformation
 
-import networkx as nx
+# import networkx as nx
 
 
 class ScriptsIterator(object):
@@ -36,6 +36,9 @@ class ScriptsIterator(object):
         while parents:
             v = parents.pop()
             for w in v.childNodes:
+                script = self._outer_node_ns()
+                if script is not None:
+                    return script
                 parents.append(w)
-                # FIXME
+
         pass  # TODO
