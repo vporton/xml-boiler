@@ -18,6 +18,7 @@
 
 from typing import NamedTuple
 
+import defusedxml
 from rdflib import URIRef
 from rdflib.resource import Resource
 
@@ -39,6 +40,7 @@ class BaseState(object):
 
 
 class PipelineState(BaseState):
+    xml: defusedxml.ElementTree
     all_namespaces: frozenset[URIRef]
     scripts: list[EnrichedScript]
     executed_scripts: list[EnrichedScript]
