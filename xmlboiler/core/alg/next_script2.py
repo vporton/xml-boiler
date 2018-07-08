@@ -45,6 +45,11 @@ class ScriptsIterator(object):
 
     def _get_ns(self, node):
         if node.namespaceURI:
-            return node.namespaceURI
+            result = [node.namespaceURI]
+        else:
+            result = []
+        attr_nodes = [node[i] for i in range(node.length) if node[i].namespaceURI is not None]
+        result.extend(sorted(set(attr_nodes)))  # set() to avoid repetitions
+        return result
 
     def _outer_node_script(self, node):
