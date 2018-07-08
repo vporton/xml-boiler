@@ -36,9 +36,15 @@ class ScriptsIterator(object):
         while parents:
             v = parents.pop()
             for w in v.childNodes:
-                script = self._outer_node_ns()
+                script = self._outer_node_script(w)
                 if script is not None:
                     return script
                 parents.append(w)
 
         pass  # TODO
+
+    def _get_ns(self, node):
+        if node.namespaceURI:
+            return node.namespaceURI
+
+    def _outer_node_script(self, node):
