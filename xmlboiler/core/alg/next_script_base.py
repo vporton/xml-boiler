@@ -38,11 +38,11 @@ class ScriptsIteratorBase(ABC):
             return scripts
         return frozenset(self.state.executed_scripts).intersection(scripts)
 
-    def _available_chains(self, NSs):
+    def _available_chains(self, sources):
         available_chains = GraphOfScripts()  # TODO: inefficient? should hold the graph, not re-create it
         available_chains.add_scripts(self.state.scripts)
         available_chains.graph.add_node(self.state.opts.targetNamespaces)
-        for source in NSs:
+        for source in sources:
                 available_chains.graph.add_node(frozenset([source]))
         available_chains.adjust()
         return available_chains

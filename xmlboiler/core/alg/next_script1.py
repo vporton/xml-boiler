@@ -41,6 +41,7 @@ class ScriptsIterator(ScriptsIteratorBase):
 
         first_edges = filter(lambda e: _precedence(e) is not None, first_edges)
         first_edges = self._checked_scripts(first_edges)
+
         # Choose the script among first_edges with highest precedence
         highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
         if len(highest_precedences) != 1:  # don't know how to choose
