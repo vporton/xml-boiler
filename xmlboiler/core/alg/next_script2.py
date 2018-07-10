@@ -19,15 +19,10 @@
 # the second algorithm from https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/Transformations/Automatic_transformation
 
 # import networkx as nx
+from .next_script_base import ScriptsIteratorBase
 
 
-class ScriptsIterator(object):
-    def __init__(self, state):
-        self.state = state
-
-    def __iter__(self):
-        return self
-
+class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
         parents = []
         elt = self.state.xml.documentElement

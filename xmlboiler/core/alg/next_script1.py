@@ -23,18 +23,13 @@ import networkx as nx
 from xmlboiler.core.alg.path import GraphOfScripts
 from xmlboiler.core.graph.minmax import Supremum
 from xmlboiler.core.graph.path import shortest_lists_of_edges
+from .next_script_base import ScriptsIteratorBase
 
 
 def _precedence(edge):
     return edge['script'].transformer.precedence
 
-class ScriptsIterator(object):
-    def __init__(self, state):
-        self.state = state
-
-    def __iter__(self):
-        return self
-
+class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
         self.available_chains = GraphOfScripts()  # TODO: inefficient? should hold the graph, not re-create it
         self.available_chains.add_scripts(self.state.scripts)
