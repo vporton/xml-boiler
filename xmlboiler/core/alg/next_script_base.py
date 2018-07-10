@@ -18,6 +18,8 @@
 
 from abc import ABC, abstractmethod
 
+from xmlboiler.core.alg.path import GraphOfScripts
+
 
 class ScriptsIteratorBase(ABC):
     def __init__(self, state):
@@ -35,3 +37,12 @@ class ScriptsIteratorBase(ABC):
         if frozenset(self.state.executed_scripts).isdisjoint(scripts):
             return scripts
         return frozenset(self.state.executed_scripts).intersection(scripts)
+
+    def _available_chains(self, NSs):
+        available_chains = GraphOfScripts()  # TODO: inefficient? should hold the graph, not re-create it
+        available_chains.add_scripts(self.state.scripts)
+        available_chains.graph.add_node(self.state.opts.targetNamespaces)
+        for source in NSs:
+                available_chains.graph.add_node(frozenset([source]))
+        available_chains.adjust()
+        return available_chains

@@ -20,7 +20,6 @@
 
 import networkx as nx
 
-from xmlboiler.core.alg.path import GraphOfScripts
 from xmlboiler.core.graph.minmax import Supremum
 from xmlboiler.core.graph.path import shortest_lists_of_edges
 from .next_script_base import ScriptsIteratorBase
@@ -31,16 +30,11 @@ def _precedence(edge):
 
 class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
-        self.available_chains = GraphOfScripts()  # TODO: inefficient? should hold the graph, not re-create it
-        self.available_chains.add_scripts(self.state.scripts)
-        self.available_chains.graph.add_node(self.state.opts.targetNamespaces)
-        for source in self.state.all_namespaces:
-            self.available_chains.graph.add_node(frozenset([source]))
-        self.available_chains.adjust()
+        available_chains = self._available_chains(self.state.all_namespaces)
         first_edges = []
         for source in self.state.all_namespaces:
             # FIXME: Does not work with universal edges
-            edges = self.available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
+            edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
             first_edges.extend(edges)
         if not first_edges:
             raise StopIteration
