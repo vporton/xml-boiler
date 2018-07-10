@@ -50,6 +50,7 @@ class ScriptsIterator(object):
         if not first_edges:
             raise StopIteration
 
+        # FIXME: Check only the first script of a chain to be in executed
         executed = GraphOfScripts(self.state.executed_scripts)
         if self.check_has_executed(executed):
             self.available_chains = executed
