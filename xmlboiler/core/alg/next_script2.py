@@ -51,6 +51,6 @@ class ScriptsIterator(ScriptsIteratorBase):
         NSs = self._get_ns(node)
         scripts = []
         for s in self.state.scripts:
-            if not NSs.isdisjoint(s.transformer.source_namespaces):
+            if not s.transformer.source_namespaces.isdisjoint(NSs):
                 scripts.append(s)
         return self._checked_scripts(scripts)

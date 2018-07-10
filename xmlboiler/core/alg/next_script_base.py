@@ -29,3 +29,9 @@ class ScriptsIteratorBase(ABC):
     @abstractmethod
     def __next__(self):
         pass
+
+    def _checked_scripts(self, scripts):
+        # TODO: Make state.executed_scripts a set?
+        if frozenset(self.state.executed_scripts).isdisjoint(scripts):
+            return scripts
+        return frozenset(self.state.executed_scripts).intersection(scripts)
