@@ -53,3 +53,9 @@ class ScriptsIterator(object):
         return result
 
     def _outer_node_script(self, node):
+        NSs = self._get_ns(node)
+        scripts = []
+        for s in self.state.scripts:
+            if not NSs.isdisjoint(s.transformer.source_namespaces):
+                scripts.append(s)
+        return self._checked_scripts(scripts)
