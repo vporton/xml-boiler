@@ -50,22 +50,9 @@ class ScriptsIterator(object):
         if not first_edges:
             raise StopIteration
 
-        # FIXME: Check only the first script of a chain to be in executed
-        executed = GraphOfScripts(self.state.executed_scripts)
-        if self.check_has_executed(executed):
-            self.available_chains = executed
-            first_edges = []
-            # TODO: May be more efficient with multi_source_dijkstra()
-            for source in self.state.all_namespaces:
-                # FIXME: Does not work with universal edges
-                edges = executed.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
-                first_edges.extend(edges)
-            if len(first_edges) > 1:
-                # TODO: Option to make it fatal
-                self.state.execution_context.warning("More than one possible executed scripts.")
-
-        # Choose the script among first_edges with highest precedence
         first_edges = filter(lambda e: _precedence(e) is not None, first_edges)
+        first_edges = self._checked_scripts(first_edges)
+        # Choose the script among first_edges with highest precedence
         highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
         if len(highest_precedences) != 1:  # don't know how to choose
             raise StopIteration
@@ -87,10 +74,3 @@ class ScriptsIterator(object):
         if not maximal_priority_edges:
             raise StopIteration
         return maximal_priority_edges[0][0]  # TODO: Add it to the list of executed scripts
-
-    def check_has_executed(self, executed):
-        for source in self.state.all_namespaces:
-            for target in self.state.opts.targetNamespaces:  # FIXME: Check for the right var
-                if nx.has_path(executed, source, target):
-                    return True
-        return False
