@@ -43,6 +43,6 @@ class ScriptsIteratorBase(ABC):
         available_chains.add_scripts(self.state.scripts)
         available_chains.graph.add_node(self.state.opts.targetNamespaces)
         for source in sources:
-                available_chains.graph.add_node(frozenset([source]))
+            available_chains.graph.add_node(frozenset([source]))
         available_chains.adjust()
         return available_chains
