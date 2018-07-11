@@ -45,3 +45,4 @@ class PipelineState(BaseState):
     scripts: list[EnrichedScript]
     executed_scripts: list[EnrichedScript]  # TODO: Should be a set/frozenset?
     singletons: set(URIRef)
+    precedences_higher: BinaryRelation
