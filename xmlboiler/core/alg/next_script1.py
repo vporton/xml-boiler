@@ -34,6 +34,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         first_edges = []
         for source in self.state.all_namespaces:
             # FIXME: Does not work with universal edges
+            # FIXME: Should first filter out the non-executed scripts
             edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
             first_edges.extend(edges)
         if not first_edges:
