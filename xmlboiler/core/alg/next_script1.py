@@ -40,12 +40,8 @@ class ScriptsIterator(ScriptsIteratorBase):
         if not first_edges:
             raise StopIteration
 
-        # TODO: Performance
-        if not frozenset(self.state.executed_scripts).isdisjoint(first_edges):
-            first_edges = [s for s in first_edges if s[0] in self.state.executed_scripts]
-
+        first_edges = self._checked_scripts(first_edges)
         first_edges = filter(lambda e: _precedence(e) is not None, first_edges)
-        # first_edges = self._checked_scripts(first_edges)
 
         # Choose the script among first_edges with highest precedence
         highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
