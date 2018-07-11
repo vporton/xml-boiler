@@ -31,17 +31,21 @@ def _precedence(edge):
 class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
         available_chains = self._available_chains(self.state.all_namespaces)
+
         first_edges = []
         for source in self.state.all_namespaces:
             # FIXME: Does not work with universal edges
-            # FIXME: Should first filter out the non-executed scripts
             edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
             first_edges.extend(edges)
         if not first_edges:
             raise StopIteration
 
+        # TODO: Performance
+        if not frozenset(self.state.executed_scripts).isdisjoint(first_edges):
+            self.state.executed_scripts = [s for s in self.state.executed_scripts if s[0] in self.state.executed_scripts]
+
         first_edges = filter(lambda e: _precedence(e) is not None, first_edges)
-        first_edges = self._checked_scripts(first_edges)
+        # first_edges = self._checked_scripts(first_edges)
 
         # Choose the script among first_edges with highest precedence
         highest_precedences = self.state.graph.maxima(first_edges, key=lambda e: _precedence(e))
