@@ -33,10 +33,9 @@ class ScriptsIteratorBase(ABC):
         pass
 
     def _checked_scripts(self, scripts):
-        # TODO: Make state.executed_scripts a set?
-        if frozenset(self.state.executed_scripts).isdisjoint(scripts):
+        if self.state.executed_scripts.isdisjoint(scripts):
             return scripts
-        return frozenset(self.state.executed_scripts).intersection(scripts)
+        return self.state.executed_scripts.intersection(scripts)
 
     def _available_chains(self, sources, destinations):
         # TODO: inefficient? should hold the graph, not re-create it

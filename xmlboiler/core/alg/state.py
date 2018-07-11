@@ -43,6 +43,6 @@ class PipelineState(BaseState):
     xml: defusedxml.minidom
     all_namespaces: frozenset[URIRef]
     scripts: list[EnrichedScript]
-    executed_scripts: list[EnrichedScript]  # TODO: Should be a set/frozenset?
+    executed_scripts: set[EnrichedScript]  # TODO: Should be a set/frozenset?
     singletons: set(URIRef)
     precedences_higher: BinaryRelation
