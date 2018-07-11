@@ -42,6 +42,7 @@ class ScriptsIterator(ScriptsIteratorBase):
 
         # TODO: Performance
         if not frozenset(self.state.executed_scripts).isdisjoint(first_edges):
+            # FIXME: Assigning to self.state.executed_scripts is a nonsense!
             self.state.executed_scripts = [s for s in self.state.executed_scripts if s[0] in self.state.executed_scripts]
 
         first_edges = filter(lambda e: _precedence(e) is not None, first_edges)
