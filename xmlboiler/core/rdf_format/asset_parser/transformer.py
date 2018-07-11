@@ -58,6 +58,10 @@ class TransformerParser(NodeParser):
                                                 BooleanLiteral(ErrorHandler.WARNING),
                                                 ErrorHandler.WARNING)
         result.ignore_target = ignore_target_parser.parse(parse_context, graph, node)
+        universal_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "universal"),
+                                            BooleanLiteral(ErrorHandler.WARNING),
+                                            ErrorHandler.WARNING)
+        result.universal = universal_parser.parse(parse_context, graph, node)
 
         script_node_parser = ScriptInfoParser(self.subclasses, ScriptKindEnum.TRANSFORMER)
         script_parser = OneOrMorePredicate(URIRef((MAIN_NAMESPACE + "script")), script_node_parser, ErrorHandler.WARNING)

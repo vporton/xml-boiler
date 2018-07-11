@@ -30,7 +30,7 @@ def _precedence(edge):
 
 class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
-        available_chains = self._available_chains(self.state.all_namespaces)
+        available_chains = self._available_chains(self.state.all_namespaces, self.state.opts.targetNamespaces)
 
         first_edges = []
         for source in self.state.all_namespaces:

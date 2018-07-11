@@ -17,7 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 from enum import Enum, auto
 from ordered_set import OrderedSet
 
@@ -79,5 +79,5 @@ class NotInTargetNamespace(Enum):
 
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     notInTargetNamespace: NotInTargetNamespace
-    universalPrecendence: URIRef  # TODO: Find a better name for this option
+    universalPrecendence: Optional[URIRef]  # TODO: Find a better name for this option
     targetNamespaces: frozenset[URIRef]
