@@ -31,7 +31,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         while parents:
             v = parents.pop()
             for w in v.childNodes:
-                script = self._outer_node_script(w)  # FIXME: it returns multiple scripts
+                script = self._outer_node_script(w)
                 if script is not None:
                     return script
                 parents.append(w)
@@ -48,9 +48,11 @@ class ScriptsIterator(ScriptsIteratorBase):
         return result
 
     def _outer_node_script(self, node):
-        NSs = self._get_ns(node)
+        NSs = self._get_ns(node)  # TODO: May be inefficient to consider all these namespaces
+        if not NSs:
+            return None
         scripts = []
         for s in self.state.scripts:
-            if not s.transformer.source_namespaces.isdisjoint(NSs):
+            if NSs[0] in s.transformer.source_namespaces:
                 scripts.append(s)
         return self._checked_scripts(scripts)
