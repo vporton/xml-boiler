@@ -69,3 +69,22 @@ class ScriptsIteratorBase(ABC):
                                                             lambda e: Supremum(-e['script'].base.preservance))
         # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
         return shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])
+
+    def _get_ns(self, node):
+        if node.namespaceURI:
+            result = [node.namespaceURI]
+        else:
+            result = []
+        attr_nodes = [node[i] for i in range(node.length) if node[i].namespaceURI is not None]
+        result.extend(sorted(set(attr_nodes)))  # set() to avoid repetitions
+        return result
+
+    def _outer_node_script(self, node):
+        NSs = self._get_ns(node)  # TODO: May be inefficient to consider all these namespaces
+        if not NSs:
+            return None
+        scripts = []
+        for s in self.state.scripts:
+            if NSs[0] in s.transformer.source_namespaces:
+                scripts.append(s)
+        return self._checked_scripts(scripts)

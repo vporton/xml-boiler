@@ -29,22 +29,3 @@ class ScriptsIterator(ScriptsIteratorBase):
             return next_outer
 
         pass  # TODO
-
-    def _get_ns(self, node):
-        if node.namespaceURI:
-            result = [node.namespaceURI]
-        else:
-            result = []
-        attr_nodes = [node[i] for i in range(node.length) if node[i].namespaceURI is not None]
-        result.extend(sorted(set(attr_nodes)))  # set() to avoid repetitions
-        return result
-
-    def _outer_node_script(self, node):
-        NSs = self._get_ns(node)  # TODO: May be inefficient to consider all these namespaces
-        if not NSs:
-            return None
-        scripts = []
-        for s in self.state.scripts:
-            if NSs[0] in s.transformer.source_namespaces:
-                scripts.append(s)
-        return self._checked_scripts(scripts)
