@@ -54,4 +54,4 @@ class ScriptsIteratorBase(ABC):
         minimal_preservance_paths = shortest_lists_of_edges(scripts,
                                                             lambda e: Supremum(-e['script'].base.preservance))
         # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
-        maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])
+        return shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])
