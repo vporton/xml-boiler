@@ -34,6 +34,20 @@ class ScriptsIteratorBase(ABC):
     def __next__(self):
         pass
 
+    def _next_outer_script(self):
+        parents = []
+        elt = self.state.xml.documentElement
+        # depth-first search
+        parents.append(elt)
+        while parents:
+            v = parents.pop()
+            for w in v.childNodes:
+                scripts = self._outer_node_script(w)  # FIXME: It is a container of multiple scripts!
+                if scripts:
+                    return self._choose_by_preservance_priority(scripts)
+                parents.append(w)
+        return None
+
     def _checked_scripts(self, scripts):
         if self.state.executed_scripts.isdisjoint(scripts):
             return scripts

@@ -24,17 +24,9 @@ from .next_script_base import ScriptsIteratorBase
 
 class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
-        parents = []
-        elt = self.state.xml.documentElement
-        # depth-first search
-        parents.append(elt)
-        while parents:
-            v = parents.pop()
-            for w in v.childNodes:
-                scripts = self._outer_node_script(w)  # FIXME: It is a container of multiple scripts!
-                if scripts:
-                    return self._choose_by_preservance_priority(scripts)
-                parents.append(w)
+        next_outer = self._next_outer_script()
+        if next_outer is not None:
+            return next_outer
 
         pass  # TODO
 
