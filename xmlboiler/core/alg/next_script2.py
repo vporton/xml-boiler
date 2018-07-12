@@ -31,7 +31,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         while parents:
             v = parents.pop()
             for w in v.childNodes:
-                script = self._outer_node_script(w)
+                script = self._outer_node_script(w)  # FIXME: it returns multiple scripts
                 if script is not None:
                     return script
                 parents.append(w)
