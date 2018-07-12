@@ -20,8 +20,6 @@
 
 import networkx as nx
 
-from xmlboiler.core.graph.minmax import Supremum
-from xmlboiler.core.graph.path import shortest_lists_of_edges
 from .next_script_base import ScriptsIteratorBase
 
 
@@ -54,12 +52,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         if highest_precedence not in self.state.singletons:
             raise StopIteration
 
-        # There are several highest_precedence_scripts - choose the maximal preservance and maximal priority
-        # a list of lists
-        minimal_preservance_paths = shortest_lists_of_edges(highest_precedence_scripts,
-                                                            lambda e: Supremum(-e['script'].base.preservance))
-        # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
-        maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])
+        maximal_priority_edges = self._choose_by_preservance_priority(highest_precedence_scripts)
 
         if not maximal_priority_edges:
             raise StopIteration

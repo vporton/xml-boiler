@@ -19,6 +19,8 @@
 from abc import ABC, abstractmethod
 
 from xmlboiler.core.alg.path import GraphOfScripts
+from xmlboiler.core.graph.minmax import Supremum
+from xmlboiler.core.graph.path import shortest_lists_of_edges
 
 
 class ScriptsIteratorBase(ABC):
@@ -46,3 +48,10 @@ class ScriptsIteratorBase(ABC):
             available_chains.graph.add_node(frozenset([source]))
         available_chains.adjust()
         return available_chains
+
+    def _choose_by_preservance_priority(self, scripts):
+        # a list of lists
+        minimal_preservance_paths = shortest_lists_of_edges(scripts,
+                                                            lambda e: Supremum(-e['script'].base.preservance))
+        # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
+        maximal_priority_edges = shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])

@@ -31,8 +31,9 @@ class ScriptsIterator(ScriptsIteratorBase):
         while parents:
             v = parents.pop()
             for w in v.childNodes:
-                script = self._outer_node_script(w)  # FIXME: It is a container of multiple scripts!
-                if script is not None:
+                scripts = self._outer_node_script(w)  # FIXME: It is a container of multiple scripts!
+                if not scripts:
+                    raise StopIteration
                     return script
                 parents.append(w)
 
