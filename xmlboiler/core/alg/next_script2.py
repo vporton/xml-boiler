@@ -18,7 +18,6 @@
 
 # the second algorithm from https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/Transformations/Automatic_transformation
 
-# import networkx as nx
 from .next_script_base import ScriptsIteratorBase
 
 
@@ -28,4 +27,21 @@ class ScriptsIterator(ScriptsIteratorBase):
         if next_outer is not None:
             return next_outer
 
-        pass  # TODO
+        elements = self.all_childs_in_taget_hash()
+
+        namespaces = [e.namespaceURI for e in elements]
+        available_chains = self._available_chains(namespaces, self.state.opts.targetNamespaces)
+
+        first_edges = []
+        for source in namespaces:
+            edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
+            first_edges.extend(edges)
+        if not first_edges:
+            raise StopIteration
+
+        first_edges = self._checked_scripts(first_edges)
+
+        maximal_priority_edges = self._choose_by_preservance_priority(first_edges)
+        if not maximal_priority_edges:
+            raise StopIteration
+        return maximal_priority_edges[0][0]  # TODO: Add it to the list of executed scripts
