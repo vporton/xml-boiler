@@ -28,7 +28,7 @@ class FirejailCommandRunner(object):
 
     def run_pipe(self, args, input):
         # TODO: --rlimit-* --timeout
-        # FIXME: This does not isolate from X11!
+        # FIXME: This does not isolate from X11 on Linux because of abstract sockets!
         fj = ['firejail', '--shell=none', '-c', '--quiet', '--caps.drop=all', '--disable-mnt',
               '--protocol=unix,inet',  # TODO: Also enable IPv6 (after creating the firewall)
               '--netfilter=' + self.netfilter,
