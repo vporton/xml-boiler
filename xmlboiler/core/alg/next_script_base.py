@@ -88,3 +88,21 @@ class ScriptsIteratorBase(ABC):
             if NSs[0] in s.transformer.source_namespaces:
                 scripts.append(s)
         return self._checked_scripts(scripts)
+
+    def all_childs_in_taget_hash(self):
+        result = set()
+
+        # use depth-first search
+        stack = []
+        stack.append(self.state.xml.documentElement)
+        while stack:
+            v = stack.pop()
+            if not v.childNodes:
+                for x in reversed(stack):
+                    if x.namespaceURI not in self.state.opts.targetNamespaces:
+                        break
+                    result.add(x)
+            for w in v.childNodes:
+                stack.append(w)
+
+        return result
