@@ -16,6 +16,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
+
+
 def _enumerate_xml_namespaces(state):
     stack = [state.xml.documentElement]
     while stack:
@@ -23,3 +26,14 @@ def _enumerate_xml_namespaces(state):
         for w in v.childNodes:
             yield w.namespaceURI
             stack.append(w)
+
+
+def _enumerate_child_namespaces(state):
+    yield from _enumerate_xml_namespaces(state)
+    for order_part in state.opts.recursiveOptions:
+        if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
+            FIXME
+        elif order_part == RecursiveRetrievalPriorityOrderElement.TARGETS:
+            FIXME
+        elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
+            FIXME

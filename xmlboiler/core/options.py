@@ -39,6 +39,7 @@ class RecursiveDownload(Enum):
 class RecursiveRetrievalPriorityOrderElement(Enum):
     SOURCES = auto()
     TARGETS = auto()
+    WORKFLOW_TARGETS = auto()
 
 class RecursiveRetrievalPriority(OrderedSet):
     """
