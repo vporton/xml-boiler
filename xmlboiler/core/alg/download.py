@@ -28,12 +28,16 @@ def _enumerate_xml_namespaces(state):
             stack.append(w)
 
 
-def _enumerate_child_namespaces(state):
+def _enumerate_child_namespaces(state, asset):
     yield from _enumerate_xml_namespaces(state)
     for order_part in state.opts.recursiveOptions:
         if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
-            FIXME
+            for t in asset.transformers:
+                for s in t.source_namespaces:
+                    yield s
         elif order_part == RecursiveRetrievalPriorityOrderElement.TARGETS:
-            FIXME
+            for t in asset.transformers:
+                for s in t.target_namespaces:
+                    yield s
         elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
-            FIXME
+            yield from state.opts.targetNamespaces
