@@ -42,3 +42,7 @@ def _enumerate_child_namespaces(state, asset):
         elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
             # TODO: It may happen atmost once, may optimize not to run it again
             yield from state.opts.targetNamespaces
+
+
+def depth_first_download(state):
+    stack
