@@ -17,11 +17,11 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-from typing import NamedTuple, Optional
+from typing import NamedTuple, Optional, Callable, List
 from enum import Enum, auto
 from ordered_set import OrderedSet
 
-from rdflib import URIRef
+from rdflib import URIRef, Graph
 
 ### Base ###
 from xmlboiler.core.execution_context import ExecutionContext
@@ -50,6 +50,7 @@ class RecursiveRetrievalPriority(OrderedSet):
     pass
 
 class RecursiveDownloadOptions(NamedTuple):
+    downloader: List[List[Callable[[URIRef], Graph]]]
     initial_assets: OrderedSet[URIRef]  # downloaded before the main loop
     recursive_download: RecursiveDownload
     retrieval_priority: RecursiveRetrievalPriority
