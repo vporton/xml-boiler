@@ -24,7 +24,7 @@ from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
 
 # https://softwareengineering.stackexchange.com/questions/358931/breadth-first-traversal-with-some-edges-preferred/358937#358937
 
-# FIXME: Actual downloading of assets
+# FIXME: Actual downloading of assets (`asset` variable should be changed!)
 
 def _enumerate_xml_namespaces(state):
     stack = [state.xml.documentElement]
