@@ -50,6 +50,7 @@ class RecursiveRetrievalPriority(OrderedSet):
     pass
 
 class RecursiveDownloadOptions(NamedTuple):
+    initial_assets: OrderedSet[URIRef]  # downloaded before the main loop
     recursive_download: RecursiveDownload
     retrieval_priority: RecursiveRetrievalPriority
 
