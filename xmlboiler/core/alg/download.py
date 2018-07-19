@@ -24,6 +24,8 @@ from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
 
 # https://softwareengineering.stackexchange.com/questions/358931/breadth-first-traversal-with-some-edges-preferred/358937#358937
 
+# FIXME: Actual downloading of assets
+
 def _enumerate_xml_namespaces(state):
     stack = [state.xml.documentElement]
     while stack:
@@ -62,10 +64,19 @@ def _enumerate_child_namespaces_without_priority(state, asset):
     return [x.ns for x in _enumerate_child_namespaces(state, asset)]
 
 
+# Recursive algorithm for simplicity
+def depth_first_download(state, asset, discovered):
+    yield asset
+    discovered.add(asset)
+    for ns in _enumerate_child_namespaces_without_priority(state, asset):
+        if ns not in discovered:
+            depth_first_download(state, ns, discovered)  # recursion
+
+
 def our_depth_first_based_download(state):
     for asset in state.opts.initial_assets:
         yield asset
     for asset in state.opts.initial_assets:
-        iter = depth_first_download(state, asset)
+        iter = depth_first_download(state, asset, set(state.opts.initial_assets))
         next(iter)  # do not repeat the above
         yield from iter
