@@ -73,6 +73,7 @@ class DepthFirstDownloader(object):
         self.state = state
 
     # Recursive algorithm for simplicity
+    # FIXME: Don't reuse already added in the past assets
     def depth_first_download(self, asset, downloaders):
         yield asset
         self.state.assets.add(asset)
