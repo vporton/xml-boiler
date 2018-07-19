@@ -22,6 +22,7 @@ import defusedxml
 from rdflib import URIRef
 from rdflib.resource import Resource
 
+from xmlboiler.core.graph.connect import Connectivity
 from xmlboiler.core.graph.relation import BinaryRelation
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
 from xmlboiler.core.rdf_format.asset import ScriptInfo, Transformer
@@ -36,7 +37,7 @@ class BaseState(object):
     opts: TransformationAutomaticWorkflowElementOptions
     assets: set[Resource]
     xml: bytes
-    graph: BinaryRelation[URIRef]
+    graph: BinaryRelation[URIRef]  # FIXME: What is it?
 
 
 class PipelineState(BaseState):
@@ -45,9 +46,10 @@ class PipelineState(BaseState):
     scripts: list[EnrichedScript]
     executed_scripts: set[EnrichedScript]  # TODO: Should be a set/frozenset?
     singletons: set(URIRef)
-    precedences_higher: BinaryRelation
-    precedences_subclasses: BinaryRelation
+    precedences_higher: Connectivity
+    precedences_subclasses: Connectivity
 
     def add_asset(self, asset):
         self.scripts += [script for transformer in asset.transformers for script in transformer.scripts]
-        # TODO
+        self.precedences_higher.add_relation(asset.precedences_higher)
+        self.precedences_subclasses.add_relation(asset.precedences_subclasses)

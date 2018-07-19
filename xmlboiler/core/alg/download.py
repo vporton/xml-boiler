@@ -81,7 +81,7 @@ class DepthFirstDownloader(object):
             if ns not in self.state.assets:
                 for graph in [downloader(ns) for downloader in downloaders]:
                     asset_info = parser.parse(graph)
-                    # TODO: Update state
+                    self.state.add_asset(asset_info)
                     self.depth_first_download(asset_info, downloaders)  # recursion
 
     def our_depth_first_based_download(self):
