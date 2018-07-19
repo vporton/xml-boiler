@@ -65,18 +65,21 @@ def _enumerate_child_namespaces_without_priority(state, asset):
 
 
 # Recursive algorithm for simplicity
-def depth_first_download(state, asset, discovered):
+def depth_first_download(state, asset, downloaders, discovered):
     yield asset
     discovered.add(asset)
     for ns in _enumerate_child_namespaces_without_priority(state, asset):
         if ns not in discovered:
-            depth_first_download(state, ns, discovered)  # recursion
+            for graph in [downloader(ns) for downloader in downloaders]:
+                # FIXME: Update state
+                depth_first_download(state, ns, downloaders, discovered)  # recursion
 
 
 def our_depth_first_based_download(state):
-    for asset in state.opts.initial_assets:
-        yield asset
-    for asset in state.opts.initial_assets:
-        iter = depth_first_download(state, asset, set(state.opts.initial_assets))
-        next(iter)  # do not repeat the above
-        yield from iter
+    for downloaders in state.opts.downloaders:
+        for asset in state.opts.initial_assets:
+            yield asset
+        for asset in state.opts.initial_assets:
+            iter = depth_first_download(state, asset, downloaders, set(state.opts.initial_assets))
+            next(iter)  # do not repeat the above
+            yield from iter
