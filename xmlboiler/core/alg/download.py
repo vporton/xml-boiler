@@ -19,6 +19,8 @@
 from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
 
 
+# https://softwareengineering.stackexchange.com/questions/358931/breadth-first-traversal-with-some-edges-preferred/358937#358937
+
 def _enumerate_xml_namespaces(state):
     stack = [state.xml.documentElement]
     while stack:
@@ -47,5 +49,10 @@ def _enumerate_child_namespaces(state, asset):
             yield from [(priority, ns) for ns in state.opts.targetNamespaces]
 
 
+def _enumerate_child_namespaces_without_priority(state, asset):
+    return [ns for priority, ns in _enumerate_child_namespaces(state, asset)]
+
+
+# Use regular depth-first search
 def depth_first_download(state):
     stack
