@@ -16,6 +16,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from dataclasses import dataclass, field
+from typing import Any
+
 from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
 
 
@@ -29,31 +32,40 @@ def _enumerate_xml_namespaces(state):
             yield w.namespaceURI
             stack.append(w)
 
+@dataclass(order=True)
+class PrioritizedNS:
+    priority: int
+    ns: Any=field(compare=False)
+
 
 # Return a pair (priority, namespace)
 # FIXME: Sort order for NSs of equal priorities is wrong (they should be unordered)
 def _enumerate_child_namespaces(state, asset):
     priority = 0
-    yield from [(priority, ns) for ns in _enumerate_xml_namespaces(state)]
+    yield from [PrioritizedNS(priority, ns) for ns in _enumerate_xml_namespaces(state)]
     for order_part in state.opts.recursiveOptions:
         priority += 1
         if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
             for t in asset.transformers:
                 for s in t.source_namespaces:
-                    yield (priority, s)
+                    yield PrioritizedNS(priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.TARGETS:
             for t in asset.transformers:
                 for s in t.target_namespaces:
-                    yield (priority, s)
+                    yield PrioritizedNS(priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
             # TODO: It may happen atmost once, may optimize not to run it again
-            yield from [(priority, ns) for ns in state.opts.targetNamespaces]
+            yield from [PrioritizedNS(priority, ns) for ns in state.opts.targetNamespaces]
 
 
 def _enumerate_child_namespaces_without_priority(state, asset):
-    return [ns for priority, ns in _enumerate_child_namespaces(state, asset)]
+    return [x.ns for x in _enumerate_child_namespaces(state, asset)]
 
 
-# Use regular depth-first search
-def depth_first_download(state):
-    assets = set()
+def our_depth_first_based_download(state):
+    for asset in state.opts.initial_assets:
+        yield asset
+    for asset in state.opts.initial_assets:
+        iter = depth_first_download(state, asset)
+        next(iter)  # do not repeat the above
+        yield from iter
