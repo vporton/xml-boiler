@@ -24,8 +24,6 @@ from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
 
 # https://softwareengineering.stackexchange.com/questions/358931/breadth-first-traversal-with-some-edges-preferred/358937#358937
 
-# FIXME: Actual downloading of assets (`asset` variable should be changed!)
-# Use the list of lists of downloaders
 from xmlboiler.core.rdf_format import asset_parser
 
 
