@@ -46,3 +46,8 @@ class PipelineState(BaseState):
     executed_scripts: set[EnrichedScript]  # TODO: Should be a set/frozenset?
     singletons: set(URIRef)
     precedences_higher: BinaryRelation
+    precedences_subclasses: BinaryRelation
+
+    def add_asset(self, asset):
+        self.scripts += [script for transformer in asset.transformers for script in transformer.scripts]
+        # TODO
