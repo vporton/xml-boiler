@@ -28,20 +28,23 @@ def _enumerate_xml_namespaces(state):
             stack.append(w)
 
 
+# Return a pair (priority, namespace)
 def _enumerate_child_namespaces(state, asset):
-    yield from _enumerate_xml_namespaces(state)
+    priority = 0
+    yield from [(priority, ns) for ns in _enumerate_xml_namespaces(state)]
     for order_part in state.opts.recursiveOptions:
+        priority += 1
         if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
             for t in asset.transformers:
                 for s in t.source_namespaces:
-                    yield s
+                    yield (priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.TARGETS:
             for t in asset.transformers:
                 for s in t.target_namespaces:
-                    yield s
+                    yield (priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
             # TODO: It may happen atmost once, may optimize not to run it again
-            yield from state.opts.targetNamespaces
+            yield from [(priority, ns) for ns in state.opts.targetNamespaces]
 
 
 def depth_first_download(state):
