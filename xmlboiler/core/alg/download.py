@@ -31,6 +31,7 @@ def _enumerate_xml_namespaces(state):
 
 
 # Return a pair (priority, namespace)
+# FIXME: Sort order for NSs of equal priorities is wrong (they should be unordered)
 def _enumerate_child_namespaces(state, asset):
     priority = 0
     yield from [(priority, ns) for ns in _enumerate_xml_namespaces(state)]
@@ -55,4 +56,4 @@ def _enumerate_child_namespaces_without_priority(state, asset):
 
 # Use regular depth-first search
 def depth_first_download(state):
-    stack
+    assets = set()
