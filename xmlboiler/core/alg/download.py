@@ -73,22 +73,22 @@ class DepthFirstDownloader(object):
         self.state = state
 
     # Recursive algorithm for simplicity
-    def depth_first_download(self, asset, downloaders, discovered):
+    def depth_first_download(self, asset, downloaders):
         yield asset
-        discovered.add(asset)
+        self.state.assets.add(asset)
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
         for ns in _enumerate_child_namespaces_without_priority(asset):
-            if ns not in discovered:
+            if ns not in self.state.assets:
                 for graph in [downloader(ns) for downloader in downloaders]:
                     asset_info = parser.parse(graph)
                     # TODO: Update state
-                    self.depth_first_download(asset_info, downloaders, discovered)  # recursion
+                    self.depth_first_download(asset_info, downloaders)  # recursion
 
     def our_depth_first_based_download(self):
         for downloaders in self.state.opts.downloaders:
             for asset in self.state.opts.initial_assets:
                 yield asset
             for asset in self.state.opts.initial_assets:
-                iter = self.depth_first_download(asset, downloaders, set(self.state.opts.initial_assets))
+                iter = self.depth_first_download(asset, downloaders)
                 next(iter)  # do not repeat the above
                 yield from iter
