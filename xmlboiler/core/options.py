@@ -50,7 +50,7 @@ class RecursiveRetrievalPriority(OrderedSet):
     pass
 
 class RecursiveDownloadOptions(NamedTuple):
-    downloader: List[List[Callable[[URIRef], Graph]]]
+    downloaders: List[List[Callable[[URIRef], Graph]]]
     initial_assets: OrderedSet[URIRef]  # downloaded before the main loop
     recursive_download: RecursiveDownload
     retrieval_priority: RecursiveRetrievalPriority
