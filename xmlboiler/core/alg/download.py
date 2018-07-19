@@ -26,6 +26,8 @@ from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
 
 # FIXME: Actual downloading of assets (`asset` variable should be changed!)
 # Use the list of lists of downloaders
+from xmlboiler.core.rdf_format import asset_parser
+
 
 def _enumerate_xml_namespaces(state):
     stack = [state.xml.documentElement]
@@ -64,22 +66,29 @@ def _enumerate_child_namespaces_without_priority(state, asset):
     return [x.ns for x in _enumerate_child_namespaces(state, asset)]
 
 
-# Recursive algorithm for simplicity
-def depth_first_download(state, asset, downloaders, discovered):
-    yield asset
-    discovered.add(asset)
-    for ns in _enumerate_child_namespaces_without_priority(state, asset):
-        if ns not in discovered:
-            for graph in [downloader(ns) for downloader in downloaders]:
-                # FIXME: Update state
-                depth_first_download(state, ns, downloaders, discovered)  # recursion
+class DepthFirstDownloader(object):
+    def __init__(self, parse_content, subclasses, state):
+        self.parse_content = parse_content
+        self.subclasses = subclasses
+        self.state = state
 
+    # Recursive algorithm for simplicity
+    def depth_first_download(self, asset, downloaders, discovered):
+        yield asset
+        discovered.add(asset)
+        parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
+        for ns in _enumerate_child_namespaces_without_priority(asset):
+            if ns not in discovered:
+                for graph in [downloader(ns) for downloader in downloaders]:
+                    asset_info = parser.parse(graph)
+                    # TODO: Update state
+                    self.depth_first_download(asset_info, downloaders, discovered)  # recursion
 
-def our_depth_first_based_download(state):
-    for downloaders in state.opts.downloaders:
-        for asset in state.opts.initial_assets:
-            yield asset
-        for asset in state.opts.initial_assets:
-            iter = depth_first_download(state, asset, downloaders, set(state.opts.initial_assets))
-            next(iter)  # do not repeat the above
-            yield from iter
+    def our_depth_first_based_download(self):
+        for downloaders in self.state.opts.downloaders:
+            for asset in self.state.opts.initial_assets:
+                yield asset
+            for asset in self.state.opts.initial_assets:
+                iter = self.depth_first_download(asset, downloaders, set(self.state.opts.initial_assets))
+                next(iter)  # do not repeat the above
+                yield from iter
