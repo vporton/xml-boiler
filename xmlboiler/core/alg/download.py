@@ -41,7 +41,6 @@ class PrioritizedNS:
 
 
 # Return a pair (priority, namespace)
-# FIXME: Sort order for NSs of equal priorities is wrong (they should be unordered)
 def _enumerate_child_namespaces(state, asset):
     priority = 0
     yield from [PrioritizedNS(priority, ns) for ns in _enumerate_xml_namespaces(state)]
