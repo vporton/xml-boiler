@@ -80,7 +80,7 @@ class DepthFirstDownloader(object):
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
         for ns in _enumerate_child_namespaces_without_priority(asset):
             if ns not in self.state.assets:
-                # FIXME: Do this iteration fo the root asset, too
+                # FIXME: Do this iteration for the root asset, too
                 for graph in [downloader(ns) for downloader in downloaders]:
                     asset_info = parser.parse(graph)
                     self.state.add_asset(asset_info)
