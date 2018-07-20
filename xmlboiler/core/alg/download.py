@@ -74,6 +74,7 @@ class DepthFirstDownloader(object):
     def depth_first_download(self, asset, downloaders):
         yield asset
         self.state.assets.add(asset)
+        # FIXME: Forgotten self.state.add_asset(asset_info)
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
         for ns in _enumerate_child_namespaces_without_priority(asset):
             if ns not in self.state.assets:
