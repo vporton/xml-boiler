@@ -22,5 +22,8 @@ chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically
 chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
 chain_parser.add_argument('-o', '--output', nargs=1, help='output file (defaults to stdout)')
 chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
+chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not in target NS',
+                          choices=['ignore', 'remove', 'error'])
+chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
 
 args = parser.parse_args()
