@@ -116,7 +116,7 @@ class BreadthFirstSearch(object):
         self.state = state
 
     # https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/
-    def breadth_first_download(self, ns, downloaders):
+    def _breadth_first_download(self, downloaders):
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
         Q = queue.PriorityQueue()
         # we start with this item as the top node of the search (later remove it)
@@ -141,3 +141,7 @@ class BreadthFirstSearch(object):
                         self.state.add_asset(asset_info)
                         yield asset_info
                     Q.put(child)
+
+    def our_breadth_first_based_download(self):
+        iter = [self._breadth_first_download(self, downloaders) for downloaders in self.state.opts.downloaders]
+        return itertools.chain.from_iterable(iter)
