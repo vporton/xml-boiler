@@ -80,7 +80,7 @@ class DepthFirstDownloader(object):
             asset_info = parser.parse(graph)
             self.state.add_asset(asset_info)
             assets.append(asset_info)
-        yield asset
+            yield asset_info
         for ns in _enumerate_child_namespaces_without_priority(asset):
             if ns not in self.state.assets:
                 for asset_info in assets:
