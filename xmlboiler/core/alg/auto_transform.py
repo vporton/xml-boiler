@@ -16,11 +16,11 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-class Phase(object):
+class AutomaticTranformation(object):
     def __init__(self, state):
         self.state = state
 
-    def __next__(self):
+    def _step(self):
         all_namespaces = set()
 
         # depth-first search
@@ -36,4 +36,16 @@ class Phase(object):
 
         self.state.all_namespaces = frozenset(all_namespaces)  # TODO: Is it worth to freeze?
 
-        # TODO
+        if self.state.all_namespaces <= self.state.opts.targetNamespaces:
+            return  # The transformation finished!
+
+        try:
+            script = next(self.state.opts.next_script)  # TODO: add next_script field
+        except StopIteration:
+            # may propagate one more StopIteration, exiting from the main loop
+            asset_info = next(self.state.opts.next_asset)  # TODO: add next_asset field
+            # TODO: Apply all scripts from asset_info (and add them to the set of executed scripts)
+
+    def run(self):
+        while True:
+            self._step()  # may raise StopIteration
