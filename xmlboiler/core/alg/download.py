@@ -77,12 +77,13 @@ class DepthFirstDownloader(object):
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
         self.state.assets.add(ns)
         assets = []
-        if ns not in self.state.assets:
-            for graph in [downloader(ns) for downloader in downloaders]:
-                asset_info = parser.parse(graph)
-                self.state.add_asset(asset_info)
-                assets.append(asset_info)
-            yield assets
+        if ns in self.state.assets:
+            return
+        for graph in [downloader(ns) for downloader in downloaders]:
+            asset_info = parser.parse(graph)
+            self.state.add_asset(asset_info)
+            assets.append(asset_info)
+        yield assets
         for ns2 in _enumerate_child_namespaces_without_priority(ns):
             if ns2 not in self.state.assets:
                 self.depth_first_download(ns2, downloaders)  # recursion
