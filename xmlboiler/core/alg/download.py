@@ -128,10 +128,11 @@ class BreadthFirstSearch(object):
         while not Q.empty():  # in Python 3.7 bool(Q) does not work
             v = Q.get()
             # TODO: Enumerate the top level differently
-            for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):
+            for child in _enumerate_child_namespaces(self.state, ns):
+                ns2 = child.ns
                 if ns2 not in self.state.assets:
-                    self.state.assets.add(ns2)
+                    self.state.assets.add(ns2)  # mark as visited
                     for graph in [downloader(ns2) for downloader in downloaders]:
                         asset_info = parser.parse(graph)
                         self.state.add_asset(asset_info)
-                        # assets.append(asset_info)
+                    Q.put(child)
