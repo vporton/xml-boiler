@@ -71,22 +71,22 @@ class DepthFirstDownloader(object):
         self.state = state
 
     # Recursive algorithm for simplicity.
-    # It returns a list of assets, because in our_depth_first_based_download() we need to discard multiple assets.
+    # Every yield produces a list of assets, because in our_depth_first_based_download() we need to discard multiple assets.
     # FIXME: Check for errors
-    def depth_first_download(self, asset, downloaders):
+    def depth_first_download(self, ns, downloaders):
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
-        self.state.assets.add(asset)
+        self.state.assets.add(ns)
         assets = []
-        for graph in [downloader(asset) for downloader in downloaders]:
-            # FIXME: Don't download already downloaded assets
-            asset_info = parser.parse(graph)
-            self.state.add_asset(asset_info)
-            assets.append(asset_info)
+        if ns not in self.state.assets:
+            for graph in [downloader(ns) for downloader in downloaders]:
+                asset_info = parser.parse(graph)
+                self.state.add_asset(asset_info)
+                assets.append(asset_info)
         yield assets
-        for ns in _enumerate_child_namespaces_without_priority(asset):
-            if ns not in self.state.assets:
+        for ns2 in _enumerate_child_namespaces_without_priority(ns):
+            if ns2 not in self.state.assets:
                 for asset_info in assets:
-                    self.depth_first_download(asset_info, downloaders)  # recursion
+                    self.depth_first_download(ns2, downloaders)  # recursion
 
     # TODO: Yield individual assets, not lists?
     def our_depth_first_based_download(self):
