@@ -71,31 +71,32 @@ class DepthFirstDownloader(object):
         self.state = state
 
     # Recursive algorithm for simplicity.
-    # Every yield produces a list of assets, because in our_depth_first_based_download() we need to discard multiple assets.
-    # FIXME: Check for errors
+    # Every yield produces a list of assets (not individual assets),
+    # because in our_depth_first_based_download() we need to discard multiple assets.
     def depth_first_download(self, ns, downloaders):
-        parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
-        self.state.assets.add(ns)
-        assets = []
         if ns in self.state.assets:
             return
+        self.state.assets.add(ns)
+        parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
+        assets = []
         for graph in [downloader(ns) for downloader in downloaders]:
             asset_info = parser.parse(graph)
             self.state.add_asset(asset_info)
             assets.append(asset_info)
         yield assets
-        for ns2 in _enumerate_child_namespaces_without_priority(ns):
-            if ns2 not in self.state.assets:
-                self.depth_first_download(ns2, downloaders)  # recursion
+        for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):
+            # if ns2 not in self.state.assets: # checked above
+            self.depth_first_download(ns2, downloaders)  # recursion
 
     # TODO: Yield individual assets, not lists?
     def our_depth_first_based_download(self):
         for downloaders in self.state.opts.downloaders:
-            # FIXME: Messed NS and asset_info
+            for assets in self.state.opts.initial_assets:
+                yield assets
             for asset in self.state.opts.initial_assets:
-                yield asset
-            for asset in self.state.opts.initial_assets:
-                # FIXME: This code relies on the assumption that the first asset is always returned by depth_first_download().
-                iter = self.depth_first_download(asset, downloaders)
-                next(iter)  # do not repeat the above
-                yield from iter
+                try:
+                    iter = self.depth_first_download(asset, downloaders)
+                    next(iter)  # do not repeat the above
+                    yield from iter
+                except StopIteration:
+                    pass
