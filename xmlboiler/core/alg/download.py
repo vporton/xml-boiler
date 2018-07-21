@@ -78,6 +78,7 @@ class DepthFirstDownloader(object):
         self.state.assets.add(asset)
         assets = []
         for graph in [downloader(asset) for downloader in downloaders]:
+            # FIXME: Don't download already downloaded assets
             asset_info = parser.parse(graph)
             self.state.add_asset(asset_info)
             assets.append(asset_info)
