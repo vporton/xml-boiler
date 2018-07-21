@@ -38,6 +38,7 @@ def _enumerate_xml_namespaces(state):
 
 @dataclass(order=True)
 class PrioritizedNS:
+    root: bool=field(False, init=False)  # (fake) root node, enqueued first, so should be dequeued first (have greatest priority)
     priority: int
     ns: Any=field(compare=False)
 
@@ -115,11 +116,22 @@ class BreadthFirstSearch(object):
         self.state = state
 
     # https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/
-    def breadth_first_download(self):
+    # TODO: Call yield
+    def breadth_first_download(self, ns, downloaders):
+        parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
         Q = queue.PriorityQueue()
-        # we start with item None as the top node of the search (later remove it)
-        Q.put(None)  # FIXME: What is the priority order for this node?
-        # no need to mark None as visited, because it is not actually traversed
+        # we start with this item as the top node of the search (later remove it)
+        fake_root = PrioritizedNS()
+        fake_root.root = True
+        Q.put(fake_root)
+        # no need to mark fake_root as visited, because it is not actually traversed
         while not Q.empty():  # in Python 3.7 bool(Q) does not work
             v = Q.get()
-            # TODO
+            # TODO: Enumerate the top level differently
+            for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):
+                if ns2 not in self.state.assets:
+                    self.state.assets.add(ns2)
+                    for graph in [downloader(ns2) for downloader in downloaders]:
+                        asset_info = parser.parse(graph)
+                        self.state.add_asset(asset_info)
+                        # assets.append(asset_info)
