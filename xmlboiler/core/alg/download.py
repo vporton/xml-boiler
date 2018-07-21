@@ -117,6 +117,7 @@ class BreadthFirstSearch(object):
 
     # https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/
     # TODO: Call yield
+    # TODO: remove the fake root node
     def breadth_first_download(self, ns, downloaders):
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
         Q = queue.PriorityQueue()
@@ -127,8 +128,12 @@ class BreadthFirstSearch(object):
         # no need to mark fake_root as visited, because it is not actually traversed
         while not Q.empty():  # in Python 3.7 bool(Q) does not work
             v = Q.get()
-            # TODO: Enumerate the top level differently
-            for child in _enumerate_child_namespaces(self.state, v.ns):
+            if v.root:  # enumerate the top level differently
+                # use priority above all other priorities
+                childs = [(100, info) for info in self.state.opts.initial_assets]
+            else:
+                childs = _enumerate_child_namespaces(self.state, v.ns)
+            for child in childs:
                 ns2 = child.ns
                 if ns2 not in self.state.assets:
                     self.state.assets.add(ns2)  # mark as visited
