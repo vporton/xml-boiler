@@ -70,7 +70,8 @@ class DepthFirstDownloader(object):
         self.subclasses = subclasses
         self.state = state
 
-    # Recursive algorithm for simplicity
+    # Recursive algorithm for simplicity.
+    # It returns a list of assets, because in our_depth_first_based_download() we need to discard multiple assets.
     # FIXME: Check for errors
     def depth_first_download(self, asset, downloaders):
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
@@ -80,12 +81,13 @@ class DepthFirstDownloader(object):
             asset_info = parser.parse(graph)
             self.state.add_asset(asset_info)
             assets.append(asset_info)
-            yield asset_info
+        yield assets
         for ns in _enumerate_child_namespaces_without_priority(asset):
             if ns not in self.state.assets:
                 for asset_info in assets:
                     self.depth_first_download(asset_info, downloaders)  # recursion
 
+    # TODO: Yield individual assets, not lists?
     def our_depth_first_based_download(self):
         for downloaders in self.state.opts.downloaders:
             for asset in self.state.opts.initial_assets:
