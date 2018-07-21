@@ -116,8 +116,6 @@ class BreadthFirstSearch(object):
         self.state = state
 
     # https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/
-    # TODO: Call yield
-    # TODO: remove the fake root node
     def breadth_first_download(self, ns, downloaders):
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
         Q = queue.PriorityQueue()
@@ -125,6 +123,7 @@ class BreadthFirstSearch(object):
         fake_root = PrioritizedNS()
         fake_root.root = True
         Q.put(fake_root)
+        # yield deliberately not called
         # no need to mark fake_root as visited, because it is not actually traversed
         while not Q.empty():  # in Python 3.7 bool(Q) does not work
             v = Q.get()
@@ -140,4 +139,5 @@ class BreadthFirstSearch(object):
                     for graph in [downloader(ns2) for downloader in downloaders]:
                         asset_info = parser.parse(graph)
                         self.state.add_asset(asset_info)
+                        yield asset_info
                     Q.put(child)
