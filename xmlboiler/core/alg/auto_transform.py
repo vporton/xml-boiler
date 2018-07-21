@@ -16,3 +16,24 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+class Phase(object):
+    def __init__(self, state):
+        self.state = state
+
+    def __next__(self):
+        all_namespaces = set()
+
+        # depth-first search
+        parents = []
+        elt = self.state.xml.documentElement
+        parents.append(elt)
+        while parents:
+            v = parents.pop()
+            if v.namespaceURI is not None:
+                all_namespaces.append(v.namespaceURI)
+            for w in v.childNodes:
+                parents.append(w)
+
+        self.state.all_namespaces = frozenset(all_namespaces)  # TODO: Is it worth to freeze?
+
+        # TODO
