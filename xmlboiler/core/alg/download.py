@@ -85,8 +85,7 @@ class DepthFirstDownloader(object):
         yield assets
         for ns2 in _enumerate_child_namespaces_without_priority(ns):
             if ns2 not in self.state.assets:
-                for asset_info in assets:
-                    self.depth_first_download(ns2, downloaders)  # recursion
+                self.depth_first_download(ns2, downloaders)  # recursion
 
     # TODO: Yield individual assets, not lists?
     def our_depth_first_based_download(self):
