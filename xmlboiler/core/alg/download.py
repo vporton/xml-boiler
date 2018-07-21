@@ -73,17 +73,23 @@ class DepthFirstDownloader(object):
     # TODO: Refactor self.state.assets.add(asset) and self.state.add_asset(asset_info) into separate class (possible?)
     #       or just separate method.
     # Recursive algorithm for simplicity
+    # FIXME: Check for errors
     def depth_first_download(self, asset, downloaders):
-        yield asset
-        self.state.assets.add(asset)
-        # FIXME: Forgotten self.state.add_asset(asset_info)
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
+        self.state.assets.add(asset)
+        for graph in [downloader(asset) for downloader in downloaders]:
+            asset_info = parser.parse(graph)
+            self.state.add_asset(asset_info)
+        yield asset
+        assets = []
+        for graph in [downloader(asset) for downloader in downloaders]:
+            asset_info = parser.parse(graph)
+            self.state.add_asset(asset_info)
+            self.depth_first_download(asset_info, downloaders)  # recursion
+            assets.append(asset_info)
         for ns in _enumerate_child_namespaces_without_priority(asset):
             if ns not in self.state.assets:
-                # FIXME: Do this iteration for the root asset, too
-                for graph in [downloader(ns) for downloader in downloaders]:
-                    asset_info = parser.parse(graph)
-                    self.state.add_asset(asset_info)
+                for asset_info in assets:
                     self.depth_first_download(asset_info, downloaders)  # recursion
 
     def our_depth_first_based_download(self):
