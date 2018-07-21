@@ -70,8 +70,6 @@ class DepthFirstDownloader(object):
         self.subclasses = subclasses
         self.state = state
 
-    # TODO: Refactor self.state.assets.add(asset) and self.state.add_asset(asset_info) into separate class (possible?)
-    #       or just separate method.
     # Recursive algorithm for simplicity
     # FIXME: Check for errors
     def depth_first_download(self, asset, downloaders):
