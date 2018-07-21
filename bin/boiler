@@ -12,6 +12,8 @@ subparsers = parser.add_subparsers(title='subcommands')
 
 parser.add_argument('-p', '--preload', help='preload asset', action='append', metavar='NAMESPACE')
 parser.add_argument('-r', '--recursive', help='recursive download mode', choices=['none', 'breadth', 'depth'])
+parser.add_argument('-x', '--recursive-order', metavar='ORDER',
+                    help='recursive download order (comma separated "sources", "targets", "workflowtargets")')
 
 chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
 chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
