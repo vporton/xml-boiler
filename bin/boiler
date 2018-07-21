@@ -11,7 +11,8 @@ To support this project:
 subparsers = parser.add_subparsers(title='subcommands')
 
 parser.add_argument('-p', '--preload', help='preload asset', action='append', metavar='NAMESPACE')
-parser.add_argument('-r', '--recursive', help='recursive download mode', choices=['none', 'breadth', 'depth'])
+parser.add_argument('-r', '--recursive', help='recursive download mode (none, breadth-first, depth-first)',
+                    choices=['none', 'breadth', 'depth'])
 parser.add_argument('-x', '--recursive-order', metavar='ORDER',
                     help='recursive download order (comma separated "sources", "targets", "workflowtargets")')
 
