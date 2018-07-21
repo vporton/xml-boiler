@@ -15,7 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+import itertools
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -88,8 +88,9 @@ class DepthFirstDownloader(object):
             # if ns2 not in self.state.assets: # checked above
             self.depth_first_download(ns2, downloaders)  # recursion
 
-    # TODO: Yield individual assets, not lists?
-    def our_depth_first_based_download(self):
+    # Every yield produces a list of assets (not individual assets),
+    # because in our_depth_first_based_download() we need to discard multiple assets.
+    def _our_depth_first_based_download(self):
         for downloaders in self.state.opts.downloaders:
             for assets in self.state.opts.initial_assets:
                 yield assets
@@ -100,3 +101,7 @@ class DepthFirstDownloader(object):
                     yield from iter
                 except StopIteration:
                     pass
+
+    # Merge list of lists (in fact, iterators) into one list
+    def our_depth_first_based_download(self):
+        return itertools.chain.from_iterable(self._our_depth_first_based_download())
