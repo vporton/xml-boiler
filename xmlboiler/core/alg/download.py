@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 import itertools
+import queue
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -105,3 +106,20 @@ class DepthFirstDownloader(object):
     # Merge list of lists (in fact, iterators) into one list
     def our_depth_first_based_download(self):
         return itertools.chain.from_iterable(self._our_depth_first_based_download())
+
+
+class BreadthFirstSearch(object):
+    def __init__(self, parse_content, subclasses, state):
+        self.parse_content = parse_content
+        self.subclasses = subclasses
+        self.state = state
+
+    # https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/
+    def breadth_first_download(self):
+        Q = queue.PriorityQueue()
+        # we start with item None as the top node of the search (later remove it)
+        Q.put(None)
+        # no need to mark None as visited, because it is not actually traversed
+        while not Q.empty():  # in Python 3.7 bool(Q) does not work
+            v = Q.get()
+            # TODO
