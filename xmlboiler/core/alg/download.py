@@ -128,7 +128,7 @@ class BreadthFirstSearch(object):
         while not Q.empty():  # in Python 3.7 bool(Q) does not work
             v = Q.get()
             # TODO: Enumerate the top level differently
-            for child in _enumerate_child_namespaces(self.state, ns):
+            for child in _enumerate_child_namespaces(self.state, v.ns):
                 ns2 = child.ns
                 if ns2 not in self.state.assets:
                     self.state.assets.add(ns2)  # mark as visited
