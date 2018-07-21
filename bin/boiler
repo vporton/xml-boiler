@@ -15,6 +15,8 @@ parser.add_argument('-r', '--recursive', help='recursive download mode (none, br
                     choices=['none', 'breadth', 'depth'])
 parser.add_argument('-x', '--recursive-order', metavar='ORDER',
                     help='recursive download order (comma separated "sources", "targets", "workflowtargets")')
+parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS',
+                    help='a plus-separated list of comma-separated lists of "builtin","ns"')
 
 chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
 chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
