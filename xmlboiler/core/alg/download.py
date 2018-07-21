@@ -91,9 +91,11 @@ class DepthFirstDownloader(object):
     # TODO: Yield individual assets, not lists?
     def our_depth_first_based_download(self):
         for downloaders in self.state.opts.downloaders:
+            # FIXME: Messed NS and asset_info
             for asset in self.state.opts.initial_assets:
                 yield asset
             for asset in self.state.opts.initial_assets:
+                # FIXME: This code relies on the assumption that the first asset is always returned by depth_first_download().
                 iter = self.depth_first_download(asset, downloaders)
                 next(iter)  # do not repeat the above
                 yield from iter
