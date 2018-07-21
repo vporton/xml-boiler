@@ -118,7 +118,7 @@ class BreadthFirstSearch(object):
     def breadth_first_download(self):
         Q = queue.PriorityQueue()
         # we start with item None as the top node of the search (later remove it)
-        Q.put(None)
+        Q.put(None)  # FIXME: What is the priority order for this node?
         # no need to mark None as visited, because it is not actually traversed
         while not Q.empty():  # in Python 3.7 bool(Q) does not work
             v = Q.get()
