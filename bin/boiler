@@ -10,7 +10,8 @@ To support this project:
 - Buy tokens at https://crypto4ngo.org/project/view/4""")
 subparsers = parser.add_subparsers(title='subcommands')
 
-parser.add_argument('-p', '--preload', help='Preload asset', action='append', metavar='NAMESPACE')
+parser.add_argument('-p', '--preload', help='preload asset', action='append', metavar='NAMESPACE')
+parser.add_argument('-r', '--recursive', help='recursive download mode', choices=['none', 'breadth', 'depth'])
 
 chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
 chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
