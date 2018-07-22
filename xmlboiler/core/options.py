@@ -48,7 +48,7 @@ class RecursiveRetrievalPriority(OrderedSet):
     """
     pass
 
-@dataclass
+@dataclass(init=False)
 class RecursiveDownloadOptions(object):
     downloaders: List[List[Callable[[URIRef], Graph]]]
     initial_assets: OrderedSet  # OrderedSet[URIRef]  # downloaded before the main loop
@@ -58,7 +58,7 @@ class RecursiveDownloadOptions(object):
 # In this version the same options are applied to all elements of the
 # workflow, but in future we may increase "granularity" to have different
 # options for different elements.
-@dataclass
+@dataclass(init=False)
 class BaseAutomaticWorkflowElementOptions(object):
     execution_context: ExecutionContext
     kind: WorklowKind
@@ -70,7 +70,7 @@ class ValidationOrderType(Enum):
     DEPTH_FIRST   = auto()
     BREADTH_FIRST = auto()
 
-@dataclass
+@dataclass(init=False)
 class ValidationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     validation_order: ValidationOrderType
     unknown_namespaces_is_invalid: bool
@@ -82,7 +82,7 @@ class NotInTargetNamespace(Enum):
     REMOVE = auto()
     ERROR  = auto()
 
-@dataclass
+@dataclass(init=False)
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     not_in_target_namespace: NotInTargetNamespace
     universal_precendence: Optional[URIRef]  # TODO: Find a better name for this option
