@@ -15,9 +15,8 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-
-from typing import NamedTuple, Optional, Callable, List
+from dataclasses import dataclass
+from typing import Optional, Callable, List
 from enum import Enum, auto
 from ordered_set import OrderedSet
 
@@ -49,7 +48,8 @@ class RecursiveRetrievalPriority(OrderedSet):
     """
     pass
 
-class RecursiveDownloadOptions(NamedTuple):
+@dataclass
+class RecursiveDownloadOptions(object):
     downloaders: List[List[Callable[[URIRef], Graph]]]
     initial_assets: OrderedSet  # OrderedSet[URIRef]  # downloaded before the main loop
     recursive_download: RecursiveDownload
@@ -58,7 +58,8 @@ class RecursiveDownloadOptions(NamedTuple):
 # In this version the same options are applied to all elements of the
 # workflow, but in future we may increase "granularity" to have different
 # options for different elements.
-class BaseAutomaticWorkflowElementOptions(NamedTuple):
+@dataclass
+class BaseAutomaticWorkflowElementOptions(object):
     execution_context: ExecutionContext
     kind: WorklowKind
     recursive_options: RecursiveDownloadOptions
@@ -69,6 +70,7 @@ class ValidationOrderType(Enum):
     DEPTH_FIRST   = auto()
     BREADTH_FIRST = auto()
 
+@dataclass
 class ValidationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     validation_order: ValidationOrderType
     unknown_namespaces_is_invalid: bool
@@ -80,6 +82,7 @@ class NotInTargetNamespace(Enum):
     REMOVE = auto()
     ERROR  = auto()
 
+@dataclass
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     not_in_target_namespace: NotInTargetNamespace
     universal_precendence: Optional[URIRef]  # TODO: Find a better name for this option
