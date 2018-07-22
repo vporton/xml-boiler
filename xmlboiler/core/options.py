@@ -48,21 +48,21 @@ class RecursiveRetrievalPriority(OrderedSet):
     """
     pass
 
-@dataclass(init=False)
+@dataclass
 class RecursiveDownloadOptions(object):
-    downloaders: List[List[Callable[[URIRef], Graph]]]
-    initial_assets: OrderedSet  # OrderedSet[URIRef]  # downloaded before the main loop
-    recursive_download: RecursiveDownload
-    retrieval_priority: RecursiveRetrievalPriority
+    downloaders: List[List[Callable[[URIRef], Graph]]] = None
+    initial_assets: OrderedSet = None  # OrderedSet[URIRef]  # downloaded before the main loop
+    recursive_download: RecursiveDownload = None
+    retrieval_priority: RecursiveRetrievalPriority = None
 
 # In this version the same options are applied to all elements of the
 # workflow, but in future we may increase "granularity" to have different
 # options for different elements.
-@dataclass(init=False)
+@dataclass
 class BaseAutomaticWorkflowElementOptions(object):
-    execution_context: ExecutionContext
-    kind: WorklowKind
-    recursive_options: RecursiveDownloadOptions
+    execution_context: ExecutionContext = None
+    kind: WorklowKind = None
+    recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
 
 ### Validation ###
 
@@ -70,10 +70,10 @@ class ValidationOrderType(Enum):
     DEPTH_FIRST   = auto()
     BREADTH_FIRST = auto()
 
-@dataclass(init=False)
+@dataclass
 class ValidationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
-    validation_order: ValidationOrderType
-    unknown_namespaces_is_invalid: bool
+    validation_order: ValidationOrderType = None
+    unknown_namespaces_is_invalid: bool = None
 
 ### Transformation ###
 
@@ -82,8 +82,8 @@ class NotInTargetNamespace(Enum):
     REMOVE = auto()
     ERROR  = auto()
 
-@dataclass(init=False)
+@dataclass
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
-    not_in_target_namespace: NotInTargetNamespace
-    universal_precendence: Optional[URIRef]  # TODO: Find a better name for this option
-    target_namespaces: frozenset  # frozenset[URIRef]
+    not_in_target_namespace: NotInTargetNamespace = None
+    universal_precendence: Optional[URIRef] = None  # TODO: Find a better name for this option
+    target_namespaces: frozenset = None  # frozenset[URIRef]

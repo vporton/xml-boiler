@@ -2,6 +2,8 @@
 
 import argparse
 
+from ordered_set import OrderedSet
+
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -37,3 +39,4 @@ except TypeError:
 
 options = args.options_object()
 
+options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else args.preload)
