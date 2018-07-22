@@ -2,6 +2,8 @@
 
 import argparse
 
+# from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
+
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                  description="""Automatically process XML.\n
 To support this project:
@@ -26,4 +28,11 @@ chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not
                           choices=['ignore', 'remove', 'error'])
 chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
 
-args = parser.parse_args()
+try:
+    args = parser.parse_args()
+except TypeError:
+    parser.print_usage()
+    exit()
+
+# options = TransformationAutomaticWorkflowElementOptions()
+
