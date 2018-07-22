@@ -28,11 +28,11 @@ def _precedence(edge):
 
 class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
-        available_chains = self._available_chains(self.state.all_namespaces, self.state.opts.targetNamespaces)
+        available_chains = self._available_chains(self.state.all_namespaces, self.state.opts.target_namespaces)
 
         first_edges = []
         for source in self.state.all_namespaces:
-            edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
+            edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.target_namespaces)
             first_edges.extend(edges)
         if not first_edges:
             raise StopIteration

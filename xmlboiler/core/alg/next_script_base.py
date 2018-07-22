@@ -57,7 +57,7 @@ class ScriptsIteratorBase(ABC):
         # TODO: inefficient? should hold the graph, not re-create it
         available_chains = GraphOfScripts(None, destinations, self.state.universal_precedence, self.state.precedences_higher)
         available_chains.add_scripts(self.state.scripts)
-        available_chains.graph.add_node(self.state.opts.targetNamespaces)
+        available_chains.graph.add_node(self.state.opts.target_namespaces)
         for source in sources:
             available_chains.graph.add_node(frozenset([source]))
         available_chains.adjust()
@@ -99,7 +99,7 @@ class ScriptsIteratorBase(ABC):
             v = stack.pop()
             if not v.childNodes:
                 for x in reversed(stack):
-                    if x.namespaceURI not in self.state.opts.targetNamespaces:
+                    if x.namespaceURI not in self.state.opts.target_namespaces:
                         break
                     result.add(x)  # FIXME: What's about parents/childs?
             for w in v.childNodes:

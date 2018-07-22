@@ -30,10 +30,10 @@ class ScriptsIterator(ScriptsIteratorBase):
         element = self.all_childs_in_taget_hash()[0]  # TODO: may be not quick enough
 
         source = element.namespaceURI
-        available_chains = self._available_chains([source], self.state.opts.targetNamespaces)
+        available_chains = self._available_chains([source], self.state.opts.target_namespaces)
 
         first_edges = []
-        edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.targetNamespaces)
+        edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.target_namespaces)
         first_edges.extend(edges)
         if not first_edges:
             raise StopIteration

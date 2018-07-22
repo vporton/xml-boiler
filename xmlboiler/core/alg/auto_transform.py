@@ -36,7 +36,7 @@ class AutomaticTranformation(object):
 
         self.state.all_namespaces = frozenset(all_namespaces)  # TODO: Is it worth to freeze?
 
-        if self.state.all_namespaces <= self.state.opts.targetNamespaces:
+        if self.state.all_namespaces <= self.state.opts.target_namespaces:
             return  # The transformation finished!
 
         try:

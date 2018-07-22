@@ -48,7 +48,7 @@ class PrioritizedNS:
 def _enumerate_child_namespaces(state, asset):
     priority = 0
     yield from [PrioritizedNS(priority, ns) for ns in _enumerate_xml_namespaces(state)]
-    for order_part in state.opts.recursiveOptions:
+    for order_part in state.opts.recursive_options:
         priority += 1
         if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
             for t in asset.transformers:
@@ -60,7 +60,7 @@ def _enumerate_child_namespaces(state, asset):
                     yield PrioritizedNS(priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
             # TODO: It may happen atmost once, may optimize not to run it again
-            yield from [PrioritizedNS(priority, ns) for ns in state.opts.targetNamespaces]
+            yield from [PrioritizedNS(priority, ns) for ns in state.opts.target_namespaces]
 
 
 def _enumerate_child_namespaces_without_priority(state, asset):

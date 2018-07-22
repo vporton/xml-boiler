@@ -61,7 +61,7 @@ class RecursiveDownloadOptions(NamedTuple):
 class BaseAutomaticWorkflowElementOptions(NamedTuple):
     execution_context: ExecutionContext
     kind: WorklowKind
-    recursiveOptions: RecursiveDownloadOptions
+    recursive_options: RecursiveDownloadOptions
 
 ### Validation ###
 
@@ -70,8 +70,8 @@ class ValidationOrderType(Enum):
     BREADTH_FIRST = auto()
 
 class ValidationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
-    validationOrder: ValidationOrderType
-    UnknownNamespacesIsInvalid: bool
+    validation_order: ValidationOrderType
+    unknown_namespaces_is_invalid: bool
 
 ### Transformation ###
 
@@ -81,6 +81,6 @@ class NotInTargetNamespace(Enum):
     ERROR  = auto()
 
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
-    notInTargetNamespace: NotInTargetNamespace
-    universalPrecendence: Optional[URIRef]  # TODO: Find a better name for this option
-    targetNamespaces: frozenset  # frozenset[URIRef]
+    not_in_target_namespace: NotInTargetNamespace
+    universal_precendence: Optional[URIRef]  # TODO: Find a better name for this option
+    target_namespaces: frozenset  # frozenset[URIRef]
