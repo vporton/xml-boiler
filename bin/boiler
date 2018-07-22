@@ -21,6 +21,7 @@ parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS',
                     help='a plus-separated list of comma-separated lists of "builtin","ns"')
 
 chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
+chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
 chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
 chain_parser.add_argument('-o', '--output', nargs=1, help='output file (defaults to stdout)')
 chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
@@ -34,5 +35,5 @@ except TypeError:
     parser.print_usage()
     exit()
 
-# options = TransformationAutomaticWorkflowElementOptions()
+options = args.options_object()
 
