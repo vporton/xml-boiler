@@ -51,7 +51,7 @@ class RecursiveRetrievalPriority(OrderedSet):
 
 class RecursiveDownloadOptions(NamedTuple):
     downloaders: List[List[Callable[[URIRef], Graph]]]
-    initial_assets: OrderedSet[URIRef]  # downloaded before the main loop
+    initial_assets: OrderedSet  # OrderedSet[URIRef]  # downloaded before the main loop
     recursive_download: RecursiveDownload
     retrieval_priority: RecursiveRetrievalPriority
 
@@ -83,4 +83,4 @@ class NotInTargetNamespace(Enum):
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     notInTargetNamespace: NotInTargetNamespace
     universalPrecendence: Optional[URIRef]  # TODO: Find a better name for this option
-    targetNamespaces: frozenset[URIRef]
+    targetNamespaces: frozenset  # frozenset[URIRef]

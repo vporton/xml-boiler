@@ -2,7 +2,7 @@
 
 import argparse
 
-# from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
+from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                  description="""Automatically process XML.\n
