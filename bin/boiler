@@ -64,3 +64,8 @@ else:
         OrderedSet([RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS,
                     RecursiveRetrievalPriorityOrderElement.TARGETS,
                     RecursiveRetrievalPriorityOrderElement.SOURCES])
+
+# FIXME: don't execute commands from remote scripts (without not yet working jail)
+#        (So downloading from URLs does not make sense yet)
+
+# TODO
