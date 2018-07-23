@@ -23,6 +23,7 @@ from ordered_set import OrderedSet
 from rdflib import URIRef, Graph
 
 ### Base ###
+from xmlboiler.core.alg.download import BaseDownloadAlgorithm
 from xmlboiler.core.execution_context import ExecutionContext
 
 
@@ -50,6 +51,7 @@ class RecursiveRetrievalPriority(OrderedSet):
 
 @dataclass
 class RecursiveDownloadOptions(object):
+    download_algorithm: BaseDownloadAlgorithm = None
     downloaders: List[List[Callable[[URIRef], Graph]]] = None
     initial_assets: OrderedSet = None  # OrderedSet[URIRef]  # downloaded before the main loop
     recursive_download: RecursiveDownload = None

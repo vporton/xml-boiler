@@ -67,12 +67,18 @@ def _enumerate_child_namespaces_without_priority(state, asset):
     return [x.ns for x in _enumerate_child_namespaces(state, asset)]
 
 
-class DepthFirstDownloader(object):
+class BaseDownloadAlgorithm(object):
     def __init__(self, parse_content, subclasses, state):
         self.parse_content = parse_content
         self.subclasses = subclasses
         self.state = state
 
+
+class NoDownloader(BaseDownloadAlgorithm):
+    def download_iterator(self):
+        return  # do not yield anything
+
+class DepthFirstDownloader(BaseDownloadAlgorithm):
     # Recursive algorithm for simplicity.
     # Every yield produces a list of assets (not individual assets),
     # because in our_depth_first_based_download() we need to discard multiple assets.
@@ -106,16 +112,11 @@ class DepthFirstDownloader(object):
                     pass
 
     # Merge list of lists (in fact, iterators) into one list
-    def our_depth_first_based_download(self):
+    def download_iterator(self):
         return itertools.chain.from_iterable(self._our_depth_first_based_download())
 
 
-class BreadthFirstSearch(object):
-    def __init__(self, parse_content, subclasses, state):
-        self.parse_content = parse_content
-        self.subclasses = subclasses
-        self.state = state
-
+class BreadthFirstDownloader(BaseDownloadAlgorithm):
     # https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/
     def _breadth_first_download(self, downloaders):
         parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
@@ -143,6 +144,6 @@ class BreadthFirstSearch(object):
                         yield asset_info
                     Q.put(child)
 
-    def our_breadth_first_based_download(self):
+    def download_iterator(self):
         iter = [self._breadth_first_download(self, downloaders) for downloaders in self.state.opts.downloaders]
         return itertools.chain.from_iterable(iter)
