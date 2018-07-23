@@ -5,7 +5,7 @@ import argparse
 from ordered_set import OrderedSet
 
 from xmlboiler.core.alg.download import NoDownloader, DepthFirstDownloader, BreadthFirstDownloader
-from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
+from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions, RecursiveRetrievalPriorityOrderElement
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                  description="""Automatically process XML.\n
@@ -36,10 +36,31 @@ try:
     args = parser.parse_args()
 except TypeError:
     parser.print_usage()
-    exit()
+    exit(1)
 
 options = args.options_object()
 
 options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else args.preload)
+
 options.recursive_options.download_algorithm = \
     {'none': NoDownloader, 'breadth': BreadthFirstDownloader, 'depth': DepthFirstDownloader}[args.recursive or 'breadth']
+
+if args.recursive_order is not None:
+    elts = args.recursive_order.split(',')
+    elts2 = frozenset(elts)
+    if not elts2.issubset(["sources", "targets", "workflowtargets"]):
+        print("Error: --recursive-order can be only: sources, targets, workflowtargets.")
+        exit(1)
+    if len(elts2) != len(elts):
+        print("Error: values are repeated more than once in --recursive-order option.")
+        exit(1)
+    map = {"sources": RecursiveRetrievalPriorityOrderElement.SOURCES,
+           "targets": RecursiveRetrievalPriorityOrderElement.TARGETS,
+           "workflowtargets": RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS}
+    options.recursive_options.retrieval_priority = OrderedSet([map[s] for s in elts])
+else:
+    # TODO: Subject to change
+    options.recursive_options.retrieval_priority = \
+        OrderedSet([RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS,
+                    RecursiveRetrievalPriorityOrderElement.TARGETS,
+                    RecursiveRetrievalPriorityOrderElement.SOURCES])

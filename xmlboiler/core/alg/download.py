@@ -39,9 +39,9 @@ def _enumerate_xml_namespaces(state):
 
 @dataclass(order=True)
 class PrioritizedNS:
-    root: bool=field(False, init=False)  # (fake) root node, enqueued first, so should be dequeued first (have greatest priority)
-    priority: int
-    ns: Any=field(compare=False)
+    root: bool=field(default=False, init=False)  # (fake) root node, enqueued first, so should be dequeued first (have greatest priority)
+    priority: int = None
+    ns: Any=field(default=None, compare=False)
 
 
 # Return a pair (priority, namespace)
