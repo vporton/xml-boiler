@@ -74,6 +74,7 @@ class BaseDownloadAlgorithm(object):
         self.state = state
 
 
+# FIXME: Should nevertheless yield initial_assets
 class NoDownloader(BaseDownloadAlgorithm):
     def download_iterator(self):
         return  # do not yield anything
