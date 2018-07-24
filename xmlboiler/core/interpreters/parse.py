@@ -99,6 +99,7 @@ class Interpeters(object):
                 return main_node
 
     # TODO: Cache the results
+    # NOTE: script_url is about interpreters.ttl not about the URL of the executable
     def construct_command_line(self, node, script_url, params):
         """
         :param node:
