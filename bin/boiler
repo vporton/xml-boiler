@@ -22,6 +22,7 @@ parser.add_argument('-x', '--recursive-order', metavar='ORDER',
                     help='recursive download order (comma separated "sources", "targets", "workflowtargets")')
 parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS', choices=['builtin'],
                     help='currently the only supported value is "builtin"')
+                    # Should be: 'a plus-separated list of comma-separated lists of "builtin","ns"
 
 chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
 chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
