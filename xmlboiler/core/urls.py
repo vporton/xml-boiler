@@ -31,7 +31,7 @@ class _local_handler(urllib.BaseHandler):
 
 
 def _build_opener():
-    # Note that it adds HTTP and other handler automatically
+    # Note that it adds HTTP and other handlers automatically
     return urllib.request.build_opener(_local_handler)
 
 
