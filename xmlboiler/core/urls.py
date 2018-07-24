@@ -26,6 +26,7 @@ import xmlboiler.core.data
 
 class _local_handler(urllib.BaseHandler):
     def local_open(req):
+        # TODO: Some code duplication with the below
         filename = re.sub(r'(?i)^local:', '', req.get_full_url())
         return xmlboiler.Global.get_resource_stream(filename)
 
@@ -41,6 +42,7 @@ class CannotConvertURLToLocalFile(RuntimeError):
 
 
 def _url_to_file(url):
+    # TODO: Some code duplication with the above
     filename = re.sub(r'(?i)^local:', '', url)
     if filename != url:  # substitution happened
         return xmlboiler.Global.get_filename(filename)
