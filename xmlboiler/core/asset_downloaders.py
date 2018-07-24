@@ -26,6 +26,7 @@ import urllib
 import xmlboiler
 
 
+# TODO: Should be dependency injected
 def local_asset_downloader(url):
     filename = 'assets/' + urllib.quote(url, safe='')
     return xmlboiler.Global.get_resource_stream(filename)
