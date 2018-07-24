@@ -97,7 +97,7 @@ algorithm = AutomaticTranformation(state)
 algorithm.run()
 
 if output is None:
-    print(state.xml_text)
+    sys.stdout.write(state.xml_text)
 else:
     with open(output, 'w') as file:
         file.write(state.xml_text)
