@@ -20,8 +20,8 @@ parser.add_argument('-r', '--recursive', help='recursive download mode (none, br
                     choices=['none', 'breadth', 'depth'])
 parser.add_argument('-x', '--recursive-order', metavar='ORDER',
                     help='recursive download order (comma separated "sources", "targets", "workflowtargets")')
-parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS',
-                    help='a plus-separated list of comma-separated lists of "builtin","ns"')
+parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS', choices=['builtin'],
+                    help='currently the only supported value is "builtin"')
 
 chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
 chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
@@ -65,7 +65,8 @@ else:
                     RecursiveRetrievalPriorityOrderElement.TARGETS,
                     RecursiveRetrievalPriorityOrderElement.SOURCES])
 
-# FIXME: don't execute commands from remote scripts (without not yet working jail)
-#        (So downloading from URLs does not make sense yet)
+# Don't execute commands from remote scripts (without not yet properly working jail).
+# So downloading from URLs does not make sense yet.
+options.recursive_options.downloaders = [[FIXME]]
 
 # TODO
