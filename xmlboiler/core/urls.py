@@ -21,7 +21,7 @@
 # TODO: correct module is urllib or urllib2?
 import re
 import urllib
-from dependency_injector import providers
+from dependency_injector import providers, containers
 import xmlboiler.core.data
 
 class _local_handler(urllib.BaseHandler):
@@ -35,5 +35,22 @@ def _build_opener():
     return urllib.request.build_opener(_local_handler)
 
 
+class CannotConvertURLToLocalFile(RuntimeError):
+    def __repr__(self):
+        return "Cannot convert URL to local file"
+
+
+def _url_to_file(url):
+    filename = re.sub(r'(?i)^local:', '', url)
+    if filename != url:  # substitution happened
+        return xmlboiler.Global.get_filename(filename)
+    filename = re.sub(r'(?i)^file:///?', '', url)
+    if filename != url:
+        return '/' + filename  # TODO: Windows support
+    raise CannotConvertURLToLocalFile()
+
+
 # TODO: Use dependency injectors instead of this global object
-our_opener = providers.ThreadSafeSingleton(_build_opener)
+class OurOpeners(containers.DeclarativeContainer):
+    opener = providers.ThreadSafeSingleton(_build_opener)
+    url_to_file = _url_to_file
