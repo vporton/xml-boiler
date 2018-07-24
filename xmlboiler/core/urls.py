@@ -35,4 +35,5 @@ def _build_opener():
     return urllib.request.build_opener(_local_handler)
 
 
+# TODO: Use dependency injectors instead of this global object
 our_opener = providers.ThreadSafeSingleton(_build_opener)
