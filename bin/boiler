@@ -5,6 +5,7 @@ import argparse
 from ordered_set import OrderedSet
 
 from xmlboiler.core.alg.download import NoDownloader, DepthFirstDownloader, BreadthFirstDownloader
+from xmlboiler.core.asset_downloaders import local_asset_downloader
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions, RecursiveRetrievalPriorityOrderElement
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -68,6 +69,6 @@ else:
 
 # Don't execute commands from remote scripts (without not yet properly working jail).
 # So downloading from URLs does not make sense yet.
-options.recursive_options.downloaders = [[FIXME]]
+options.recursive_options.downloaders = [[local_asset_downloader]]
 
 # TODO
