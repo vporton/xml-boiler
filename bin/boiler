@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
 import argparse
+import re
+import sys
 
 from ordered_set import OrderedSet
 
+import xmlboiler.core.urls
 from xmlboiler.core.alg.download import NoDownloader, DepthFirstDownloader, BreadthFirstDownloader
 from xmlboiler.core.asset_downloaders import local_asset_downloader
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions, RecursiveRetrievalPriorityOrderElement
@@ -70,5 +73,11 @@ else:
 # Don't execute commands from remote scripts (without not yet properly working jail).
 # So downloading from URLs does not make sense yet.
 options.recursive_options.downloaders = [[local_asset_downloader]]
+
+source = sys.stdin if args.source is None or args.source == '-' else \
+    (xmlboiler.core.urls.our_opener.open(args.source) if re.match(r'^[a-zA-Z]+:', args.source) else open(args.source))
+output = args.output  # TODO: if None
+
+
 
 # TODO

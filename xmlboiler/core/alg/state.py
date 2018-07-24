@@ -35,7 +35,7 @@ class EnrichedScript(NamedTuple):
 
 class BaseState(object):
     opts: TransformationAutomaticWorkflowElementOptions
-    assets: set[Resource]
+    assets: set[Resource] = set()
     xml: bytes
     graph: BinaryRelation[URIRef]  # FIXME: What is it?
 
@@ -43,11 +43,11 @@ class BaseState(object):
 class PipelineState(BaseState):
     xml: defusedxml.minidom
     all_namespaces: frozenset[URIRef]
-    scripts: list[EnrichedScript]
-    executed_scripts: set[EnrichedScript]  # TODO: Should be a set/frozenset?
-    singletons: set(URIRef)
-    precedences_higher: Connectivity
-    precedences_subclasses: Connectivity
+    scripts: list[EnrichedScript] = list()
+    executed_scripts: set[EnrichedScript] = set()  # TODO: Should be a set/frozenset?
+    singletons: set(URIRef) = set()
+    precedences_higher: Connectivity = Connectivity()
+    precedences_subclasses: Connectivity = Connectivity()
 
     def add_asset(self, asset):
         self.scripts += [script for transformer in asset.transformers for script in transformer.scripts]
