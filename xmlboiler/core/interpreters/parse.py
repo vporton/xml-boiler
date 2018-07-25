@@ -18,6 +18,7 @@
 from dependency_injector import providers
 from rdflib import URIRef
 
+from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
 from xmlboiler.core.packages.base import ThePackageManaging
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
@@ -36,7 +37,7 @@ class _FromPackageVersion:
 
 
 class Interpeters(object):
-    def __init__(self, execution_context, graph = Global.load_rdf('interpreters.ttl')):
+    def __init__(self, execution_context, graph):
         self.graph = graph
         self.execution_context = execution_context
 
@@ -100,7 +101,7 @@ class Interpeters(object):
                 return main_node
 
     # TODO: Cache the results
-    # NOTE: script_url is about interpreters.ttl not about the URL of the executable
+    # script_url is the URL of the executable (however it may be instead a local file)
     def construct_command_line(self, node, script_url, params):
         """
         :param node:
@@ -113,4 +114,6 @@ class Interpeters(object):
         return parser.parse(parse_context, self.graph, node)
 
 # TODO: Use proper dependency injection instead of the singleton
-interpreters = providers.ThreadLocalSingleton(Interpeters)
+interpreters = providers.ThreadLocalSingleton(Interpeters,
+                                              execution_context=execution_context_builders.Contexts.default_context,
+                                              graph=Global.load_rdf('interpreters.ttl'))
