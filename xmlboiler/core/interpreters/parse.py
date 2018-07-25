@@ -15,9 +15,10 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+from dependency_injector import providers
 from rdflib import URIRef
 
+from xmlboiler.core.data import Global
 from xmlboiler.core.packages.base import ThePackageManaging
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate
@@ -35,7 +36,7 @@ class _FromPackageVersion:
 
 
 class Interpeters(object):
-    def __init__(self, graph, execution_context):
+    def __init__(self, execution_context, graph = Global.load_rdf('interpreters.ttl')):
         self.graph = graph
         self.execution_context = execution_context
 
@@ -110,3 +111,6 @@ class Interpeters(object):
         parse_context = InterpreterParseContext(self.execution_context, script_url, params)
         parser = MainParser()
         return parser.parse(parse_context, self.graph, node)
+
+# TODO: Use proper dependency injection instead of the singleton
+interpreters = providers.ThreadLocalSingleton(Interpeters)

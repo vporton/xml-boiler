@@ -18,13 +18,18 @@
 
 # This is an object which receives bytes and produces bytes
 
-# TODO
-# TODO: Use construct_command_line() from core.interpreters.parse
+from xmlboiler.core.rdf_format.asset import CommandScriptInfo
+
 
 class _RunInterpreter(object):
     def __init__(self, script):
         self.script = script
 
     def run(self, input: bytes) -> bytes:
+        assert isinstance(self.script, CommandScriptInfo) and \
+               self.script.script_URL is not None and self.script.command_string is None
         # TODO
+        # TODO: Use construct_command_line() from core.interpreters.parse
         pass
+
+# TODO
