@@ -20,3 +20,11 @@
 
 # TODO
 # TODO: Use construct_command_line() from core.interpreters.parse
+
+class _RunInterpreter(object):
+    def __init__(self, script):
+        self.script = script
+
+    def run(self, input: bytes) -> bytes:
+        # TODO
+        pass
