@@ -45,6 +45,7 @@ class Interpeters(object):
         the_list = ListParser(ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
+    # FIXME: The user may provide a range of versions instead of a single version
     def check_version(self, version, main_node):
         if version is None:  # any version is OK
             return True

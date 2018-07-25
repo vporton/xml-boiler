@@ -29,9 +29,9 @@ class _RunInterpreter(object):
     def run(self, input: bytes) -> bytes:
         assert isinstance(self.script, CommandScriptInfo) and \
                self.script.script_URL is not None and self.script.command_string is None
+
+        node = self.interpreters.find_interpreter(self.script.language, version)
         self.interpreters.construct_command_line(node, self.script.script_URL, params)
         # TODO
-        # TODO: Use construct_command_line() from core.interpreters.parse
-        pass
 
 # TODO
