@@ -1,6 +1,8 @@
 * to make processing of RDF deterministic:
   https://github.com/koo5/univar/blob/master/pyin/ordered_rdflib_store.py
 
+* Don't download URL twice if they differ only in #ID in the end of the URL.
+
 * How to "import" in Python through the network:
   https://docs.python.org/3/reference/import.html#replacing-the-standard-import-system
 
