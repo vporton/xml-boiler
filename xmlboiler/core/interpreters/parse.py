@@ -46,9 +46,11 @@ class Interpeters(object):
         self.order = {k: v for v, k in enumerate(the_list)}
 
     # TODO: Use version_wrapper.py
-    def check_version(self, version, main_node):
-        if version is None:  # any version is OK
+    def check_version(self, min_version, max_version, main_node):
+        if min_version is None and max_version is None:  # any version is OK
             return True
+
+        # First try to check without retrieving package version
         parse_context = ParseContext(self.execution_context)
         version_parser = Choice([StringLiteral(), Enum({PREFIX + ':fromPackageVersion': _FromPackageVersion()})])
         lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", version_parser, ErrorHandler.FATAL). \

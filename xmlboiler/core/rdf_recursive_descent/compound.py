@@ -19,6 +19,26 @@
 from xmlboiler.core.rdf_recursive_descent.base import *
 
 
+class PostProcessNodeParser(NodeParser):
+    def __init__(self, child, f):
+        super(NodeParser, self).__init__()
+        self.child = child
+        self.f = f
+
+    def parse(self, parse_context, graph, node):
+        return self.f(self.child.parse(parse_context, graph, node))
+
+
+class PostProcessPredicateParser(PredicateParser):
+    def __init__(self, child, f):
+        super(PredicateParser, self).__init__()
+        self.child = child
+        self.f = f
+
+    def parse(self, parse_context, graph, node):
+        return self.f(self.child.parse(parse_context, graph, node))
+
+
 class Choice(NodeParser):
     """
     TODO: If the node conforms to more than one choice, this class does

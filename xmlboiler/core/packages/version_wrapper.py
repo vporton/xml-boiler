@@ -26,6 +26,9 @@ from xmlboiler.core.packages.base import ThePackageManaging
 _Version = ThePackageManaging.VersionClass
 
 
+# For "X.*" at the end of version see
+# https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
+
 # WARNING: Comparison like like y.n > x.* does not work
 # (we never compare it, because x.* can be only the upper bound not lower)
 @total_ordering
