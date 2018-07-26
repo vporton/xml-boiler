@@ -59,8 +59,8 @@ class Interpeters(object):
             parse(parse_context, self.graph, main_node)
         lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
-        lang_min_version = lang_min_version or float('-inf')
-        lang_max_version = lang_max_version or float('inf')
+        lang_min_version = lang_min_version or VersionWrapper(float('-inf'))
+        lang_max_version = lang_max_version or VersionWrapper(float('inf'))
 
         # TODO: Rewrite the below
         if lang_min_version is str and _Version(version) < _Version(lang_min_version):
