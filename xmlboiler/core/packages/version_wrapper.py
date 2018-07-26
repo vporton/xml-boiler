@@ -25,19 +25,31 @@ from xmlboiler.core.packages.base import ThePackageManaging
 
 _Version = ThePackageManaging.VersionClass
 
+
+# WARNING: Comparison like like y.n > x.* does not work
+# (we never compare it, because x.* can be only the upper bound not lower)
 @total_ordering
 class VersionWrapper(object):
     def __init__(self, version):
         self.version = version  # a string or float("inf") or float("-inf")
+
+    def __eq__(self, other):
+        return self.version == other.version
 
     def __ge__(self, other):
         if self.version == float("inf"):
             return True
         if self.version == float("-inf"):
             return other == float("-inf")  # never met in practice but check for completeness
-        # FIXME: What if other[-2:] == '.*'?
-        if self.version is str and self.version[-2:] == '.*':
-            if _Version(self.version[:-2]) < _Version(other) and \
-                    not other.startswith(self.version[:-2] + '.'):
-                return False
-        return _Version(self.version) >= _Version(other)
+
+        # x.* > x.n is the only special case for .*
+        # (we never compare like y.n > x.*)
+
+        if self.version == other.version:  # encompasses the case if both end with .*
+            return True
+        # Check the only special case when both start with the same prefix
+        if self.version is str and self.version[-2:] == '.*' and \
+                other.startswith(self.version[:-2] + '.'):
+            return True
+        version2 = self.version[:-2] if self.version[-2:] == '.*' else self.version
+        return _Version(version2) >= _Version(other)
