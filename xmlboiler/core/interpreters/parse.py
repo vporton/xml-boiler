@@ -21,8 +21,10 @@ from rdflib import URIRef
 from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
 from xmlboiler.core.packages.base import ThePackageManaging
+from xmlboiler.core.packages.version_wrapper import VersionWrapper
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
-from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate
+from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
+    PostProcessPredicateParser
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
 from .parse_impl import MainParser, InterpreterParseContext
@@ -45,18 +47,22 @@ class Interpeters(object):
         the_list = ListParser(ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
-    # TODO: Use version_wrapper.py
     def check_version(self, min_version, max_version, main_node):
         if min_version is None and max_version is None:  # any version is OK
             return True
 
         # First try to check without retrieving package version
         parse_context = ParseContext(self.execution_context)
-        version_parser = Choice([StringLiteral(), Enum({PREFIX + ':fromPackageVersion': _FromPackageVersion()})])
+        version_parser = Choice([PostProcessPredicateParser(StringLiteral(), VersionWrapper),
+                                 Enum({PREFIX + ':fromPackageVersion': _FromPackageVersion()})])
         lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
+        lang_min_version = lang_min_version or float('-inf')
+        lang_max_version = lang_max_version or float('inf')
+
+        # TODO: Rewrite the below
         if lang_min_version is str and _Version(version) < _Version(lang_min_version):
             return False
         if lang_max_version is str:  # "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
