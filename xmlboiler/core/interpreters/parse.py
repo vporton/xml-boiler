@@ -51,6 +51,14 @@ class Interpeters(object):
         if min_version is None and max_version is None:  # any version is OK
             return True
 
+        if min_version is None:
+            min_version = float('-inf')
+        if max_version is None:
+            max_version = float('inf')
+
+        min_version = VersionWrapper(min_version)
+        max_version = VersionWrapper(max_version)
+
         # First try to check without retrieving package version
         parse_context = ParseContext(self.execution_context)
         version_parser = Choice([PostProcessPredicateParser(StringLiteral(), VersionWrapper),
