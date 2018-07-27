@@ -102,7 +102,7 @@ class Interpeters(object):
     # TODO: Cache the results
     # TODO: Allow to use the URI of the interpreter directly instead of the language name
     # FIXME: We have two version ranges: for the interpreter and for the script, not a range and a version as here
-    def find_interpreter(self, language, version):
+    def find_interpreter(self, language, min_version, max_version):
         """
         :param language: the URI of the language
         :param version: string or None
@@ -110,7 +110,7 @@ class Interpeters(object):
         main_nodes = list(self.graph.subjects(PREFIX + "lang", language))
         main_nodes = sorted(main_nodes, lambda u: self.order[u])
         for main_node in main_nodes:
-            if self.check_version(version, main_node):
+            if self.check_version(min_version, max_version, main_node):
                 return main_node
 
     # TODO: Cache the results
