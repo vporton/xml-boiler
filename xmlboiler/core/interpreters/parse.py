@@ -75,7 +75,6 @@ class Interpeters(object):
         if not isinstance(lang_max_version, _FromPackageVersion) and min_version > lang_max_version:
             return False
 
-        # TODO: Rewrite the below
         pmin_version = ZeroOnePredicate(PREFIX + "packageMinVersion", StringLiteral(), ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         pmax_version = ZeroOnePredicate(PREFIX + "packageMaxVersion", StringLiteral(), ErrorHandler.FATAL). \
@@ -90,13 +89,13 @@ class Interpeters(object):
             if real_version is None:  # no such Debian package
                 return False
             if lang_min_version is _FromPackageVersion:
-                if _Version(version) < _Version(real_version):
+                if VersionWrapper(real_version) > max_version:
                     return False
             if lang_max_version is _FromPackageVersion:
-                if _Version(version) > _Version(real_version):
+                if VersionWrapper(real_version) < min_version:
                     return False
-            if (pmin_version is not None and _Version(real_version) < _Version(pmin_version)) or \
-                    (pmax_version is not None and _Version(real_version) > _Version(pmax_version)):
+            if (pmin_version is not None and VersionWrapper(real_version) < VersionWrapper(pmin_version)) or \
+                    (pmax_version is not None and VersionWrapper(real_version) > VersionWrapper(pmax_version)):
                 return False
         return True
 
