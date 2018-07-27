@@ -59,7 +59,6 @@ class Interpeters(object):
         min_version = VersionWrapper(min_version)
         max_version = VersionWrapper(max_version)
 
-        # First try to check without retrieving package version
         parse_context = ParseContext(self.execution_context)
         version_parser = Choice([PostProcessPredicateParser(StringLiteral(), VersionWrapper),
                                  Enum({PREFIX + ':fromPackageVersion': _FromPackageVersion()})])
@@ -70,16 +69,13 @@ class Interpeters(object):
         lang_min_version = lang_min_version or VersionWrapper(float('-inf'))
         lang_max_version = lang_max_version or VersionWrapper(float('inf'))
 
-        # TODO: Rewrite the below
-        if lang_min_version is str and _Version(version) < _Version(lang_min_version):
+        # First try to check without retrieving package version (for efficiency)
+        if not isinstance(lang_min_version, _FromPackageVersion) and max_version < lang_min_version:
             return False
-        if lang_max_version is str:  # "X.*" at the end of version: https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format
-            if lang_max_version[-2:] == '.*':
-                if _Version(version) > _Version(lang_max_version[:-2]) and \
-                        not version.startswith(lang_max_version[:-2] + '.'):
-                    return False
-            elif _Version(version) > _Version(lang_max_version):
-                return False
+        if not isinstance(lang_max_version, _FromPackageVersion) and min_version > lang_max_version:
+            return False
+
+        # TODO: Rewrite the below
         pmin_version = ZeroOnePredicate(PREFIX + "packageMinVersion", StringLiteral(), ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         pmax_version = ZeroOnePredicate(PREFIX + "packageMaxVersion", StringLiteral(), ErrorHandler.FATAL). \
