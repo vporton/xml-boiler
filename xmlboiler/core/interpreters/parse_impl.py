@@ -33,6 +33,7 @@ class InterpreterParseContext(ParseContext):
         self.current_param = None
 
 
+# FIXME: I do not parse :command predicate
 class MainParser(Choice):
     def __init__(self):
         """
