@@ -115,15 +115,17 @@ class Interpeters(object):
 
     # TODO: Cache the results
     # script_url is the URL of the executable (however it may be instead a local file)
-    def construct_command_line(self, node, script_url, params):
+    def construct_command_line(self, node, script_url, params, inline=False):
         """
         :param node:
         :param script_url:
         :param params: script params, a list of 2-tuples
+        :param inline: use inline script, not scriptURL
         :return: a list of strings
         """
         parse_context = InterpreterParseContext(self.execution_context, script_url, params)
-        parser = OnePredicate(URIRef(PREFIX + 'command'), MainParser(), ErrorHandler.FATAL)
+        pred = URIRef(PREFIX + ('inlineCommand' if inline else 'scriptCommand'))
+        parser = ZeroOnePredicate(pred, MainParser(), ErrorHandler.FATAL)
         return parser.parse(parse_context, self.graph, node)
 
 

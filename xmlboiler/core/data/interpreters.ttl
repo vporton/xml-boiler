@@ -19,9 +19,9 @@ int:xsltproc
     :lang lang:XSLT ;
     :langMinVersion "1.0" ;
     :langMaxVersion "1.0" ;
-    :command ("xsltproc"
-              [ :params ("--param" :name :value) ]
-              :script) ;
+    :scriptCommand ("xsltproc"
+                    [ :params ("--param" :name :value) ]
+                    :script) ;
     :debianPackage "xsltproc" .
 
 # We don't support Saxon 6.5.5. Saxon PE and EE are also currently not supported.
@@ -29,9 +29,9 @@ int:Saxon
     :lang lang:XSLT ;
     :langMinVersion "1.0" ;
     :langMaxVersion "2.0" ;
-    :command ("saxonb-xslt"
-              [ :concat ("-xsl:" :script) ]
-              "-s:-"
-              [ :params [ :concat (:name "=" :value) ]]) ;
+    :scriptCommand ("saxonb-xslt"
+                    [ :concat ("-xsl:" :script) ]
+                    "-s:-"
+                    [ :params [ :concat (:name "=" :value) ]]) ;
     :debianPackage "libsaxonhe-java" ;
     :packageMinVersion "9.5" .
