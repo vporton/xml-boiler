@@ -123,7 +123,7 @@ class Interpeters(object):
         :return: a list of strings
         """
         parse_context = InterpreterParseContext(self.execution_context, script_url, params)
-        parser = MainParser()
+        parser = OnePredicate(URIRef(PREFIX + 'command'), MainParser(), ErrorHandler.FATAL)
         return parser.parse(parse_context, self.graph, node)
 
 # TODO: Use proper dependency injection instead of the singleton
