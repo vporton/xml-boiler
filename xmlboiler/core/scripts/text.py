@@ -22,7 +22,7 @@ from xmlboiler.core.os_command.regular import regular_provider
 from xmlboiler.core.rdf_format.asset import CommandScriptInfo
 
 
-class _RunInterpreter(object):
+class _RunScriptCommand(object):
     def __init__(self, script):
         self.script = script
         self.interpreters = interpreters
@@ -32,9 +32,36 @@ class _RunInterpreter(object):
                self.script.script_URL is not None and self.script.command_string is None
 
         node = self.interpreters.find_interpreter(self.script.language, self.script.min_version, self.script.max_version)
-        args = self.interpreters.construct_command_line(node, self.script.script_URL, self.script.params)
+        args = self.interpreters.construct_command_line(node, self.script.script_URL, self.script.params, inline=False)
 
         # TODO: Use dependency injection
-        regular_provider.run_pipe(args, input)
+        return regular_provider.run_pipe(args, input)
 
-# TODO
+
+class _RunInlineCommand(object):
+    def __init__(self, script):
+        self.script = script
+        self.interpreters = interpreters
+
+    def run(self, input: bytes) -> bytes:
+        assert isinstance(self.script, CommandScriptInfo) and \
+               self.script.script_URL is None and self.script.command_string is not None
+
+        node = self.interpreters.find_interpreter(self.script.language, self.script.min_version, self.script.max_version)
+        args = self.interpreters.construct_command_line(node, self.script.command_string, self.script.params, inline=True)
+
+        # TODO: Use dependency injection
+        return regular_provider.run_pipe(args, input)
+
+
+class RunCommand(object):
+    def __init__(self, script, interpreters):
+        # FIXME: Check that we can execute the script when the asset loads, not now
+        assert isinstance(script, CommandScriptInfo)
+        if script.script_URL:
+            self.impl = _RunScriptCommand(script)
+        else:
+            self.impl = _RunInlineCommand(script)
+
+    def run(self, input: bytes) -> bytes:
+        return self.impl.run(input)
