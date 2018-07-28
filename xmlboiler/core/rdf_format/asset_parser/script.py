@@ -26,6 +26,7 @@ from xmlboiler.core.rdf_recursive_descent.compound import Choice, ZeroOnePredica
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_format.asset import AssetInfo, TransformerKindEnum, ValidatorKindEnum, BaseScriptInfo, \
     ScriptKindEnum, ScriptInfo, CommandScriptInfo
+from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import FloatLiteral, StringLiteral, IRILiteral
 from xmlboiler.core.rdf_recursive_descent.types import check_node_class
 
@@ -39,6 +40,15 @@ class ScriptInfoParser(Choice):
         # self.script_kind = script_kind
 
     # def parse(self, parse_context, graph, node):
+
+
+class _ParamParser(NodeParser):
+    def parse(self, parse_context, graph, node):
+        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(), ErrorHandler.WARNING).\
+            parse(parse_context, graph, node)
+        value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"), StringLiteral(), ErrorHandler.WARNING).\
+            parse(parse_context, graph, node)
+        return (name, value)
 
 
 class BaseScriptInfoParser(NodeParser):
@@ -90,6 +100,11 @@ class BaseScriptInfoParser(NodeParser):
                                             ok_result_node_parser,
                                             ErrorHandler.WARNING)
         result.ok_result = ok_result_parser.parse(parse_context, graph, node)
+        params_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "params"),
+                                         ListParser(_ParamParser()),
+                                         ErrorHandler.WARNING,
+                                         default=[])
+        result.params = params_parser.parse(parse_context, graph, node)
         return result
 
 
@@ -117,6 +132,12 @@ class CommandScriptInfoParser(NodeParser):
             parse_context.throw(ErrorHandler.WARNING, msg)
         more.scriptURL     = str1
         more.commandString = str2
+
+        if not more.scriptURL and len(base.params) != 0:
+            def s():
+                self.parse_context.translate("Cannot provide params for commandString script {node}.").\
+                    format(node=node)
+            self.throw(s)
 
         min_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "minVersion"), StringLiteral(ErrorHandler.WARNING))
         more.minVersion = min_parser.parse(parse_context, graph, node)
