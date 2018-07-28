@@ -56,6 +56,7 @@ class CommandScriptInfo(NamedTuple):
     # either one of the following must be None
     command_string: Optional[str]
     script_URL    : Optional[str]
+    params: list  # TODO: Initialize this when parsing the asset
 
 class WebServiceScriptInfo(NamedTuple):
     action: URIRef

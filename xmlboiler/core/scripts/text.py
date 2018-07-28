@@ -30,7 +30,7 @@ class _RunInterpreter(object):
         assert isinstance(self.script, CommandScriptInfo) and \
                self.script.script_URL is not None and self.script.command_string is None
 
-        node = self.interpreters.find_interpreter(self.script.language, version)
+        node = self.interpreters.find_interpreter(self.script.language, self.script.min_version, self.script.max_version)
         self.interpreters.construct_command_line(node, self.script.script_URL, params)
         # TODO
 
