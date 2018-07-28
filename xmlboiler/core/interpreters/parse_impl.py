@@ -49,6 +49,7 @@ class ArgumentLiteralParser(NodeParser):
     def parse(self, parse_context, graph, node):
         return [StringLiteral().parse(parse_context, graph, node)]
 
+
 class ArgumentListParser(NodeParser):
     def parse(self, parse_context, graph, node):
         l = ListParser(MainParser()).parse(parse_context, graph, node)
