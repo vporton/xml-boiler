@@ -18,6 +18,7 @@
 
 # This is an object which receives bytes and produces bytes
 from xmlboiler.core.interpreters.parse import interpreters
+from xmlboiler.core.os_command.regular import regular_provider
 from xmlboiler.core.rdf_format.asset import CommandScriptInfo
 
 
@@ -31,7 +32,9 @@ class _RunInterpreter(object):
                self.script.script_URL is not None and self.script.command_string is None
 
         node = self.interpreters.find_interpreter(self.script.language, self.script.min_version, self.script.max_version)
-        self.interpreters.construct_command_line(node, self.script.script_URL, params)
-        # TODO
+        args = self.interpreters.construct_command_line(node, self.script.script_URL, self.script.params)
+
+        # TODO: Use dependency injection
+        regular_provider.run_pipe(args, input)
 
 # TODO
