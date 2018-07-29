@@ -30,10 +30,11 @@ class ScriptKindEnum(Enum):
     VALIDATOR   = auto()
 
 class TransformerKindEnum(Enum):
-    ENTIRE     = auto()
-    SEQUENTIAL = auto()
-    UP_DOWN    = auto()
-    DOWN_UP    = auto()
+    ENTIRE = auto()
+    SIMPLE_SEQUENTIAL = auto()
+    SUBDOCUMENT_SEQUENTIAL = auto()
+    UP_DOWN = auto()
+    DOWN_UP = auto()
 
 class ValidatorKindEnum(Enum):
     ENTIRE = auto()
