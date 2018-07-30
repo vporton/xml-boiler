@@ -72,6 +72,6 @@ class XMLRunCommandWrapper(object):
                     str2 = self.script.run(str)
                     frag = parseString(str2)
                     # FIXME: It does not conform to the spec, as does not iterate through newly inserted XML fragment
-                    v.replaceChild(w, frag.documentElement)  # FIXME: Make sure that it does not break the for-loop
+                    v.replaceChild(w, frag.documentElement)  # It does not break the for-loop, because childNodes is "live"
                 parents.append(w)
         return doc.toxml()
