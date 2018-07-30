@@ -29,6 +29,7 @@ class XMLRunCommandWrapper(object):
         map = {
             TransformerKindEnum.ENTIRE: self._run_entire,
             TransformerKindEnum.SIMPLE_SEQUENTIAL: self._run_simple_seq,
+            TransformerKindEnum.SUBDOCUMENT_SEQUENTIAL: self._run_subdoc_seq,
             # TODO
         }
         return map[self.kind](input)
@@ -57,3 +58,20 @@ class XMLRunCommandWrapper(object):
             if not found:
                 return input  # TODO: Check XML validity? (point this in the specification)
             input = self.script.run(input)
+
+    def _run_subdoc_seq(self, input: bytes) -> bytes:
+        doc = parseString(input)
+        elt = doc.documentElement
+        # depth-first search
+        parents = [elt]
+        while parents:
+            v = parents.pop()
+            for w in v.childNodes:
+                if w.namespaceURI in self.script.transformer.source_namespaces:
+                    str = w.toxml()
+                    str2 = self.script.run(str)
+                    frag = parseString(str2)
+                    # FIXME: It does not conform to the spec, as does not iterate through newly inserted XML fragment
+                    v.replaceChild(w, frag)  # FIXME: Make sure that it does not break the for-loop
+                parents.append(w)
+        return doc.toxml()
