@@ -24,9 +24,7 @@ class AutomaticTranformation(object):
         all_namespaces = set()
 
         # depth-first search
-        parents = []
-        elt = self.state.xml.documentElement
-        parents.append(elt)
+        parents = [self.state.xml.documentElement]
         while parents:
             v = parents.pop()
             if v.namespaceURI is not None:

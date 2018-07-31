@@ -35,10 +35,8 @@ class ScriptsIteratorBase(ABC):
         pass
 
     def _next_outer_script(self):
-        parents = []
-        elt = self.state.xml.documentElement
+        parents = [self.state.xml.documentElement]
         # depth-first search
-        parents.append(elt)
         while parents:
             v = parents.pop()
             for w in v.childNodes:

@@ -40,9 +40,8 @@ class XMLRunCommandWrapper(object):
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
             doc = parseString(input)
-            elt = doc.documentElement
             # depth-first search
-            parents = [elt]
+            parents = [doc.documentElement]
             found = False
             while parents and not found:
                 v = parents.pop()
@@ -61,9 +60,8 @@ class XMLRunCommandWrapper(object):
 
     def _run_subdoc_seq(self, input: bytes) -> bytes:
         doc = parseString(input)
-        elt = doc.documentElement
         # depth-first search
-        parents = [elt]
+        parents = [doc.documentElement]
         while parents:
             v = parents.pop()
             for w in v.childNodes:
