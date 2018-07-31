@@ -60,7 +60,6 @@ class BaseScriptInfoParser(NodeParser):
         map = {MAIN_NAMESPACE + "entire": TransformerKindEnum.ENTIRE,
                MAIN_NAMESPACE + "simpleSequential": TransformerKindEnum.SIMPLE_SEQUENTIAL,
                MAIN_NAMESPACE + "subdocumentSequential": TransformerKindEnum.SUBDOCUMENT_SEQUENTIAL,
-               MAIN_NAMESPACE + "upDown": TransformerKindEnum.UP_DOWN,
                MAIN_NAMESPACE + "downUp": TransformerKindEnum.DOWN_UP}
         return EnumParser(map)
 
