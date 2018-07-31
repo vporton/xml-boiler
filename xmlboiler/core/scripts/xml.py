@@ -30,7 +30,7 @@ class XMLRunCommandWrapper(object):
             TransformerKindEnum.ENTIRE: self._run_entire,
             TransformerKindEnum.SIMPLE_SEQUENTIAL: self._run_simple_seq,
             TransformerKindEnum.SUBDOCUMENT_SEQUENTIAL: self._run_subdoc_seq,
-            # TODO
+            TransformerKindEnum.DOWN_UP: self._run_down_up,
         }
         return map[self.kind](input)
 
@@ -74,3 +74,7 @@ class XMLRunCommandWrapper(object):
                     v.replaceChild(w, frag.documentElement)  # It does not break the for-loop, because childNodes is "live"
                 parents.append(w)
         return doc.toxml()
+
+    # FIXME
+    def _run_down_up(self, input: bytes) -> bytes:
+        pass  # TODO

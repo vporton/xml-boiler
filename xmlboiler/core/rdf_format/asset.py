@@ -33,7 +33,6 @@ class TransformerKindEnum(Enum):
     ENTIRE = auto()
     SIMPLE_SEQUENTIAL = auto()
     SUBDOCUMENT_SEQUENTIAL = auto()
-    UP_DOWN = auto()
     DOWN_UP = auto()
 
 class ValidatorKindEnum(Enum):
