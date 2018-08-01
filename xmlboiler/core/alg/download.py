@@ -83,7 +83,7 @@ class NoDownloader(BaseDownloadAlgorithm):
         return itertools.chain.from_iterable(self._iter())
 
     def _iter(self):
-        for downloaders in self.state.opts.downloaders:
+        for downloaders in self.state.opts.recursive_options.downloaders:
             for assets in self.state.opts.initial_assets:
                 yield assets
 
@@ -154,7 +154,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
                     Q.put(child)
 
     def download_iterator(self):
-        iter = [self._breadth_first_download(self, downloaders) for downloaders in self.state.opts.downloaders]
+        iter = [self._breadth_first_download(downloaders) for downloaders in self.state.opts.recursive_options.downloaders]
         return itertools.chain.from_iterable(iter)
 
 
