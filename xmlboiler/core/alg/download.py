@@ -109,7 +109,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     # Every yield produces a list of assets (not individual assets),
     # because in our_depth_first_based_download() we need to discard multiple assets.
     def _our_depth_first_based_download(self):
-        for downloaders in self.state.opts.downloaders:
+        for downloaders in self.state.opts.recursive_options.downloaders:
             for assets in self.state.opts.initial_assets:
                 yield assets
             for asset in self.state.opts.initial_assets:
