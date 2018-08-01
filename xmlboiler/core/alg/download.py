@@ -74,10 +74,14 @@ class BaseDownloadAlgorithm(object):
         self.state = state
 
 
-# FIXME: Should nevertheless yield initial_assets
 class NoDownloader(BaseDownloadAlgorithm):
     def download_iterator(self):
-        return  # do not yield anything
+        return itertools.chain.from_iterable(self._iter())
+
+    def _iter(self):
+        for downloaders in self.state.opts.downloaders:
+            for assets in self.state.opts.initial_assets:
+                yield assets
 
 class DepthFirstDownloader(BaseDownloadAlgorithm):
     # Recursive algorithm for simplicity.
