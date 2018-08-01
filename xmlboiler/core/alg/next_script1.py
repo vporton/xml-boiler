@@ -47,7 +47,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         highest_precedence = highest_precedences[0]
         highest_precedence_scripts = filter(lambda e: _precedence(e) == highest_precedence, first_edges)
         if len(highest_precedence_scripts) == 1:
-            return highest_precedence_scripts[0]  # TODO: Add it to the list of executed scripts
+            return highest_precedence_scripts[0]
 
         if highest_precedence not in self.state.singletons:
             raise StopIteration
@@ -56,4 +56,4 @@ class ScriptsIterator(ScriptsIteratorBase):
 
         if not maximal_priority_edges:
             raise StopIteration
-        return maximal_priority_edges[0][0]  # TODO: Add it to the list of executed scripts
+        return maximal_priority_edges[0][0]

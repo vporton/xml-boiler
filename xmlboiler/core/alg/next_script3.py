@@ -43,4 +43,4 @@ class ScriptsIterator(ScriptsIteratorBase):
         maximal_priority_edges = self._choose_by_preservance_priority(first_edges)
         if not maximal_priority_edges:
             raise StopIteration
-        return maximal_priority_edges[0][0]  # TODO: Add it to the list of executed scripts
+        return maximal_priority_edges[0][0]
