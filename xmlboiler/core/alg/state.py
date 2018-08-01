@@ -15,7 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+from dataclasses import dataclass, field
 from typing import NamedTuple, Set, FrozenSet, List
 
 import xml.dom.minidom
@@ -33,21 +33,23 @@ class EnrichedScript(NamedTuple):
     transformer: Transformer
 
 
+@dataclass
 class BaseState(object):
     opts: TransformationAutomaticWorkflowElementOptions
-    assets: Set[Resource] = set()
     xml_text: bytes
     graph: BinaryRelation  #BinaryRelation[URIRef]  # FIXME: What is it?
+    assets: Set[Resource] = field(default_factory=set)
 
 
+@dataclass
 class PipelineState(BaseState):
-    xml: xml.dom.minidom.Document
-    all_namespaces: FrozenSet[URIRef]
-    scripts: List[EnrichedScript] = list()
-    executed_scripts: Set[EnrichedScript] = set()  # TODO: Should be a set/frozenset?
-    singletons: Set[URIRef] = set()
-    precedences_higher: Connectivity = Connectivity()
-    precedences_subclasses: Connectivity = Connectivity()
+    xml: xml.dom.minidom.Document = None
+    all_namespaces: FrozenSet[URIRef] = None
+    scripts: List[EnrichedScript] = field(default_factory=list)
+    executed_scripts: Set[EnrichedScript] = field(default_factory=set)  # TODO: Should be a set/frozenset?
+    singletons: Set[URIRef] = field(default_factory=set)
+    precedences_higher: Connectivity = field(default_factory=Connectivity)
+    precedences_subclasses: Connectivity = field(default_factory=Connectivity)
 
     def add_asset(self, asset):
         self.scripts += [script for transformer in asset.transformers for script in transformer.scripts]
