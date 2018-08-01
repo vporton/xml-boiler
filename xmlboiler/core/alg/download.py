@@ -21,10 +21,14 @@ import queue
 from dataclasses import dataclass, field
 from typing import Any
 
+from dependency_injector import containers, providers
+
+from xmlboiler.core import execution_context_builders
 from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
 
 
 # https://softwareengineering.stackexchange.com/questions/358931/breadth-first-traversal-with-some-edges-preferred/358937#358937
+from xmlboiler.core.rdf_base.subclass import SubclassContainers
 
 from xmlboiler.core.rdf_format import asset_parser
 
@@ -68,10 +72,10 @@ def _enumerate_child_namespaces_without_priority(state, asset):
 
 
 class BaseDownloadAlgorithm(object):
-    def __init__(self, parse_content, subclasses, state):
-        self.parse_content = parse_content
-        self.subclasses = subclasses
+    def __init__(self, state, parse_context, subclasses):
         self.state = state
+        self.parse_context = parse_context
+        self.subclasses = subclasses
 
 
 class NoDownloader(BaseDownloadAlgorithm):
@@ -91,7 +95,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
         if ns in self.state.assets:
             return
         self.state.assets.add(ns)
-        parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
+        parser = asset_parser.AssetParser(self.parse_context, self.subclasses)
         assets = []
         for graph in [downloader(ns) for downloader in downloaders]:
             asset_info = parser.parse(graph)
@@ -124,7 +128,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
 class BreadthFirstDownloader(BaseDownloadAlgorithm):
     # https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/
     def _breadth_first_download(self, downloaders):
-        parser = asset_parser.AssetParser(self.parse_content, self.subclasses)
+        parser = asset_parser.AssetParser(self.parse_context, self.subclasses)
         Q = queue.PriorityQueue()
         # we start with this item as the top node of the search (later remove it)
         fake_root = PrioritizedNS()
@@ -152,3 +156,15 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
     def download_iterator(self):
         iter = [self._breadth_first_download(self, downloaders) for downloaders in self.state.opts.downloaders]
         return itertools.chain.from_iterable(iter)
+
+
+class download_providers(containers.DeclarativeContainer):
+    no_download = providers.Callable(NoDownloader,
+                                     parse_context=execution_context_builders.Contexts.execution_context,
+                                     subclasses=SubclassContainers.basic_subclasses)
+    depth_first_download = providers.Callable(DepthFirstDownloader,
+                                              parse_context=execution_context_builders.Contexts.execution_context,
+                                              subclasses=SubclassContainers.basic_subclasses)
+    breadth_first_download = providers.Callable(BreadthFirstDownloader,
+                                                parse_context=execution_context_builders.Contexts.execution_context,
+                                                subclasses=SubclassContainers.basic_subclasses)
