@@ -35,7 +35,7 @@ class ScriptsIteratorBase(ABC):
         pass
 
     def _next_outer_script(self):
-        parents = [self.state.xml.documentElement]
+        parents = [self.state.dom.documentElement]
         # depth-first search
         while parents:
             v = parents.pop()
@@ -92,7 +92,7 @@ class ScriptsIteratorBase(ABC):
 
         # use depth-first search
         stack = []
-        stack.append(self.state.xml.documentElement)
+        stack.append(self.state.dom.documentElement)
         while stack:
             v = stack.pop()
             if not v.childNodes:

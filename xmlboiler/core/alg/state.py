@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 from dataclasses import dataclass, field
-from typing import NamedTuple, Set, FrozenSet, List
+from typing import NamedTuple, Set, FrozenSet, List, Optional
 
 import xml.dom.minidom
 from rdflib import URIRef
@@ -43,8 +43,8 @@ class BaseState(object):
 
 @dataclass
 class PipelineState(BaseState):
-    xml: xml.dom.minidom.Document = None
-    all_namespaces: FrozenSet[URIRef] = None
+    dom: Optional[xml.dom.minidom.Document] = None
+    all_namespaces: Optional[FrozenSet[URIRef]] = None
     scripts: List[EnrichedScript] = field(default_factory=list)
     executed_scripts: Set[EnrichedScript] = field(default_factory=set)  # TODO: Should be a set/frozenset?
     singletons: Set[URIRef] = field(default_factory=set)

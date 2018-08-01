@@ -16,11 +16,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from defusedxml.minidom import parseString
+
 from xmlboiler.core.alg.common import RealNextScript
 
 
 class AutomaticTranformation(object):
     def __init__(self, state):
+        state.dom = parseString(state.xml_text)
         self.state = state
         self.state.next_asset = self.state.opts.recursive_options.download_algorithm
 
@@ -28,7 +31,7 @@ class AutomaticTranformation(object):
         all_namespaces = set()
 
         # depth-first search
-        parents = [self.state.xml.documentElement]
+        parents = [self.state.dom.documentElement]
         while parents:
             v = parents.pop()
             if v.namespaceURI is not None:

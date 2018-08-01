@@ -34,7 +34,7 @@ import xmlboiler.core.rdf_format.asset_parser.asset
 
 
 def _enumerate_xml_namespaces(state):
-    stack = [state.xml.documentElement]
+    stack = [state.dom.documentElement]
     while stack:
         v = stack.pop()
         for w in v.childNodes:
