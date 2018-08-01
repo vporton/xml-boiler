@@ -117,7 +117,7 @@ options.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
                          'remove': NotInTargetNamespace.REMOVE,
                          'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
 
-options.universal_precendence = args.universal_precendence
+options.universal_precedence = args.universal_precedence
 
 state = PipelineState()  # TODO: Support for other commands than 'chain'
 state.opts = options

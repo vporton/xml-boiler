@@ -89,5 +89,5 @@ class NotInTargetNamespace(Enum):
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
     next_script: ScriptsIteratorBase = None
     not_in_target_namespace: NotInTargetNamespace = None
-    universal_precendence: Optional[URIRef] = None  # TODO: Find a better name for this option
+    universal_precedence: Optional[URIRef] = None  # TODO: Find a better name for this option
     target_namespaces: frozenset = None  # frozenset[URIRef]
