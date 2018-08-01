@@ -101,7 +101,6 @@ class Interpeters(object):
 
     # TODO: Cache the results
     # TODO: Allow to use the URI of the interpreter directly instead of the language name
-    # FIXME: We have two version ranges: for the interpreter and for the script, not a range and a version as here
     def find_interpreter(self, language, min_version, max_version):
         """
         :param language: the URI of the language
