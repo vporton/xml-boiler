@@ -22,7 +22,7 @@ from xmlboiler.core.alg.common import RealNextScript
 class AutomaticTranformation(object):
     def __init__(self, state):
         self.state = state
-        self.state.next_asset = next(self.state.opts.recursive_options.download_algorithm)
+        self.state.next_asset = self.state.opts.recursive_options.download_algorithm
 
     def _step(self):
         all_namespaces = set()
