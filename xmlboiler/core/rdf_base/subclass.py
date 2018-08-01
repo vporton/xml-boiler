@@ -70,4 +70,4 @@ class SubclassRelationForType(SubclassRelation):
 
 
 class SubclassContainers(containers.DeclarativeContainer):
-    basic_subclasses = providers.ThreadSafeSingleton(Global.load_rdf, filename='xmlboiler/core/data/subclasses.ttl')
+    basic_subclasses = providers.ThreadSafeSingleton(Global.load_rdf, filename='core/data/subclasses.ttl')
