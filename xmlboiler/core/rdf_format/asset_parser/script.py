@@ -32,7 +32,7 @@ from xmlboiler.core.rdf_recursive_descent.types import check_node_class
 
 
 class ScriptInfoParser(Choice):
-    def __init__(self, subclasses, script_kind: AssetInfo.ScriptKindEnum):
+    def __init__(self, subclasses, script_kind: ScriptKindEnum):
         # Intentionally not using dependency injection pattern
         super(Choice, self).__init__([CommandScriptInfoParser   (subclasses, script_kind),
                                       WebServiceScriptInfoParser(subclasses, script_kind)])
