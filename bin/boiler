@@ -120,10 +120,11 @@ state = PipelineState()  # TODO: Support for other commands than 'chain'
 state.opts = options
 state.xml_text = source.read(); source.close()
 
+# TODO: Refactor
 options.recursive_options.download_algorithm = \
     {'none': download_providers.no_download,
      'breadth': download_providers.breadth_first_download,
-     'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](state)
+     'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](state).download_iterator()
 
 algorithm = AutomaticTranformation(state)
 algorithm.run()
