@@ -115,3 +115,8 @@ class XMLRunCommandWrapper(object):
             return True
         return any(a.namespaceURI != node.namespaceURI and a.namespaceURI in self.script.transformer.source_namespaces \
                    for a in node.attributes.values())
+
+
+class XMLRunCommand(XMLRunCommandWrapper):
+    def __init__(self, script):
+        super().__init__(script, script.transformer_kind)
