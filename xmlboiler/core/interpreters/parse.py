@@ -112,6 +112,7 @@ class Interpeters(object):
         for main_node in main_nodes:
             if self.check_version(min_version, max_version, main_node):
                 return main_node
+        return None
 
     # TODO: Cache the results
     # script_url is the URL of the executable (however it may be instead a local file)

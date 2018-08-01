@@ -16,6 +16,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from xmlboiler.core.alg.common import RealNextScript
+
+
 class AutomaticTranformation(object):
     def __init__(self, state):
         self.state = state
@@ -38,11 +41,10 @@ class AutomaticTranformation(object):
             return  # The transformation finished!
 
         try:
-            script = next(self.state.opts.next_script)  # TODO: add next_script field
+            RealNextScript(self.state).step()
         except StopIteration:
             # may propagate one more StopIteration, exiting from the main loop
-            asset_info = next(self.state.opts.next_asset)  # TODO: add next_asset field
-            # TODO: Apply all scripts from asset_info (and add them to the set of executed scripts)
+            next(self.state.opts.next_asset)  # TODO: add next_asset field
 
     def run(self):
         while True:

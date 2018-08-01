@@ -54,6 +54,7 @@ class RegularCommandRunner(object):
             raise Timeout()
 
 
+# TODO: Use proper dependency injection
 regular_provider = providers.Factory(RegularCommandRunner,
                                      timeout=None,
                                      timeout2=None)
