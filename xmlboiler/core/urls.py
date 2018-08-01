@@ -24,7 +24,7 @@ import urllib
 from dependency_injector import providers, containers
 import xmlboiler.core.data
 
-class _local_handler(urllib.BaseHandler):
+class _local_handler(urllib.request.BaseHandler):
     def local_open(req):
         # TODO: Some code duplication with the below
         filename = re.sub(r'(?i)^local:', '', req.get_full_url())
