@@ -24,6 +24,7 @@ from rdflib import URIRef, Graph
 
 ### Base ###
 # from xmlboiler.core.alg.download import BaseDownloadAlgorithm
+from xmlboiler.core.alg.next_script_base import ScriptsIteratorBase
 from xmlboiler.core.execution_context import ExecutionContext
 
 
@@ -86,6 +87,7 @@ class NotInTargetNamespace(Enum):
 
 @dataclass
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
+    next_script: ScriptsIteratorBase = None
     not_in_target_namespace: NotInTargetNamespace = None
     universal_precendence: Optional[URIRef] = None  # TODO: Find a better name for this option
     target_namespaces: frozenset = None  # frozenset[URIRef]

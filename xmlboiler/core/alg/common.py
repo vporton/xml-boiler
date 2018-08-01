@@ -27,7 +27,7 @@ class RealNextScript(object):
 
     def step(self):
         while True:
-            script = next(self.state.opts.next_script)  # TODO: add next_script field
+            script = next(self.state.opts.next_script)
             # TODO: Support Web requests, etc.
             node = interpreters.find_interpreter(script.language, script.min_version, script.max_version)
             if node is not None:
