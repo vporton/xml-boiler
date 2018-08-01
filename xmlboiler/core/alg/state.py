@@ -16,9 +16,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from typing import NamedTuple
+from typing import NamedTuple, Set, FrozenSet, List
 
-import defusedxml
+import xml.dom.minidom
 from rdflib import URIRef
 from rdflib.resource import Resource
 
@@ -35,17 +35,17 @@ class EnrichedScript(NamedTuple):
 
 class BaseState(object):
     opts: TransformationAutomaticWorkflowElementOptions
-    assets: set[Resource] = set()
+    assets: Set[Resource] = set()
     xml_text: bytes
-    graph: BinaryRelation[URIRef]  # FIXME: What is it?
+    graph: BinaryRelation  #BinaryRelation[URIRef]  # FIXME: What is it?
 
 
 class PipelineState(BaseState):
-    xml: defusedxml.minidom
-    all_namespaces: frozenset[URIRef]
-    scripts: list[EnrichedScript] = list()
-    executed_scripts: set[EnrichedScript] = set()  # TODO: Should be a set/frozenset?
-    singletons: set(URIRef) = set()
+    xml: xml.dom.minidom.Document
+    all_namespaces: FrozenSet[URIRef]
+    scripts: List[EnrichedScript] = list()
+    executed_scripts: Set[EnrichedScript] = set()  # TODO: Should be a set/frozenset?
+    singletons: Set[URIRef] = set()
     precedences_higher: Connectivity = Connectivity()
     precedences_subclasses: Connectivity = Connectivity()
 
