@@ -23,15 +23,18 @@ import gettext
 import dependency_injector.containers as containers
 import dependency_injector.providers as providers
 
+from xmlboiler.core.data import Global
 from .execution_context import ExecutionContext
 
 
-def init_locale(lang=locale.getlocale()[0][0:2]):
-    #locale.setlocale(locale.LC_ALL, '')  # call from your app
-    filename = "res/messages_%s.mo" % lang  # FIXME: filename
+def init_locale(lang=None):
+    #locale.setlocale(locale.LC_ALL, '')  # TODO: call from your app
     try:
-        trans = gettext.GNUTranslations(open(filename, "rb"))
-    except IOError:
+        if lang is None:
+            lang = locale.getlocale()[0][0:2]
+        file = Global.get_resource_stream("res/messages_%s.mo" % lang)
+        trans = gettext.GNUTranslations(file)
+    except (ValueError, IOError):
         logging.debug("Locale not found. Using default messages")
         trans = gettext.NullTranslations()
     #trans.set_output_charset()  # TODO
