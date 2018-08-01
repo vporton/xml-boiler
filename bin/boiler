@@ -73,11 +73,6 @@ options = args.options_object()
 
 options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else args.preload)
 
-options.recursive_options.download_algorithm = \
-    {'none': download_providers.no_download,
-     'breadth': download_providers.breadth_first_download,
-     'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](state)
-
 if args.recursive_order is not None:
     elts = args.recursive_order.split(',')
     elts2 = frozenset(elts)
@@ -124,6 +119,11 @@ options.universal_precedence = args.universal_precedence
 state = PipelineState()  # TODO: Support for other commands than 'chain'
 state.opts = options
 state.xml_text = source.read(); source.close()
+
+options.recursive_options.download_algorithm = \
+    {'none': download_providers.no_download,
+     'breadth': download_providers.breadth_first_download,
+     'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](state)
 
 algorithm = AutomaticTranformation(state)
 algorithm.run()
