@@ -22,6 +22,7 @@ from xmlboiler.core.alg.common import RealNextScript
 class AutomaticTranformation(object):
     def __init__(self, state):
         self.state = state
+        self.state.next_asset = self.state.opt.download_algorithm()
 
     def _step(self):
         all_namespaces = set()
@@ -44,7 +45,7 @@ class AutomaticTranformation(object):
             RealNextScript(self.state).step()
         except StopIteration:
             # may propagate one more StopIteration, exiting from the main loop
-            next(self.state.opts.next_asset)  # TODO: add next_asset field
+            next(self.state.next_asset)
 
     def run(self):
         while True:
