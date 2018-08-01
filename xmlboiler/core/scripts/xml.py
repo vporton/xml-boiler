@@ -19,8 +19,12 @@ from defusedxml.minidom import parseString
 
 from xmlboiler.core.rdf_format.asset import TransformerKindEnum
 
+# TODO: Don't parse directly after serializing (for efficiency)
 
 class XMLRunCommandWrapper(object):
+    """
+    Don't use it directly, use XMLRunCommand
+    """
     def __init__(self, script, kind):
         self.script = script
         self.kind = kind
@@ -70,13 +74,33 @@ class XMLRunCommandWrapper(object):
                     str = w.toxml()
                     str2 = self.script.run(str)
                     frag = parseString(str2)
-                    v.replaceChild(w, frag.documentElement)  # It does not break the for-loop, because childNodes is "live"
+                    v.replaceChild(w, frag.documentElement)
                 parents.append(w)
         return doc.toxml()
 
-    # FIXME
     def _run_down_up(self, input: bytes) -> bytes:
-        pass  # TODO
+        while True:
+            input = self._run_down_up_step(input)
+            if input is None:
+                return input
+
+    def _run_down_up_step(self, input: bytes) -> bytes:
+        doc = parseString(input)
+        # depth-first search
+        parents = [doc.documentElement]
+        while parents:
+            v = parents.pop()
+            if not v.childNodes:
+                for node in reversed(parents):
+                    if self._is_primary_node(node):
+                        str = node.toxml()
+                        str2 = self.script.run(str)
+                        frag = parseString(str2)
+                        node.parentNode.replaceChild(node, frag.documentElement)
+                        return doc.toxml()
+            for w in v.childNodes:
+                parents.append(w)
+        return None
 
     # Should be moved to a more general class?
     def _is_primary_node(self, node):
