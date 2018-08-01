@@ -50,7 +50,8 @@ class XMLRunCommandWrapper(object):
                         found = True
                         break
                     else:
-                        if any(a in self.script.transformer.source_namespaces for a in w.attributes):
+                        # TODO: https://bugs.python.org/issue34306
+                        if any(a.namespaceURI in self.script.transformer.source_namespaces for a in w.attributes.values()):
                             found = True
                             break
                     parents.append(w)
@@ -76,3 +77,17 @@ class XMLRunCommandWrapper(object):
     # FIXME
     def _run_down_up(self, input: bytes) -> bytes:
         pass  # TODO
+
+    # Should be moved to a more general class?
+    def _is_primary_node(self, node):
+        # TODO: https://bugs.python.org/issue34306
+        if node.parentNode.parentNode is None:  # if parentNode is minidom.Document
+            if node.namespaceURI in self.script.transformer.source_namespaces or \
+                    any(a.namespaceURI in self.script.transformer.source_namespaces for a in node.attributes.values()):
+                return True
+            return False
+        if node.namespaceURI != node.parentNode.namespaceURI and \
+                node.namespaceURI in self.script.transformer.source_namespaces:
+            return True
+        return any(a.namespaceURI != node.namespaceURI and a.namespaceURI in self.script.transformer.source_namespaces \
+                   for a in node.attributes.values())
