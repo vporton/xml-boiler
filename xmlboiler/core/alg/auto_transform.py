@@ -51,5 +51,6 @@ class AutomaticTranformation(object):
             next(self.state.next_asset)
 
     def run(self):
+        self.state.dom = parseString(self.state.xml_text)
         while True:
             self._step()  # may raise StopIteration
