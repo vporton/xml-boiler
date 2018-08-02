@@ -42,7 +42,7 @@ class AutomaticTranformation(object):
         self.state.all_namespaces = frozenset(all_namespaces)  # TODO: Is it worth to freeze?
 
         if self.state.all_namespaces <= self.state.opts.target_namespaces:
-            return  # The transformation finished!
+            return False  # The transformation finished!
 
         try:
             RealNextScript(self.state).step()
@@ -50,7 +50,9 @@ class AutomaticTranformation(object):
             # may propagate one more StopIteration, exiting from the main loop
             next(self.state.next_asset)
 
+        return True
+
     def run(self):
         self.state.dom = parseString(self.state.xml_text)
-        while True:
-            self._step()  # may raise StopIteration
+        while self._step():  # may raise StopIteration
+            pass
