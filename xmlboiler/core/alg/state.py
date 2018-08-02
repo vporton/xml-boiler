@@ -36,7 +36,7 @@ class EnrichedScript(NamedTuple):
 @dataclass
 class BaseState(object):
     opts: TransformationAutomaticWorkflowElementOptions
-    xml_text: bytes
+    xml_text: bytes = None
     assets: Set[Resource] = field(default_factory=set)
 
 

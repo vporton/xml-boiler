@@ -116,8 +116,7 @@ options.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
 
 options.universal_precedence = args.universal_precedence
 
-state = PipelineState()  # TODO: Support for other commands than 'chain'
-state.opts = options
+state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
 state.xml_text = source.read(); source.close()
 
 # TODO: Refactor
