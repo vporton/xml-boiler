@@ -37,7 +37,6 @@ class EnrichedScript(NamedTuple):
 class BaseState(object):
     opts: TransformationAutomaticWorkflowElementOptions
     xml_text: bytes
-    graph: BinaryRelation  #BinaryRelation[URIRef]  # FIXME: What is it?
     assets: Set[Resource] = field(default_factory=set)
 
 
