@@ -44,7 +44,7 @@ class GraphOfScripts(object):
     def adjust(self):
         # TODO: The below is inefficient
         for i in self.graph.nodes:
-            if i.tranformer.universal and \
+            if i.transformer.universal and \
                     self.precedences_graph.is_connected(self.universal_precedence, i.tranformer.precedence):
                 self.graph.add_edge(i, self.destinations, weight=0)
             else:
