@@ -73,7 +73,7 @@ class ScriptsIteratorBase(ABC):
             result = [node.namespaceURI]
         else:
             result = []
-        attr_nodes = [node[i] for i in range(node.length) if node[i].namespaceURI is not None]
+        attr_nodes = [node.attributes[i] for i in range(node.attributes.length) if node.attributes[i].namespaceURI is not None]
         result.extend(sorted(set(attr_nodes)))  # set() to avoid repetitions
         return result
 
