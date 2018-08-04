@@ -15,7 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import NamedTuple, Optional, AbstractSet, List
 
@@ -79,10 +79,11 @@ class Namespace(NamedTuple):
     resource: URIRef
     validators: List[ScriptInfo]
 
-class AssetInfo(NamedTuple):
-    transformers: List[Transformer]
-    namespaces  : List[Namespace]
-    see_also_transform: List[URIRef]
-    see_also_validate : List[URIRef]
-    precedences_subclasses: BinaryRelation
-    precedences_higher    : BinaryRelation
+@dataclass
+class AssetInfo(object):
+    transformers: List[Transformer] = None
+    namespaces  : List[Namespace] = None
+    see_also_transform: List[URIRef] = None
+    see_also_validate : List[URIRef] = None
+    precedences_subclasses: BinaryRelation = None
+    precedences_higher    : BinaryRelation = None
