@@ -63,9 +63,12 @@ class AssetParser(object):
     def scan_see_also(self, graph, kind_URI):
         nodes = list(graph[:RDFS.seeAlso])
         # Can be simplified using OnePredicate class
+        if len(nodes) == 0:
+            return []
         if len(nodes) > 1:
-            msg = self.parse_context.translate("Multiple rdfs:seeAlso in asset {node}").format(node=node)
-            str = self.parse_context.throw(ErrorHandler.FATAL, msg)
+            # TODO: Show URL of the asset
+            msg = self.parse_context.translate("Multiple rdfs:seeAlso in asset") #.format()
+            self.parse_context.throw(ErrorHandler.FATAL, msg)
         return ListParser(IRILiteral(ErrorHandler.WARNING)).parse(self.parse_context, graph, nodes[0])
 
 
