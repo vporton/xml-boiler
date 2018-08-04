@@ -138,6 +138,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
         # no need to mark fake_root as visited, because it is not actually traversed
         while not Q.empty():  # in Python 3.7 bool(Q) does not work
             v = Q.get()
+            # FIXME: Iteration stops if we have an empty set of initial_assets
             if v.root:  # enumerate the top level differently
                 # use priority above all other priorities
                 childs = [(100, info) for info in self.state.opts.recursive_options.initial_assets]
