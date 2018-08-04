@@ -1,14 +1,18 @@
-_
+@prefix : <http://portonvictor.org/ns/trans/> .
+@prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+
+_:xinclude
    a :Transformer ;
    :sourceNamespace <http://www.w3.org/2001/XInclude> ;
+   :universal true ;
    #:targetNamespace <...> ;
-   :precedence <...> ;
+   :precedence :precedence-include ;
    :script [
      a :Command ;
      :language lang:XSLT ;
      :scriptURL <local:scripts/xinclude.xslt> ;
      :transformerKind :entire ;
-     preservance 1.0 ;
-     stability 1.0 ;
-     preference 1.0
+     :preservance 1.0 ;
+     :stability 1.0 ;
+     :preference 1.0
    ] .
