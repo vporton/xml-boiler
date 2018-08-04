@@ -66,7 +66,7 @@ class AssetParser(object):
         if len(nodes) > 1:
             msg = self.parse_context.translate("Multiple rdfs:seeAlso in asset {node}").format(node=node)
             str = self.parse_context.throw(ErrorHandler.FATAL, msg)
-        return ListParser(IRILiteral()).parse(self.parse_context, graph, nodes[0])
+        return ListParser(IRILiteral(ErrorHandler.WARNING)).parse(self.parse_context, graph, nodes[0])
 
 
 asset_parser_provider = providers.Factory(AssetParser,
