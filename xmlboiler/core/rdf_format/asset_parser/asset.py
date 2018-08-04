@@ -52,7 +52,7 @@ class AssetParser(object):
         result.precedences_subclasses = SubclassRelationForType(URIRef(MAIN_NAMESPACE + "Precedence"),
                                                                 context=self.parse_context.execution_context,
                                                                 graph=graph,
-                                                                relation=RDF.isSubClass)
+                                                                relation=RDFS.subClassOf)
         result.precedences_higher = SubclassRelationForType(URIRef(MAIN_NAMESPACE + "Precedence"),
                                                             context=self.parse_context.execution_context,
                                                             graph=graph,
