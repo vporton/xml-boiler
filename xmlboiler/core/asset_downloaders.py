@@ -21,12 +21,12 @@
 # we support only one method of downloading assets for a given URL:
 # we use a local file named after the URL.
 
-import urllib
+import urllib.parse
 
 import xmlboiler
 
 
 # No need to be dependency injected, because it is to be used only in initialization code.
 def local_asset_downloader(url):
-    filename = 'assets/' + urllib.quote(url, safe='')
+    filename = 'assets/' + urllib.parse.quote(url, safe='')
     return xmlboiler.Global.get_resource_stream(filename)
