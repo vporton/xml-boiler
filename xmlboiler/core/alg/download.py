@@ -141,9 +141,9 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
             if v.root:  # enumerate the top level differently
                 # use priority above all other priorities
                 childs = [(100, info) for info in self.state.opts.recursive_options.initial_assets]
+                childs.extend(_enumerate_xml_namespaces(self.state))
             else:
-                childs = []
-            childs.extend(_enumerate_child_namespaces(self.state, v.ns))
+                childs = _enumerate_child_namespaces(self.state, v.ns)
             for child in childs:
                 ns2 = child.ns
                 if ns2 not in self.state.assets:
