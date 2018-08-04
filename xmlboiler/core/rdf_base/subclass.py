@@ -58,7 +58,7 @@ class SubclassRelationForType(SubclassRelation):
                  context=Contexts.execution_context(),
                  graph=None,
                  relation=RDFS.subClassOf):
-        super(SubclassRelation, self).__init__(context=context, graph=graph, relation=relation)
+        super().__init__(context=context, graph=graph, relation=relation)
         self.node_class = node_class
 
     def check_types(self, graph, src, dst):
