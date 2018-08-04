@@ -31,6 +31,7 @@ from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
 from xmlboiler.core.rdf_base.subclass import SubclassContainers
 
 import xmlboiler.core.rdf_format.asset_parser.asset
+from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
 
 
 def _enumerate_xml_namespaces(state):
@@ -161,11 +162,11 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
 
 class download_providers(containers.DeclarativeContainer):
     no_download = providers.Callable(NoDownloader,
-                                     parse_context=execution_context_builders.Contexts.execution_context,
+                                     parse_context=default_parse_context,
                                      subclasses=SubclassContainers.basic_subclasses)
     depth_first_download = providers.Callable(DepthFirstDownloader,
-                                              parse_context=execution_context_builders.Contexts.execution_context,
+                                              parse_context=default_parse_context,
                                               subclasses=SubclassContainers.basic_subclasses)
     breadth_first_download = providers.Callable(BreadthFirstDownloader,
-                                                parse_context=execution_context_builders.Contexts.execution_context,
+                                                parse_context=default_parse_context,
                                                 subclasses=SubclassContainers.basic_subclasses)
