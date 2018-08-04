@@ -144,7 +144,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
                 childs = [(100, info) for info in self.state.opts.recursive_options.initial_assets]
                 childs.extend([PrioritizedNS(0, ns) for ns in _enumerate_xml_namespaces(self.state)])  # FIXME: Is 0 right priority?
             else:
-                childs = _enumerate_child_namespaces(self.state, v.ns)
+                childs = _enumerate_child_namespaces(self.state, v.ns)  # FIXME: v.ns is an URI not asset and v.ns may be None
             for child in childs:
                 ns2 = child.ns
                 if ns2 not in self.state.assets:
