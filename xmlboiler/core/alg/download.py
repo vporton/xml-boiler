@@ -52,7 +52,7 @@ class PrioritizedNS:
 def _enumerate_child_namespaces(state, asset):
     priority = 0
     yield from [PrioritizedNS(priority, ns) for ns in _enumerate_xml_namespaces(state)]
-    for order_part in state.opts.recursive_options:
+    for order_part in state.opts.recursive_options.retrieval_priority:
         priority += 1
         if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
             for t in asset.transformers:
