@@ -45,7 +45,7 @@ class GraphOfScripts(object):
         # TODO: The below is inefficient
         for i in self.graph.nodes:
             if i.transformer.universal and \
-                    self.precedences_graph.is_connected(self.universal_precedence, i.tranformer.precedence):
+                    self.precedences_graph.is_connected(self.universal_precedence, i.transformer.precedence):
                 self.graph.add_edge(i, self.destinations, weight=0)
             else:
                 for j in self.graph.nodes:
