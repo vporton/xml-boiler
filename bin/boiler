@@ -101,13 +101,6 @@ source = sys.stdin if args.source is None or args.source == '-' else \
     (xmlboiler.core.urls.our_opener.open(args.source) if re.match(r'^[a-zA-Z]+:', args.source) else open(args.source))
 output = None if args.output == '-' else args.output
 
-map = {
-    'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
-    'doc1': xmlboiler.core.alg.next_script2.ScriptsIterator,
-    'doc2': xmlboiler.core.alg.next_script3.ScriptsIterator,
-}
-options.next_script = map[args.next_script]
-
 options.target_namespaces = frozenset([] if args.target is None else args.target)
 
 options.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
@@ -118,6 +111,13 @@ options.universal_precedence = args.universal_precedence
 
 state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
 state.xml_text = source.read(); source.close()
+
+map = {
+    'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
+    'doc1': xmlboiler.core.alg.next_script2.ScriptsIterator,
+    'doc2': xmlboiler.core.alg.next_script3.ScriptsIterator,
+}
+options.next_script = map[args.next_script](state)
 
 # TODO: Refactor
 options.recursive_options.download_algorithm = \

@@ -16,12 +16,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from abc import abstractclassmethod, ABCMeta
+from abc import abstractclassmethod, ABC
 
 from .debian import DebianPackageManaging
 
 
-class BasePackageManaging(object, metaclass=ABCMeta):
+class BasePackageManaging(ABC):
     @abstractclassmethod
     def determine_package_version(cls, package_name):
         """

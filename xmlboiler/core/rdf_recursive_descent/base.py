@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from abc import abstractmethod, ABCMeta
+from abc import abstractmethod, ABC
 from dependency_injector import providers
 from enum import Enum, auto
 
@@ -71,7 +71,7 @@ class ParseContext(object):
     def translate(self, str):
         return self.execution_context.translate.gettext(str)
 
-class NodeParser(object, metaclass=ABCMeta):
+class NodeParser(ABC):
     """
     Parses a node of RDF resource (and its "subnodes").
 
@@ -86,7 +86,7 @@ class NodeParser(object, metaclass=ABCMeta):
         pass
 
 
-class PredicateParser(object, metaclass=ABCMeta):
+class PredicateParser(ABC):
     """
     Parses a given predicate (which may participate in several relationships)
     of a given RDF node.
