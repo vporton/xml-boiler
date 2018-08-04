@@ -39,7 +39,7 @@ class ClassForestParser(object):
         result = []
         # TODO: Not the fastest algorithm
         # TODO: It does a wrong thing if one node has multiple "type" predicates
-        for node, nodeClass in result[:RDF.type]:
+        for node, nodeClass in graph[:RDF.type]:
             if nodeClass in URIRef and self.subclasses.is_connected(nodeClass, self.klass):
                 try:
                     result.append(self.node_parser.parse(parse_context, graph, node))
