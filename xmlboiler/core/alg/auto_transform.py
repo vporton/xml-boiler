@@ -21,6 +21,10 @@ from defusedxml.minidom import parseString
 from xmlboiler.core.alg.common import RealNextScript
 
 
+class AssetsExhausted(StopIteration):
+    pass
+
+
 class AutomaticTranformation(object):
     def __init__(self, state):
         state.dom = parseString(state.xml_text)
@@ -48,11 +52,14 @@ class AutomaticTranformation(object):
             RealNextScript(self.state).step()
         except StopIteration:
             # may propagate one more StopIteration, exiting from the main loop
-            next(self.state.next_asset)
+            try:
+                next(self.state.next_asset)
+            except StopIteration:
+                raise AssetsExhausted()
 
         return True
 
     def run(self):
         self.state.dom = parseString(self.state.xml_text)
-        while self._step():  # may raise StopIteration
+        while self._step():  # may raise AssetsExhausted
             pass

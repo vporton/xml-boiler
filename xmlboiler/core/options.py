@@ -81,7 +81,7 @@ class ValidationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOpti
 
 class NotInTargetNamespace(Enum):
     IGNORE = auto()
-    REMOVE = auto()
+    REMOVE = auto()  # TODO: Not implemented
     ERROR  = auto()
 
 @dataclass
