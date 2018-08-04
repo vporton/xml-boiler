@@ -29,4 +29,4 @@ import xmlboiler.core.data
 # No need to be dependency injected, because it is to be used only in initialization code.
 def local_asset_downloader(url):
     filename = 'core/data/assets/' + urllib.parse.quote(url, safe='')
-    return xmlboiler.core.data.Global.get_resource_stream(filename)
+    return xmlboiler.core.data.Global.load_rdf(filename)
