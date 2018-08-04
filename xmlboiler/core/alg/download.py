@@ -141,7 +141,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
             if v.root:  # enumerate the top level differently
                 # use priority above all other priorities
                 childs = [(100, info) for info in self.state.opts.recursive_options.initial_assets]
-                childs.extend(_enumerate_xml_namespaces(self.state))
+                childs.extend([PrioritizedNS(0, ns) for ns in _enumerate_xml_namespaces(self.state)])  # FIXME: Is 0 right priority?
             else:
                 childs = _enumerate_child_namespaces(self.state, v.ns)
             for child in childs:
