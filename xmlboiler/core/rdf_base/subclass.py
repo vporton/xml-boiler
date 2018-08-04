@@ -29,6 +29,7 @@ class SubclassRelation(Connectivity):
                  context=Contexts.execution_context(),
                  graph=None,
                  relation=RDFS.subClassOf):
+        super().__init__()
         self.context = context
         self.relation = relation
         self.add_graph(graph)
