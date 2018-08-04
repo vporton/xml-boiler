@@ -23,7 +23,6 @@ from rdflib import URIRef
 from rdflib.resource import Resource
 
 from xmlboiler.core.graph.connect import Connectivity
-from xmlboiler.core.graph.relation import BinaryRelation
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
 from xmlboiler.core.rdf_format.asset import ScriptInfo, Transformer
 
