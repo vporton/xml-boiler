@@ -1,0 +1,14 @@
+_
+   a :Transformer ;
+   :sourceNamespace <http://www.w3.org/2001/XInclude> ;
+   #:targetNamespace <...> ;
+   :precedence <...> ;
+   :script [
+     a :Command ;
+     :language lang:XSLT ;
+     :scriptURL <local:scripts/xinclude.xslt> ;
+     :transformerKind :entire ;
+     preservance 1.0 ;
+     stability 1.0 ;
+     preference 1.0
+   ] .
