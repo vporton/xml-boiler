@@ -17,7 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import NamedTuple, Optional, AbstractSet, List
+from typing import NamedTuple, Optional, AbstractSet, List, Any
 
 from rdflib import URIRef
 
@@ -42,6 +42,7 @@ class ValidatorKindEnum(Enum):
 # TODO: Distinguishing transformer and validator scripts does not conform to the specification
 @dataclass
 class BaseScriptInfo(object):
+    transformer: Any #Transformer
     script_kind: ScriptKindEnum
     preservance : float = None
     stability   : float = None
@@ -67,7 +68,7 @@ class WebServiceScriptInfo(NamedTuple):
 
 class ScriptInfo(NamedTuple):
     base: BaseScriptInfo
-    more: NamedTuple
+    more: object
 
 @dataclass
 class Transformer(object):

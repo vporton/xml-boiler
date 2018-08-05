@@ -32,10 +32,10 @@ from xmlboiler.core.rdf_recursive_descent.types import check_node_class
 
 
 class ScriptInfoParser(Choice):
-    def __init__(self, subclasses, script_kind: ScriptKindEnum):
+    def __init__(self, transformer, subclasses, script_kind: ScriptKindEnum):
         # Intentionally not using dependency injection pattern
-        super().__init__([CommandScriptInfoParser   (subclasses, script_kind),
-                          WebServiceScriptInfoParser(subclasses, script_kind)])
+        super().__init__([CommandScriptInfoParser   (transformer, subclasses, script_kind),
+                          WebServiceScriptInfoParser(transformer, subclasses, script_kind)])
         # self.subclasses = subclasses
         # self.script_kind = script_kind
 
@@ -52,7 +52,8 @@ class _ParamParser(NodeParser):
 
 
 class BaseScriptInfoParser(NodeParser):
-    def __init__(self, script_kind):
+    def __init__(self, transformer, script_kind):
+        self.transformer = transformer
         self.script_kind = script_kind
 
     @staticmethod
@@ -70,7 +71,7 @@ class BaseScriptInfoParser(NodeParser):
         return EnumParser(map)
 
     def parse(self, parse_context, graph, node):
-        result = BaseScriptInfo(script_kind=self.script_kind)
+        result = BaseScriptInfo(transformer=self.transformer, script_kind=self.script_kind)
         # TODO: Check 0..1 range
         float_parser = FloatLiteral(ErrorHandler.WARNING)
         preservance_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "preservance"),
@@ -109,7 +110,8 @@ class BaseScriptInfoParser(NodeParser):
 
 
 class CommandScriptInfoParser(NodeParser):
-    def __init__(self, subclasses, script_kind):
+    def __init__(self, transformer, subclasses, script_kind):
+        self.transformer = self.transformer
         self.subclasses = subclasses
         self.script_kind = script_kind
 
@@ -117,7 +119,7 @@ class CommandScriptInfoParser(NodeParser):
         klass = URIRef(MAIN_NAMESPACE + "Command")
         check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorHandler.IGNORE)
 
-        base = BaseScriptInfoParser(self.script_kind).parse(parse_context, graph, node)
+        base = BaseScriptInfoParser(self.transformer, self.script_kind).parse(parse_context, graph, node)
         more = CommandScriptInfo()
 
         str1_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "scriptURL"), IRILiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
@@ -152,6 +154,7 @@ class CommandScriptInfoParser(NodeParser):
 
 class WebServiceScriptInfoParser(NodeParser):
     def __init__(self, subclasses, script_kind):
+        self.transformer = self.transformer
         self.subclasses = subclasses
         self.script_kind = script_kind
 
@@ -159,7 +162,7 @@ class WebServiceScriptInfoParser(NodeParser):
         klass = URIRef(MAIN_NAMESPACE + "WebService")
         check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorHandler.IGNORE)
 
-        base = BaseScriptInfoParser(self.script_kind).parse(parse_context, graph, node)
+        base = BaseScriptInfoParser(self.transformer, self.script_kind).parse(parse_context, graph, node)
         more = CommandScriptInfo()
 
         action_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "action"), IRILiteral(ErrorHandler.WARNING))
