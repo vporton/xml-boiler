@@ -95,7 +95,7 @@ class OnePredicate(PredicateParserWithError):
                 parse_context.translate("Exactly one predicate {pred} required for node {node}.").\
                     format(pred=self.predicate, node=node)
             parse_context.throw(self.on_error, s)
-        return self.child.parse(parse_context, graph, node)
+        return self.child.parse(parse_context, graph, v[0])
 
 
 class ZeroOnePredicate(PredicateParserWithError):
