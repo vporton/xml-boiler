@@ -120,7 +120,7 @@ class CommandScriptInfoParser(NodeParser):
         base = BaseScriptInfoParser(self.script_kind).parse(parse_context, graph, node)
         more = CommandScriptInfo()
 
-        str1_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "scriptURL"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
+        str1_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "scriptURL"), IRILiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
         str1 = str1_parser.parse(parse_context, graph, node)
         str2_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "commandString"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
         str2 = str2_parser.parse(parse_context, graph, node)
