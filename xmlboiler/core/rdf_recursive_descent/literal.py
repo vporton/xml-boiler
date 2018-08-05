@@ -32,7 +32,7 @@ class IRILiteral(NodeParserWithError):
 class StringLiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
         # TODO: xsd:normalizedString support
-        if node not in Literal or node.datatype != XSD.string:
+        if not isinstance(node, Literal) or node.datatype != XSD.string:
             parse_context.throw(self.on_error, lambda: parse_context.translate("Node {node} is not a string literal.").format(node=node))
         return str(node)
 
