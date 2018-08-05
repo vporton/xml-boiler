@@ -59,7 +59,7 @@ class IntegerLiteral(NodeParserWithError):
 
 class FloatLiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
-        if isinstance(node, Literal) and node.datatype in (XSD.integer, XSD.float, XSD.double, XSD.decimal)
+        if isinstance(node, Literal) and node.datatype in (XSD.integer, XSD.float, XSD.double, XSD.decimal):
             try:
                 return float(node.value)
             except ValueError:
