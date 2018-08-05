@@ -139,12 +139,12 @@ class CommandScriptInfoParser(NodeParser):
                     format(node=node)
             parse_context.throw(ErrorHandler.FATAL, s)
 
-        min_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "minVersion"), StringLiteral(ErrorHandler.WARNING))
+        min_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "minVersion"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
         more.minVersion = min_parser.parse(parse_context, graph, node)
-        max_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "maxVersion"), StringLiteral(ErrorHandler.WARNING))
+        max_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "maxVersion"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
         more.maxVersion = max_parser.parse(parse_context, graph, node)
 
-        language_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "language"), IRILiteral(ErrorHandler.WARNING))
+        language_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "language"), IRILiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
         more.language = language_parser.parse(parse_context, graph, node)
 
         return ScriptInfo(base=base, more=more)
