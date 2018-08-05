@@ -30,7 +30,7 @@ class EnumParser(NodeParserWithError):
         if not isinstance(node, URIRef):
             parse_context.throw(self.on_error, lambda: parse_context.translate("Node {node} should be an IRI.").format(node=node))
         try:
-            value = self.map[node]
+            value = self.map[str(node)]
         except KeyError:
             parse_context.throw(self.on_error, lambda: parse_context.translate("The IRI {iri} is unknown.").format(iri=node))
         return value
