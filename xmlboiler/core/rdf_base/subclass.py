@@ -38,7 +38,7 @@ class SubclassRelation(Connectivity):
         result = BinaryRelation()
         were_errors = False
         for subject, object in graph[:self.relation]:
-             if object is URIRef:
+             if isinstance(object, URIRef):
                  if self.check_types(graph, subject, object):
                      result.add_edge(subject, object)
              else:
