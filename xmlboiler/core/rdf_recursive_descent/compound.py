@@ -112,4 +112,4 @@ class ZeroOnePredicate(PredicateParserWithError):
                 parse_context.translate("Cannot be more than one predicate {pred} for node {node}.").\
                     format(pred=self.predicate, node=node)
             parse_context.throw(self.on_error, s)
-        return self.child.parse(parse_context, graph, node)
+        return self.child.parse(parse_context, graph, v[0])
