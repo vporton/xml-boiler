@@ -43,8 +43,7 @@ class TransformerParser(NodeParser):
                                                       ErrorHandler.WARNING)
         result.source_namespaces = source_namespaces_parser.parse(parse_context, graph, node)
         target_namespaces_parser = ZeroOrMorePredicate(URIRef(MAIN_NAMESPACE + "targetNamespace"),
-                                                       IRILiteral(ErrorHandler.WARNING),
-                                                       ErrorHandler.WARNING)
+                                                       IRILiteral(ErrorHandler.WARNING))
         result.target_namespaces = target_namespaces_parser.parse(parse_context, graph, node)
 
         precedence_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "precedence"),
