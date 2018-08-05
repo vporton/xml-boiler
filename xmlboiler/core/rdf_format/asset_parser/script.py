@@ -154,7 +154,7 @@ class CommandScriptInfoParser(NodeParser):
 
 class WebServiceScriptInfoParser(NodeParser):
     def __init__(self, transformer, subclasses, script_kind):
-        self.transformer = self.transformer
+        self.transformer = transformer
         self.subclasses = subclasses
         self.script_kind = script_kind
 
