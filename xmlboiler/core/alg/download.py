@@ -88,6 +88,8 @@ class NoDownloader(BaseDownloadAlgorithm):
             for assets in self.state.opts.initial_assets:
                 yield assets
 
+
+# FIXME: Rerwrite to use asset_info instead ns (like as done in BreadthFirstDownloader)
 class DepthFirstDownloader(BaseDownloadAlgorithm):
     # Recursive algorithm for simplicity.
     # Every yield produces a list of assets (not individual assets),
@@ -134,7 +136,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
         # we start with this item as the top node of the search (later remove it)
         fake_root = PrioritizedNS()
         fake_root.root = True
-        Q.put(fake_root)
+        Q.put(fake_root)  # root node
         # yield deliberately not called
         # no need to mark fake_root as visited, because it is not actually traversed
         while not Q.empty():  # in Python 3.7 bool(Q) does not work
@@ -144,7 +146,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
                 childs = [(100, info) for info in self.state.opts.recursive_options.initial_assets]
                 childs.extend([PrioritizedNS(0, ns) for ns in _enumerate_xml_namespaces(self.state)])  # FIXME: Is 0 right priority?
             else:
-                childs = _enumerate_child_namespaces(self.state, v.ns)  # FIXME: v.ns is an URI not asset and v.ns may be None
+                childs = _enumerate_child_namespaces(self.state, v.ns)
             for child in childs:
                 ns2 = child.ns
                 if ns2 not in self.state.assets:
@@ -153,7 +155,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
                         asset_info = parser.parse(graph)
                         self.state.add_asset(asset_info)
                         yield asset_info
-                    Q.put(child)
+                        Q.put((child.ns, asset_info))
 
     def download_iterator(self):
         iter = [self._breadth_first_download(downloaders) for downloaders in self.state.opts.recursive_options.downloaders]
