@@ -135,9 +135,9 @@ class CommandScriptInfoParser(NodeParser):
 
         if not more.scriptURL and len(base.params) != 0:
             def s():
-                self.parse_context.translate("Cannot provide params for commandString script {node}.").\
+                parse_context.translate("Cannot provide params for commandString script {node}.").\
                     format(node=node)
-            parse_context.throw(s)
+            parse_context.throw(ErrorHandler.FATAL, s)
 
         min_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "minVersion"), StringLiteral(ErrorHandler.WARNING))
         more.minVersion = min_parser.parse(parse_context, graph, node)

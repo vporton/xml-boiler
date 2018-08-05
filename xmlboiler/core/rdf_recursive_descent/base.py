@@ -117,7 +117,7 @@ class PredicateParserWithError(PredicateParser):
         self.on_error = on_error
 
     def throw(self, str):
-        self.parse_context.throw(self.on_error, str)
+        parse_context.throw(self.on_error, str)
 
 
 default_parse_context = providers.Factory(ParseContext, execution_context=Contexts.execution_context)

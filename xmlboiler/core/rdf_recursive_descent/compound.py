@@ -76,9 +76,9 @@ class OneOrMorePredicate(PredicateParserWithError):
         value = parent.parse(parse_context, graph, node)
         if len(value) == 0:
             def s():
-                self.parse_context.translate("Must have at least one predicate {pred} for node {node}.").\
+                parse_context.translate("Must have at least one predicate {pred} for node {node}.").\
                     format(pred=self.predicate, node=node)
-            parse_context.throw(s)
+            parse_context.throw(self.on_error, s)
         return value
 
 
@@ -91,9 +91,9 @@ class OnePredicate(PredicateParserWithError):
         v = list(graph.objects(node, self.predicate))
         if len(v) != 1:
             def s():
-                self.parse_context.translate("Exactly one predicate {pred} required for node {node}.").\
+                parse_context.translate("Exactly one predicate {pred} required for node {node}.").\
                     format(pred=self.predicate, node=node)
-            parse_context.throw(s)
+            parse_context.throw(self.on_error, s)
         return self.child.parse(parse_context, graph, node)
 
 
@@ -109,7 +109,7 @@ class ZeroOnePredicate(PredicateParserWithError):
             return self.default
         if len(v) > 1:
             def s():
-                self.parse_context.translate("Cannot be more than one predicate {pred} for node {node}.").\
+                parse_context.translate("Cannot be more than one predicate {pred} for node {node}.").\
                     format(pred=self.predicate, node=node)
-            parse_context.throw(s)
+            parse_context.throw(self.on_error, s)
         return self.child.parse(parse_context, graph, node)
