@@ -54,6 +54,7 @@ class Choice(NodeParser):
                 return p.parse(parse_context, graph, node)
             except ParseException:
                 pass
+        parse_context.throw(ErrorHandler.WARNING, "No variant")  # FIXME: Allow to specify the error mode and give more clear error message
 
 
 class ZeroOrMorePredicate(PredicateParser):
