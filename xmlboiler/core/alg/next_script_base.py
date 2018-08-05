@@ -89,6 +89,7 @@ class ScriptsIteratorBase(ABC):
                 scripts.append(s)
         return self._checked_scripts(scripts)
 
+    # FIXME: This does not support universal scripts
     def all_childs_in_target_hash(self):
         result = set()
 
