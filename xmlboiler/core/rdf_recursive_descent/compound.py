@@ -21,7 +21,7 @@ from xmlboiler.core.rdf_recursive_descent.base import *
 
 class PostProcessNodeParser(NodeParser):
     def __init__(self, child, f):
-        super(NodeParser, self).__init__()
+        super().__init__()
         self.child = child
         self.f = f
 
@@ -31,7 +31,7 @@ class PostProcessNodeParser(NodeParser):
 
 class PostProcessPredicateParser(PredicateParser):
     def __init__(self, child, f):
-        super(PredicateParser, self).__init__()
+        super().__init__()
         self.child = child
         self.f = f
 

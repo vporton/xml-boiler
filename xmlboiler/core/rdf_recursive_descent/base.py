@@ -104,7 +104,7 @@ class PredicateParser(ABC):
 
 class NodeParserWithError(NodeParser):
     def __init__(self, on_error):
-        super(NodeParser, self).__init__()
+        super().__init__()
         self.on_error = on_error
 
     def throw(self, str):

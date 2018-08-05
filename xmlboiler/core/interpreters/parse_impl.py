@@ -27,7 +27,7 @@ PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
 class InterpreterParseContext(ParseContext):
     def __init__(self, execution_context, script_url, params):
-        super(ParseContext, self).__init__(execution_context)
+        super().__init__(execution_context)
         self.script_url = script_url
         self.params = params
         self.current_param = None
@@ -38,10 +38,10 @@ class MainParser(Choice):
         """
         Every of these parsers returns a list (probably one-element) of strings.
         """
-        super(Choice, self).__init__([ArgumentLiteralParser(),
-                                      ArgumentListParser(),
-                                      ConcatParser(),
-                                      ConstantParser()])
+        super().__init__([ArgumentLiteralParser(),
+                          ArgumentListParser(),
+                          ConcatParser(),
+                          ConstantParser()])
 
 
 class ArgumentLiteralParser(NodeParser):
