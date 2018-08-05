@@ -33,7 +33,7 @@ class Connectivity(object):
         self.connectivity = BinaryRelation()
 
     def is_connected(self, src, dst):
-        return self.connectivity.adjanced(src, dst)
+        return src == dst or self.connectivity.adjanced(src, dst)
 
     def add_relation(self, relation):
         self.connectivity = transitive_closure(union(self.connectivity, relation))
