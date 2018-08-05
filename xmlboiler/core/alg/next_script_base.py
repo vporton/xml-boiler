@@ -89,7 +89,7 @@ class ScriptsIteratorBase(ABC):
                 scripts.append(s)
         return self._checked_scripts(scripts)
 
-    def all_childs_in_taget_hash(self):
+    def all_childs_in_target_hash(self):
         result = set()
 
         # use depth-first search

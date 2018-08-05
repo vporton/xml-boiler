@@ -27,7 +27,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         if next_outer is not None:
             return next_outer
 
-        elements = self.all_childs_in_taget_hash()
+        elements = self.all_childs_in_target_hash()
 
         namespaces = [e.namespaceURI for e in elements]
         available_chains = self._available_chains(namespaces, self.state.opts.target_namespaces)
