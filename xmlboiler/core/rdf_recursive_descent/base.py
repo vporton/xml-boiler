@@ -69,7 +69,7 @@ class ParseContext(object):
 
     # to shorten code
     def translate(self, str):
-        return self.execution_context.translate.gettext(str)
+        return self.execution_context.translations.gettext(str)
 
 class NodeParser(ABC):
     """
