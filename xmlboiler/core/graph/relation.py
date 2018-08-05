@@ -122,7 +122,7 @@ def union(a, b):
         setA = a.adj.get(x, None)
         setB = b.adj.get(x, None)
         if a is not None or b is not None:
-            s = dict()
+            s = set()
             if setA is not None:
                 s |= setA
             if setB is not None:
