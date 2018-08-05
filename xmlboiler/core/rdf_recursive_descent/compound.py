@@ -58,7 +58,7 @@ class Choice(NodeParser):
 
 class ZeroOrMorePredicate(PredicateParser):
     def __init__(self, predicate, child):
-        super(PredicateParserWithError, self).__init__(predicate)
+        super().__init__(predicate)
         self.child = child
 
     def parse(self, parse_context, graph, node):
@@ -68,7 +68,7 @@ class ZeroOrMorePredicate(PredicateParser):
 
 class OneOrMorePredicate(PredicateParserWithError):
     def __init__(self, predicate, child, on_error):
-        super(PredicateParserWithError, self).__init__(predicate, on_error)
+        super().__init__(predicate, on_error)
         self.child = child
 
     def parse(self, parse_context, graph, node):
@@ -84,7 +84,7 @@ class OneOrMorePredicate(PredicateParserWithError):
 
 class OnePredicate(PredicateParserWithError):
     def __init__(self, predicate, child, on_error):
-        super(PredicateParserWithError, self).__init__(predicate, on_error)
+        super().__init__(predicate, on_error)
         self.child = child
 
     def parse(self, parse_context, graph, node):
@@ -99,7 +99,7 @@ class OnePredicate(PredicateParserWithError):
 
 class ZeroOnePredicate(PredicateParserWithError):
     def __init__(self, predicate, child, on_error, default_value=None):
-        super(PredicateParserWithError, self).__init__(predicate, on_error)
+        super().__init__(predicate, on_error)
         self.child = child
         self.default = default_value
 
