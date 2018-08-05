@@ -50,14 +50,15 @@ class BaseScriptInfo(object):
     validator_kind  : ValidatorKindEnum = None
     okResult: Optional[str] = None
 
-class CommandScriptInfo(NamedTuple):
-    language: URIRef
-    min_version: Optional[str]
-    max_version: Optional[str]
+@dataclass
+class CommandScriptInfo(object):
+    language: URIRef = None
+    min_version: Optional[str] = None
+    max_version: Optional[str] = None
     # either one of the following must be None
-    command_string: Optional[str]
-    script_URL    : Optional[str]
-    params: list
+    command_string: Optional[str] = None
+    script_URL    : Optional[str] = None
+    params: list = None
 
 class WebServiceScriptInfo(NamedTuple):
     action: URIRef
