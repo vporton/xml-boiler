@@ -39,7 +39,7 @@ class StringLiteral(NodeParserWithError):
 
 class BooleanLiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
-        if node in Literal and node.datatype == XSD.boolean:
+        if isinstance(node, Literal) and node.datatype == XSD.boolean:
             if node.value in ("0", "false"):
                 return False
             if node.value in ("1", "true"):
@@ -49,7 +49,7 @@ class BooleanLiteral(NodeParserWithError):
 
 class IntegerLiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
-        if node in Literal and node.datatype == XSD.integer and \
+        if isinstance(node, Literal) and node.datatype == XSD.integer and \
                 len(node.value) != 0 and node.value[0] != ' ' and node.value[-1] != ' ':
             try:
                 return int(node.value)
@@ -60,7 +60,7 @@ class IntegerLiteral(NodeParserWithError):
 
 class FloatLiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
-        if node in Literal and node.datatype in (XSD.integer, XSD.float, XSD.double, XSD.decimal) and \
+        if isinstance(node, Literal) and node.datatype in (XSD.integer, XSD.float, XSD.double, XSD.decimal) and \
                 len(node.value) != 0 and node.value[0] != ' ' and node.value[-1] != ' ':
             try:
                 return float(node.value)
