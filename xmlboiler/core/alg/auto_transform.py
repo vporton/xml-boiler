@@ -51,7 +51,6 @@ class AutomaticTranformation(object):
         try:
             RealNextScript(self.state).step()
         except StopIteration:
-            # may propagate one more StopIteration, exiting from the main loop
             try:
                 next(self.state.next_asset)
             except StopIteration:
