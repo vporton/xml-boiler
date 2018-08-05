@@ -123,9 +123,9 @@ def union(a, b):
         setB = b.adj.get(x, None)
         if a is not None or b is not None:
             s = dict()
-            if not a is None:
+            if a is not None:
                 s |= setA
-            if not b is None:
+            if b is not None:
                 s |= setB
             adj[x] = s
     return BinaryRelation(adj)
