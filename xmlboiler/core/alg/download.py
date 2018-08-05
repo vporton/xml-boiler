@@ -155,7 +155,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
                         asset_info = parser.parse(graph)
                         self.state.add_asset(asset_info)
                         yield asset_info
-                        Q.put((child.ns, asset_info))
+                        Q.put(PrioritizedNS(child.ns, asset_info))
 
     def download_iterator(self):
         iter = [self._breadth_first_download(downloaders) for downloaders in self.state.opts.recursive_options.downloaders]
