@@ -67,13 +67,14 @@ class ScriptInfo(NamedTuple):
     base: BaseScriptInfo
     more: NamedTuple
 
-class Transformer(NamedTuple):
-    source_namespaces: AbstractSet[URIRef]
-    target_namespaces: AbstractSet[URIRef]
-    ignore_target: bool
-    precedence: Optional[URIRef]
-    inwardness: Optional[bool]
-    scripts: List[ScriptInfo]
+@dataclass
+class Transformer(object):
+    source_namespaces: AbstractSet[URIRef] = None
+    target_namespaces: AbstractSet[URIRef] = None
+    ignore_target: bool = False
+    precedence: Optional[URIRef] = None
+    inwardness: Optional[bool] = None
+    scripts: List[ScriptInfo] = None
 
 class Namespace(NamedTuple):
     resource: URIRef
