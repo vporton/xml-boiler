@@ -27,7 +27,7 @@ class EnumParser(NodeParserWithError):
         self.map = map
 
     def parse(self, parse_context, graph, node):
-        if node not in URIRef:
+        if not isinstance(node, URIRef):
             self.throw(lambda: parse_context.translate("Node {node} should be an IRI.").format(node=node))
         try:
             value = self.map[node]

@@ -23,7 +23,7 @@ from xmlboiler.core.rdf_recursive_descent.base import ParseException
 
 def check_node_class(relation, parse_context, graph, node, klass, on_error):
     for i in graph.objects(node, RDF.type):
-        if i in URIRef and relation.is_connected(i, klass):
+        if isinstance(i, URIRef) and relation.is_connected(i, klass):
             return
     str = lambda: parse_context.translate("Node {node} must be of class {klass}.").format(node=node, klass=klass)
     parse_context.throw(on_error, str)

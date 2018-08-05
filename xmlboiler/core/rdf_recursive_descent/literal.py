@@ -23,7 +23,7 @@ from xmlboiler.core.rdf_recursive_descent.base import *
 
 class IRILiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
-        if node in URIRef:
+        if isinstance(node, URIRef):
             return node
         else:
             self.throw(lambda: self.parse_context.translate("Node {node} should be an IRI.").format(node=node))
