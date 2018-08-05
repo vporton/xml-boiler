@@ -36,8 +36,8 @@ class GraphOfScripts(object):
 
     def add_scripts(self, enriched_scripts):
         for scr in enriched_scripts:
-            source = frozenset(scr.transfomer.source_namespaces)
-            target = frozenset(scr.transfomer.target_namespaces)
+            source = frozenset(scr.base.transformer.source_namespaces)
+            target = frozenset(scr.base.transformer.target_namespaces)
             # TODO: There are two proposed formulas for weight in the specification
             weight = 1 / (scr.script.base.preservance + scr.script.base.stability + scr.script.base.preference)
             self.graph.add_node(source, target, script=scr, weight=weight)

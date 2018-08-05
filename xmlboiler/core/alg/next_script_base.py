@@ -85,7 +85,7 @@ class ScriptsIteratorBase(ABC):
             return None
         scripts = []
         for s in self.state.scripts:
-            if NSs[0] in s.transformer.source_namespaces:
+            if NSs[0] in s.base.transformer.source_namespaces:
                 scripts.append(s)
         return self._checked_scripts(scripts)
 
