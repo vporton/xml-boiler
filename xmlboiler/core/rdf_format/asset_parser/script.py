@@ -120,9 +120,9 @@ class CommandScriptInfoParser(NodeParser):
         base = BaseScriptInfoParser(self.script_kind).parse(parse_context, graph, node)
         more = CommandScriptInfo()
 
-        str1_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "scriptURL"), StringLiteral(), ErrorHandler.WARNING)
+        str1_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "scriptURL"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
         str1 = str1_parser.parse(parse_context, graph, node)
-        str2_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "commandString"), StringLiteral(), ErrorHandler.WARNING)
+        str2_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "commandString"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
         str2 = str2_parser.parse(parse_context, graph, node)
         if str1 is None and str2 is None:
             msg = parse_context.translate("Both :scriptURL and :commandString can't be missing in node {node}.").format(node=node)
