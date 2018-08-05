@@ -22,7 +22,7 @@ from typing import NamedTuple, Optional, AbstractSet, List
 from rdflib import URIRef
 
 from xmlboiler.core.graph.relation import BinaryRelation
-from xmlboiler.core.graph.connect import Connectivity
+# from xmlboiler.core.graph.connect import Connectivity
 
 
 class ScriptKindEnum(Enum):
@@ -40,14 +40,15 @@ class ValidatorKindEnum(Enum):
     PARTS  = auto()
 
 # TODO: Distinguishing transformer and validator scripts does not conform to the specification
-class BaseScriptInfo(NamedTuple):
-    preservance : float
-    stability   : float
-    preference  : float
+@dataclass
+class BaseScriptInfo(object):
     script_kind: ScriptKindEnum
-    transformer_kind: TransformerKindEnum
-    validator_kind  : ValidatorKindEnum
-    okResult: Optional[str]
+    preservance : float = None
+    stability   : float = None
+    preference  : float = None
+    transformer_kind: TransformerKindEnum = None
+    validator_kind  : ValidatorKindEnum = None
+    okResult: Optional[str] = None
 
 class CommandScriptInfo(NamedTuple):
     language: URIRef
