@@ -103,7 +103,7 @@ class BaseScriptInfoParser(NodeParser):
         params_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "params"),
                                          ListParser(_ParamParser()),
                                          ErrorHandler.WARNING,
-                                         default=[])
+                                         default_value=[])
         result.params = params_parser.parse(parse_context, graph, node)
         return result
 
