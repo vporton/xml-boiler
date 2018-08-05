@@ -28,9 +28,9 @@ class EnumParser(NodeParserWithError):
 
     def parse(self, parse_context, graph, node):
         if not isinstance(node, URIRef):
-            self.throw(lambda: parse_context.translate("Node {node} should be an IRI.").format(node=node))
+            parse_context.throw(lambda: parse_context.translate("Node {node} should be an IRI.").format(node=node))
         try:
             value = self.map[node]
         except KeyError:
-            self.throw(lambda: parse_context.translate("The IRI {iri} is unknown.").format(iri=node))
+            parse_context.throw(lambda: parse_context.translate("The IRI {iri} is unknown.").format(iri=node))
         return value

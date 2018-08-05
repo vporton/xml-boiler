@@ -78,7 +78,7 @@ class OneOrMorePredicate(PredicateParserWithError):
             def s():
                 self.parse_context.translate("Must have at least one predicate {pred} for node {node}.").\
                     format(pred=self.predicate, node=node)
-            self.throw(s)
+            parse_context.throw(s)
         return value
 
 
@@ -93,7 +93,7 @@ class OnePredicate(PredicateParserWithError):
             def s():
                 self.parse_context.translate("Exactly one predicate {pred} required for node {node}.").\
                     format(pred=self.predicate, node=node)
-            self.throw(s)
+            parse_context.throw(s)
         return self.child.parse(parse_context, graph, node)
 
 
@@ -111,5 +111,5 @@ class ZeroOnePredicate(PredicateParserWithError):
             def s():
                 self.parse_context.translate("Cannot be more than one predicate {pred} for node {node}.").\
                     format(pred=self.predicate, node=node)
-            self.throw(s)
+            parse_context.throw(s)
         return self.child.parse(parse_context, graph, node)

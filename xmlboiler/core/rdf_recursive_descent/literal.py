@@ -26,14 +26,14 @@ class IRILiteral(NodeParserWithError):
         if isinstance(node, URIRef):
             return node
         else:
-            self.throw(lambda: self.parse_context.translate("Node {node} should be an IRI.").format(node=node))
+            parse_context.throw(lambda: self.parse_context.translate("Node {node} should be an IRI.").format(node=node))
 
 
 class StringLiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
         # TODO: xsd:normalizedString support
         if node not in Literal or node.datatype != XSD.string:
-            self.throw(lambda: self.parse_context.translate("Node {node} is not a string literal.").format(node=node))
+            parse_context.throw(lambda: self.parse_context.translate("Node {node} is not a string literal.").format(node=node))
         return str(node)
 
 
@@ -44,7 +44,7 @@ class BooleanLiteral(NodeParserWithError):
                 return False
             if node.value in ("1", "true"):
                 return True
-        self.throw(lambda: self.parse_context.translate("Node {node} is not a boolean literal.").format(node=node))
+        parse_context.throw(lambda: self.parse_context.translate("Node {node} is not a boolean literal.").format(node=node))
 
 
 class IntegerLiteral(NodeParserWithError):
@@ -55,7 +55,7 @@ class IntegerLiteral(NodeParserWithError):
                 return int(node.value)
             except ValueError:
                 pass
-        self.throw(lambda: self.parse_context.translate("Node {node} is not an integer literal.").format(node=node))
+        parse_context.throw(lambda: self.parse_context.translate("Node {node} is not an integer literal.").format(node=node))
 
 
 class FloatLiteral(NodeParserWithError):
@@ -66,4 +66,4 @@ class FloatLiteral(NodeParserWithError):
                 return float(node.value)
             except ValueError:
                 pass
-        self.throw(lambda: self.parse_context.translate("Node {node} is not a float literal.").format(node=node))
+        parse_context.throw(lambda: self.parse_context.translate("Node {node} is not a float literal.").format(node=node))
