@@ -22,7 +22,8 @@ from xmlboiler.core.rdf_format.asset import Transformer, ScriptKindEnum
 from xmlboiler.core.rdf_format.asset_parser.script import ScriptInfoParser
 from xmlboiler.core.rdf_format.base import MAIN_NAMESPACE
 from xmlboiler.core.rdf_recursive_descent.base import NodeParser, ErrorHandler
-from xmlboiler.core.rdf_recursive_descent.compound import OneOrMorePredicate, OnePredicate, ZeroOnePredicate
+from xmlboiler.core.rdf_recursive_descent.compound import OneOrMorePredicate, OnePredicate, ZeroOnePredicate, \
+    ZeroOrMorePredicate
 from xmlboiler.core.rdf_recursive_descent.literal import IRILiteral, BooleanLiteral
 from xmlboiler.core.rdf_recursive_descent.types import check_node_class
 
@@ -41,9 +42,9 @@ class TransformerParser(NodeParser):
                                                       IRILiteral(ErrorHandler.WARNING),
                                                       ErrorHandler.WARNING)
         result.source_namespaces = source_namespaces_parser.parse(parse_context, graph, node)
-        target_namespaces_parser = OneOrMorePredicate(URIRef(MAIN_NAMESPACE + "targetNamespace"),
-                                                      IRILiteral(ErrorHandler.WARNING),
-                                                      ErrorHandler.WARNING)
+        target_namespaces_parser = ZeroOrMorePredicate(URIRef(MAIN_NAMESPACE + "targetNamespace"),
+                                                       IRILiteral(ErrorHandler.WARNING),
+                                                       ErrorHandler.WARNING)
         result.target_namespaces = target_namespaces_parser.parse(parse_context, graph, node)
 
         precedence_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "precedence"),
