@@ -21,7 +21,7 @@
 
 from functools import total_ordering
 
-from xmlboiler.core.packages.base import ThePackageManaging
+from xmlboiler.core.packages.config import ThePackageManaging
 
 _Version = ThePackageManaging.VersionClass
 
