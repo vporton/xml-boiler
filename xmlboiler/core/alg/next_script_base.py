@@ -88,8 +88,12 @@ class ScriptsIteratorBase(ABC):
         if not NSs:
             return None
         available_chains = self._available_chains(frozenset(NSs), self.state.opts.target_namespaces)
-        paths = nx.all_shortest_paths(available_chains.graph, frozenset(NSs), self.state.opts.target_namespaces, weight='weight')
-        return shortest_paths_to_edges(available_chains.graph, paths, lambda e: 1) # FIXME: get weight!
+        try:
+            # list() to force exception if there is no path
+            paths = list(nx.all_shortest_paths(available_chains.graph, frozenset(NSs), self.state.opts.target_namespaces, weight='weight'))
+        except nx.NetworkXNoPath:
+            return None
+        return shortest_paths_to_edges(available_chains.graph, paths, lambda e: e['weight'])
 
     # FIXME: This does not support universal scripts
     def all_childs_in_target_hash(self):

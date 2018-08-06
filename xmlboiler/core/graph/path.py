@@ -35,7 +35,8 @@ def shortest_path_to_edges(graph, path, weight):
     for i in range(len(path) - 1):
         last_weight = math.inf
         last_edges = []
-        for e in graph[path[i]][path[i+1]]:
+        # for e in graph[path[i]][path[i+1]]:
+        for x, e in graph[path[i]][path[i + 1]].items():
             new_weight = weight(e)
             if new_weight < last_weight:
                 last_edges = []
