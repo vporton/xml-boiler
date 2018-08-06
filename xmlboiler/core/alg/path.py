@@ -46,6 +46,7 @@ class GraphOfScripts(object):
     def adjust(self):
         # TODO: The below is inefficient
         for i in self.graph.nodes:
+            # FIXME: i is a node not a script!
             if isinstance(i, EnrichedScript) and i.transformer.universal and \
                     self.precedences_graph.is_connected(self.universal_precedence, i.transformer.precedence):
                 self.graph.add_edge(i, self.destinations, weight=0)
