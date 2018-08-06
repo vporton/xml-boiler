@@ -126,7 +126,7 @@ options.recursive_options.download_algorithm = \
      'breadth': download_providers.breadth_first_download,
      'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](state).download_iterator()
 
-_interpreters = xmlboiler.core.interpreters.parse.interpreters_factory()
+_interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory()
 algorithm = AutomaticTranformation(state, _interpreters)
 try:
     algorithm.run()

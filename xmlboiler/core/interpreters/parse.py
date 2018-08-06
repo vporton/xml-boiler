@@ -15,7 +15,8 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-from dependency_injector import providers
+
+from dependency_injector import providers, containers
 from rdflib import URIRef
 
 from xmlboiler.core import execution_context_builders
@@ -43,7 +44,7 @@ class Interpeters(object):
         self.graph = graph
         self.execution_context = execution_context
 
-        list_node = graph[:URIRef(PREFIX + "interpretersList")][0]
+        list_node = next(graph[:URIRef(PREFIX + "interpretersList")])
         the_list = ListParser(ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
@@ -130,6 +131,7 @@ class Interpeters(object):
 
 
 # TODO: Use proper dependency injection instead of the singleton
-interpreters_factory = providers.ThreadLocalSingleton(Interpeters,
-                                                      execution_context=execution_context_builders.Contexts.execution_context,
-                                                      graph=Global.load_rdf('core/data/interpreters.ttl'))
+class Providers(containers.DeclarativeContainer):
+    interpreters_factory = providers.ThreadLocalSingleton(Interpeters,
+                                                          execution_context=execution_context_builders.Contexts.execution_context,
+                                                          graph=Global.load_rdf('core/data/interpreters.ttl'))
