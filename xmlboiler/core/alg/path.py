@@ -64,7 +64,7 @@ class GraphOfScripts(object):
                 for i in range(len(path) - 1):
                     if script_found:
                         break
-                    for _, edge in self.graph.edges[path[i]][path[i+1]].items():
+                    for _, _, edge in self.graph.edges[path[i]][path[i+1]].items():
                         script = edge.get('script')
                         if script is not None:
                             edges.append(script)
