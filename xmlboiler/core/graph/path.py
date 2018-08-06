@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import functools
 import itertools
 import math
 
@@ -73,7 +74,7 @@ def shortest_lists_of_edges(edges, weight):
     result = []
     last_weight = math.inf
     for cur_edges in edges:
-        new_weight = itertools.reduce(filter(weight, cur_edges), 0)
+        new_weight = functools.reduce(filter(weight, cur_edges), 0)
         if new_weight < last_weight:
             result = []
         if new_weight <= last_weight:
