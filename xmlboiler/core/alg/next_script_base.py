@@ -53,7 +53,7 @@ class ScriptsIteratorBase(ABC):
 
     def _available_chains(self, sources, destinations):
         # TODO: inefficient? should hold the graph, not re-create it
-        available_chains = GraphOfScripts(None, destinations, self.state.opts.universal_precedence, self.state.precedences_higher)
+        available_chains = GraphOfScripts(None, self.state.opts.universal_precedence, self.state.precedences_higher)
         available_chains.add_scripts(self.state.scripts)
         available_chains.graph.add_node(self.state.opts.target_namespaces)
         for source in sources:

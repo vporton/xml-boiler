@@ -28,8 +28,7 @@ from xmlboiler.core.alg.state import EnrichedScript
 
 
 class GraphOfScripts(object):
-    def __init__(self, graph, destinations, universal_precedence, precedences_graph):
-        self.destinations = destinations
+    def __init__(self, graph, universal_precedence, precedences_graph):
         self.universal_precedence = universal_precedence
         self.precedences_graph = precedences_graph
         self.graph = graph or nx.MultiDiGraph()
