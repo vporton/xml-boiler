@@ -22,7 +22,6 @@ from .next_script_base import ScriptsIteratorBase
 
 
 class ScriptsIterator(ScriptsIteratorBase):
-    # FIXME: Does not conform to the specification
     def __next__(self):
         next_outer = self._next_outer_script()
         if next_outer is not None:
