@@ -21,6 +21,8 @@ import itertools
 import math
 import operator
 
+from networkx import NetworkXNoPath
+
 
 def shortest_path_to_edges(graph, path, weight):
     r"""
@@ -74,11 +76,14 @@ def shortest_lists_of_edges(edges, weight):
     """
     result = []
     last_weight = math.inf
-    for cur_edges in edges:
-        new_weight = functools.reduce(operator.add, filter(weight, cur_edges), 0)
-        if new_weight < last_weight:
-            result = []
-        if new_weight <= last_weight:
-            last_weight = new_weight
-            result.append(cur_edges)
+    try:
+        for cur_edges in edges:
+            new_weight = functools.reduce(operator.add, filter(weight, cur_edges), 0)
+            if new_weight < last_weight:
+                result = []
+            if new_weight <= last_weight:
+                last_weight = new_weight
+                result.append(cur_edges)
+    except NetworkXNoPath:
+        pass
     return result
