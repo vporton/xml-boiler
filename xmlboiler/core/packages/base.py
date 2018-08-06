@@ -18,8 +18,6 @@
 
 from abc import abstractclassmethod, ABC
 
-from .debian import DebianPackageManaging
-
 
 class BasePackageManaging(ABC):
     @abstractclassmethod
