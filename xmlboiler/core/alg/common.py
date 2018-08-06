@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from xmlboiler.core import interpreters
+from xmlboiler.core.interpreters.parse import interpreters
 from xmlboiler.core.os_command.regular import regular_provider
 
 
@@ -29,10 +29,10 @@ class RealNextScript(object):
         while True:
             script = next(self.state.opts.next_script)
             # TODO: Support Web requests, etc.
-            node = interpreters.find_interpreter(script.language, script.min_version, script.max_version)
+            node = interpreters.parse.interpeters.find_interpreter(script.language, script.min_version, script.max_version)
             if node is not None:
                 self.state.executed_scripts.append(script)
                 # FIXME: What about .command_line?
-                cmd = interpreters.construct_command_line(node, script.script_URL, script.params, bool(script.command_string))
+                cmd = interpreters.parse.interpeters.construct_command_line(node, script.script_URL, script.params, bool(script.command_string))
                 self.state.xml_text = regular_provider.run_pipe(cmd, self.state.xml_text)
                 return
