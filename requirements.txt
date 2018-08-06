@@ -1,3 +1,4 @@
+git+ssh://git@github.com/vporton/python-executor
 rdflib
 dependency_injector
 ordered-set
