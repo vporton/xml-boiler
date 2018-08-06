@@ -17,7 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import re
-import deb_pkg_tools
+import deb_pkg_tools.version
 
 from .base import BasePackageManaging
 
