@@ -100,9 +100,9 @@ class ScriptsIteratorBase(ABC):
             v = stack.pop()
             if not v.childNodes:
                 for x in reversed(stack):
+                    result.add(x)
                     if x.namespaceURI not in self.state.opts.target_namespaces:
                         break
-                    result.add(x)  # FIXME: What's about parents/childs?
             for w in v.childNodes:
                 stack.append(w)
 

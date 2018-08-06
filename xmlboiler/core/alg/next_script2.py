@@ -22,14 +22,31 @@ from .next_script_base import ScriptsIteratorBase
 
 
 class ScriptsIterator(ScriptsIteratorBase):
+    # FIXME: Does not conform to the specification
     def __next__(self):
         next_outer = self._next_outer_script()
         if next_outer is not None:
             return next_outer
 
-        elements = self.all_childs_in_target_hash()
+        childs_hash = self.all_childs_in_target_hash()
+
+        elements = []
+        # use depth-first search
+        stack = []
+        stack.append(self.state.dom.documentElement)
+        while stack:
+            v = stack.pop()
+            if not v.childNodes:
+                for x in reversed(stack):
+                    if x not in childs_hash:
+                        break
+                    elements.add(x)
+            for w in v.childNodes:
+                stack.append(w)
 
         namespaces = [e.namespaceURI for e in elements]
+
+        # Check that for this element there is a known inwardly processed script (FIXME)
         available_chains = self._available_chains(namespaces, self.state.opts.target_namespaces)
 
         first_edges = []
