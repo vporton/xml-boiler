@@ -39,8 +39,8 @@ class AutomaticTranformation(object):
         parents = [self.state.dom.documentElement]
         while parents:
             v = parents.pop()
-            # if v.namespaceURI is not None:  # even if it is None add it to the set
-            all_namespaces.add(URIRef(v.namespaceURI))
+            if v.namespaceURI is not None:
+                all_namespaces.add(URIRef(v.namespaceURI))
             for w in v.childNodes:
                 parents.append(w)
 

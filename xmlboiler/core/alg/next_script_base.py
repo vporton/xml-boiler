@@ -103,7 +103,7 @@ class ScriptsIteratorBase(ABC):
             if not v.childNodes:
                 for x in reversed(stack):
                     result.add(x)
-                    if URIRef(x.namespaceURI) not in self.state.opts.target_namespaces:
+                    if x.namespaceURI is None or URIRef(x.namespaceURI) not in self.state.opts.target_namespaces:
                         break
             for w in v.childNodes:
                 stack.append(w)
