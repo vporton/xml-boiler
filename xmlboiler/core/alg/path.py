@@ -40,21 +40,20 @@ class GraphOfScripts(object):
             target = frozenset(scr.base.transformer.target_namespaces)
             # TODO: There are two proposed formulas for weight in the specification
             weight = 1 / (scr.base.preservance + scr.base.stability + scr.base.preference)
+            if scr.base.transformer.universal and \
+                    self.precedences_graph.is_connected(self.universal_precedence, scr.base.transformer.precedence):
+                target = frozenset()
             self.graph.add_edge(source, target, script=scr, weight=weight)
+
 
     # to be called before use
     def adjust(self):
         # TODO: The below is inefficient
         for i in self.graph.nodes:
-            # FIXME: i is a node not a script!
-            if isinstance(i, EnrichedScript) and i.transformer.universal and \
-                    self.precedences_graph.is_connected(self.universal_precedence, i.transformer.precedence):
-                self.graph.add_edge(i, self.destinations, weight=0)
-            else:
-                for j in self.graph.nodes:
-                    if i < j:
-                        if not self.graph.has_edge(i, j):
-                            self.graph.add_edge(i, j, weight=0)
+            for j in self.graph.nodes:
+                if i < j:
+                    if not self.graph.has_edge(i, j):
+                        self.graph.add_edge(i, j, weight=0)
 
     def first_edges_for_shortest_path(self, source, target):
         paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')
