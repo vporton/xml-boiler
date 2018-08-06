@@ -23,7 +23,7 @@ from rdflib import URIRef
 
 from xmlboiler.core.alg.path import GraphOfScripts
 from xmlboiler.core.graph.minmax import Supremum
-from xmlboiler.core.graph.path import shortest_lists_of_edges
+from xmlboiler.core.graph.path import shortest_lists_of_edges, shortest_paths_to_edges
 
 
 class ScriptsIteratorBase(ABC):
@@ -88,7 +88,8 @@ class ScriptsIteratorBase(ABC):
         if not NSs:
             return None
         available_chains = self._available_chains(frozenset(NSs), self.state.opts.target_namespaces)
-        return nx.all_shortest_paths(available_chains.graph, frozenset(NSs), self.state.opts.target_namespaces, weight='weight')
+        paths = nx.all_shortest_paths(available_chains.graph, frozenset(NSs), self.state.opts.target_namespaces, weight='weight')
+        return shortest_paths_to_edges(available_chains.graph, paths, lambda e: 1) # FIXME: get weight!
 
     # FIXME: This does not support universal scripts
     def all_childs_in_target_hash(self):
