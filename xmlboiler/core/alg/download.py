@@ -40,7 +40,8 @@ def _enumerate_xml_namespaces(state):
     while stack:
         v = stack.pop()
         for w in v.childNodes:
-            yield URIRef(w.namespaceURI)
+            if w.namespaceURI is not None:
+                yield URIRef(w.namespaceURI)
             stack.append(w)
 
 @dataclass(order=True)
