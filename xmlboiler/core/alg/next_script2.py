@@ -25,7 +25,7 @@ from .next_script_base import ScriptsIteratorBase
 class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
         next_outer = self._next_outer_script()
-        if next_outer is not None:
+        if next_outer:
             return next_outer
 
         childs_hash = self.all_childs_in_target_hash()
