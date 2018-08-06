@@ -29,7 +29,7 @@ from xmlboiler.core.alg.auto_transform import AutomaticTranformation, AssetsExha
 from xmlboiler.core.alg.download import NoDownloader, DepthFirstDownloader, BreadthFirstDownloader, download_providers
 from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader
-from xmlboiler.core.interpreters.parse import interpreters
+import xmlboiler.core.interpreters.parse
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions, \
     RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace
 import xmlboiler.core.alg.next_script1
@@ -126,7 +126,7 @@ options.recursive_options.download_algorithm = \
      'breadth': download_providers.breadth_first_download,
      'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](state).download_iterator()
 
-_interpreters = interpreters.parse.interpeters()
+_interpreters = xmlboiler.core.interpreters.parse.interpreters_factory()
 algorithm = AutomaticTranformation(state, _interpreters)
 try:
     algorithm.run()

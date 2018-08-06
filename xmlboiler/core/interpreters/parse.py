@@ -130,6 +130,6 @@ class Interpeters(object):
 
 
 # TODO: Use proper dependency injection instead of the singleton
-interpreters = providers.ThreadLocalSingleton(Interpeters,
-                                              execution_context=execution_context_builders.Contexts.execution_context,
-                                              graph=Global.load_rdf('core/data/interpreters.ttl'))
+interpreters_factory = providers.ThreadLocalSingleton(Interpeters,
+                                                      execution_context=execution_context_builders.Contexts.execution_context,
+                                                      graph=Global.load_rdf('core/data/interpreters.ttl'))
