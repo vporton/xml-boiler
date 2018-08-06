@@ -44,7 +44,7 @@ class ScriptsIteratorBase(ABC):
             for w in v.childNodes:
                 scripts = self._outer_node_script(w)  # FIXME: It is a container of multiple scripts!
                 if scripts:
-                    return self._choose_by_preservance_priority(scripts)
+                    return self._choose_by_preservance_priority(scripts)  # FIXME: argument must be a list of lists
                 parents.append(w)
         return None
 
@@ -66,9 +66,10 @@ class ScriptsIteratorBase(ABC):
     def _choose_by_preservance_priority(self, scripts):
         # a list of lists
         minimal_preservance_paths = shortest_lists_of_edges(scripts,
-                                                            lambda e: Supremum(-e['script'].base.preservance))
+                                                            lambda e: Supremum(-e.base.preservance))
         # minimal_preservance_scripts = [[s['script'] for s in l if 'script' in s] for l in minimal_preservance_scripts]
-        return shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])
+        # return shortest_lists_of_edges(minimal_preservance_paths, lambda e: e['weight'])
+        return shortest_lists_of_edges(minimal_preservance_paths, lambda e: 1) # FIXME: get weight!
 
     def _get_ns(self, node):
         if node.namespaceURI:
