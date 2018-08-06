@@ -51,7 +51,7 @@ class ScriptsIterator(ScriptsIteratorBase):
 
         first_edges = []
         for source in namespaces:
-            edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.target_namespaces)
+            edges = available_chains.first_edges_for_shortest_path(frozenset([source]), self.state.opts.target_namespaces)
             first_edges.extend(edges)
         if not first_edges:
             raise StopIteration
