@@ -88,7 +88,7 @@ class ScriptsIteratorBase(ABC):
         if not NSs:
             return None
         available_chains = self._available_chains(frozenset(NSs), self.state.opts.target_namespaces)
-        return nx.all_shortest_paths(available_chains, frozenset(NSs), self.state.opts.target_namespaces, weight='weight')
+        return nx.all_shortest_paths(available_chains.graph, frozenset(NSs), self.state.opts.target_namespaces, weight='weight')
 
     # FIXME: This does not support universal scripts
     def all_childs_in_target_hash(self):
