@@ -19,6 +19,7 @@
 import functools
 import itertools
 import math
+import operator
 
 
 def shortest_path_to_edges(graph, path, weight):
@@ -43,25 +44,25 @@ def shortest_path_to_edges(graph, path, weight):
     return result
 
 
-def shortest_paths_to_edges(graph, paths, weight):
-    r"""
-    :param graph:
-    :param paths: a list of lists of nodes
-    :param weight: a function
-    :return: a list of lists of edges
-    """
-    result = []
-    last_weight = math.inf
-    for path in paths:
-        new_lists_of_edges = shortest_path_to_edges(graph, path, weight)
-        for new_edges in new_lists_of_edges:
-            new_weight = itertools.reduce(filter(weight, new_edges), 0)
-            if new_weight < last_weight:
-                result = []
-            if new_weight <= last_weight:
-                last_weight = new_weight
-                result.append(new_edges)
-    return result
+# def shortest_paths_to_edges(graph, paths, weight):
+#     r"""
+#     :param graph:
+#     :param paths: a list of lists of nodes
+#     :param weight: a function
+#     :return: a list of lists of edges
+#     """
+#     result = []
+#     last_weight = math.inf
+#     for path in paths:
+#         new_lists_of_edges = shortest_path_to_edges(graph, path, weight)
+#         for new_edges in new_lists_of_edges:
+#             new_weight = functools.reduce(max, filter(weight, new_edges), 0)
+#             if new_weight < last_weight:
+#                 result = []
+#             if new_weight <= last_weight:
+#                 last_weight = new_weight
+#                 result.append(new_edges)
+#     return result
 
 
 def shortest_lists_of_edges(edges, weight):
@@ -74,7 +75,7 @@ def shortest_lists_of_edges(edges, weight):
     result = []
     last_weight = math.inf
     for cur_edges in edges:
-        new_weight = functools.reduce(filter(weight, cur_edges), 0)
+        new_weight = functools.reduce(operator.add, filter(weight, cur_edges), 0)
         if new_weight < last_weight:
             result = []
         if new_weight <= last_weight:
