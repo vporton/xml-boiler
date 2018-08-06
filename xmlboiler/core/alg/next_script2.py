@@ -45,7 +45,7 @@ class ScriptsIterator(ScriptsIteratorBase):
 
         namespaces = frozenset([e.namespaceURI for e in elements if e.namespaceURI is not None])
 
-        # Check that for this element there is a known inwardly processed script (FIXME)
+        # Check that for this element there is a known inwardly processed script
         available_chains = self._available_chains(namespaces, self.state.opts.target_namespaces)
 
         first_edges = []
