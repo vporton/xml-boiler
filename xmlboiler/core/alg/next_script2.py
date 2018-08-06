@@ -40,11 +40,11 @@ class ScriptsIterator(ScriptsIteratorBase):
                 for x in reversed(stack):
                     if x not in childs_hash:
                         break
-                    elements.add(x)
+                    elements.append(x)
             for w in v.childNodes:
                 stack.append(w)
 
-        namespaces = [e.namespaceURI for e in elements]
+        namespaces = frozenset([e.namespaceURI for e in elements if e.namespaceURI is not None])
 
         # Check that for this element there is a known inwardly processed script (FIXME)
         available_chains = self._available_chains(namespaces, self.state.opts.target_namespaces)
