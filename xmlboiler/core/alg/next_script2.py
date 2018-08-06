@@ -56,7 +56,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         if not first_edges:
             raise StopIteration
 
-        first_edges = self._checked_scripts(first_edges)
+        # first_edges = self._checked_scripts(first_edges)  # done in base_script.py
 
         maximal_priority_edges = self._choose_by_preservance_priority(first_edges)
         if not maximal_priority_edges:

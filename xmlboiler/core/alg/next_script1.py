@@ -32,12 +32,12 @@ class ScriptsIterator(ScriptsIteratorBase):
 
         first_edges = []
         for source in self.state.all_namespaces:
-            edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.target_namespaces)
+            edges = available_chains.first_edges_for_shortest_path(frozenset([source]), self.state.opts.target_namespaces)
             first_edges.extend(edges)
         if not first_edges:
             raise StopIteration
 
-        first_edges = self._checked_scripts(first_edges)
+        # first_edges = self._checked_scripts(first_edges)  # done in base_script.py
         first_edges = filter(lambda e: _precedence(e) is not None, first_edges)
 
         # Choose the script among first_edges with highest precedence

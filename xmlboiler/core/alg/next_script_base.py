@@ -18,6 +18,7 @@
 
 from abc import ABC, abstractmethod
 
+import networkx as nx
 from rdflib import URIRef
 
 from xmlboiler.core.alg.path import GraphOfScripts
@@ -56,7 +57,7 @@ class ScriptsIteratorBase(ABC):
     def _available_chains(self, sources, destinations):
         # TODO: inefficient? should hold the graph, not re-create it
         available_chains = GraphOfScripts(None, self.state.opts.universal_precedence, self.state.precedences_higher)
-        available_chains.add_scripts(self.state.scripts)
+        available_chains.add_scripts(self._checked_scripts(self.state.scripts))
         available_chains.graph.add_node(self.state.opts.target_namespaces)
         for source in sources:
             available_chains.graph.add_node(frozenset([source]))
@@ -83,14 +84,11 @@ class ScriptsIteratorBase(ABC):
         return result
 
     def _outer_node_script(self, node):
-        NSs = self._get_ns(node)  # TODO: May be inefficient to consider all these namespaces
+        NSs = self._get_ns(node)
         if not NSs:
             return None
-        scripts = []
-        for s in self.state.scripts:
-            if NSs[0] in s.base.transformer.source_namespaces:
-                scripts.append(s)
-        return self._checked_scripts(scripts)
+        available_chains = self._available_chains(frozenset(NSs), self.state.opts.target_namespaces)
+        return nx.all_shortest_paths(available_chains, frozenset(NSs), self.state.opts.target_namespaces, weight='weight')
 
     # FIXME: This does not support universal scripts
     def all_childs_in_target_hash(self):
