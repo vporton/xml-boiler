@@ -95,7 +95,7 @@ class ScriptsIteratorBase(ABC):
         except nx.NetworkXNoPath:
             return None
         p2 = shortest_paths_to_edges(available_chains.graph, paths, lambda e: e['weight'])
-        return [[p for p in path] for path in p2 if not path[0]['script'].base.transformer.inwardness]
+        return [path for path in p2 if not path[0]['script'].base.transformer.inwardness]
 
     # FIXME: This does not support universal scripts
     def all_childs_in_target_hash(self):
