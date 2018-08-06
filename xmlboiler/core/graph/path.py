@@ -73,7 +73,6 @@ def shortest_paths_to_edges(graph, paths, weight):
 
 def shortest_lists_of_edges(edges, weight):
     r"""
-    :param graph:
     :param edges: a list of lists of edges
     :param weight: a function
     :return: a list of lists of edges
