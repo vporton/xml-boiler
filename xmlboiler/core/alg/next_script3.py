@@ -17,6 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # the second algorithm from https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/Transformations/Automatic_transformation
+from rdflib import URIRef
 
 from .next_script_base import ScriptsIteratorBase
 
@@ -29,7 +30,7 @@ class ScriptsIterator(ScriptsIteratorBase):
 
         element = self.all_childs_in_target_hash()[0]  # TODO: may be not quick enough
 
-        source = element.namespaceURI
+        source = URIRef(element.namespaceURI)
         available_chains = self._available_chains([source], self.state.opts.target_namespaces)
 
         first_edges = []

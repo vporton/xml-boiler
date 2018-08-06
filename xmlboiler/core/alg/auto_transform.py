@@ -17,6 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from defusedxml.minidom import parseString
+from rdflib import URIRef
 
 from xmlboiler.core.alg.common import RealNextScript
 
@@ -39,7 +40,7 @@ class AutomaticTranformation(object):
         while parents:
             v = parents.pop()
             # if v.namespaceURI is not None:  # even if it is None add it to the set
-            all_namespaces.add(v.namespaceURI)
+            all_namespaces.add(URIRef(v.namespaceURI))
             for w in v.childNodes:
                 parents.append(w)
 

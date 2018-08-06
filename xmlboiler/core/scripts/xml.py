@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 from defusedxml.minidom import parseString
+from rdflib import URIRef
 
 from xmlboiler.core.rdf_format.asset import TransformerKindEnum
 
@@ -50,12 +51,12 @@ class XMLRunCommandWrapper(object):
             while parents and not found:
                 v = parents.pop()
                 for w in v.childNodes:
-                    if w.namespaceURI in self.script.transformer.source_namespaces:
+                    if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces:
                         found = True
                         break
                     else:
                         # TODO: https://bugs.python.org/issue34306
-                        if any(a.namespaceURI in self.script.transformer.source_namespaces for a in w.attributes.values()):
+                        if any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in w.attributes.values()):
                             found = True
                             break
                     parents.append(w)
@@ -70,7 +71,7 @@ class XMLRunCommandWrapper(object):
         while parents:
             v = parents.pop()
             for w in v.childNodes:
-                if w.namespaceURI in self.script.transformer.source_namespaces:
+                if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces:
                     str = w.toxml()
                     str2 = self.script.run(str)
                     frag = parseString(str2)
@@ -106,14 +107,14 @@ class XMLRunCommandWrapper(object):
     def _is_primary_node(self, node):
         # TODO: https://bugs.python.org/issue34306
         if node.parentNode.parentNode is None:  # if parentNode is minidom.Document
-            if node.namespaceURI in self.script.transformer.source_namespaces or \
-                    any(a.namespaceURI in self.script.transformer.source_namespaces for a in node.attributes.values()):
+            if URIRef(node.namespaceURI) in self.script.transformer.source_namespaces or \
+                    any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in node.attributes.values()):
                 return True
             return False
         if node.namespaceURI != node.parentNode.namespaceURI and \
-                node.namespaceURI in self.script.transformer.source_namespaces:
+                URIRef(node.namespaceURI) in self.script.transformer.source_namespaces:
             return True
-        return any(a.namespaceURI != node.namespaceURI and a.namespaceURI in self.script.transformer.source_namespaces \
+        return any(a.namespaceURI != node.namespaceURI and URIRef(a.namespaceURI) in self.script.transformer.source_namespaces \
                    for a in node.attributes.values())
 
 

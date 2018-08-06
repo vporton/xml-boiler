@@ -18,6 +18,8 @@
 
 from abc import ABC, abstractmethod
 
+from rdflib import URIRef
+
 from xmlboiler.core.alg.path import GraphOfScripts
 from xmlboiler.core.graph.minmax import Supremum
 from xmlboiler.core.graph.path import shortest_lists_of_edges
@@ -70,7 +72,7 @@ class ScriptsIteratorBase(ABC):
 
     def _get_ns(self, node):
         if node.namespaceURI:
-            result = [node.namespaceURI]
+            result = [URIRef(node.namespaceURI)]
         else:
             result = []
         if getattr(node, 'attributes', None) is None:
@@ -101,7 +103,7 @@ class ScriptsIteratorBase(ABC):
             if not v.childNodes:
                 for x in reversed(stack):
                     result.add(x)
-                    if x.namespaceURI not in self.state.opts.target_namespaces:
+                    if URIRef(x.namespaceURI) not in self.state.opts.target_namespaces:
                         break
             for w in v.childNodes:
                 stack.append(w)

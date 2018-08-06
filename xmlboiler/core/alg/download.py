@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from dependency_injector import containers, providers
+from rdflib import URIRef
 
 from xmlboiler.core import execution_context_builders
 from xmlboiler.core.options import RecursiveRetrievalPriorityOrderElement
@@ -39,7 +40,7 @@ def _enumerate_xml_namespaces(state):
     while stack:
         v = stack.pop()
         for w in v.childNodes:
-            yield w.namespaceURI
+            yield URIRef(w.namespaceURI)
             stack.append(w)
 
 @dataclass(order=True)
