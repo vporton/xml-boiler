@@ -60,7 +60,7 @@ def shortest_paths_to_edges(graph, paths, weight):
         for path in paths:
             new_lists_of_edges = shortest_path_to_edges(graph, path, weight)
             for new_edges in new_lists_of_edges:
-                new_weight = functools.reduce(operator.add, filter(weight, new_edges), 0)
+                new_weight = functools.reduce(operator.add, map(weight, new_edges), 0)
                 if new_weight < last_weight:
                     result = []
                 if new_weight <= last_weight:
@@ -82,7 +82,7 @@ def shortest_lists_of_edges(edges, weight):
     last_weight = math.inf
     try:
         for cur_edges in edges:
-            new_weight = functools.reduce(operator.add, filter(weight, cur_edges), 0)
+            new_weight = functools.reduce(operator.add, map(weight, cur_edges), 0)
             if new_weight < last_weight:
                 result = []
             if new_weight <= last_weight:
