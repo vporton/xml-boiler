@@ -70,6 +70,9 @@ class ScriptInfo(NamedTuple):
     base: BaseScriptInfo
     more: object
 
+    def __hash__(self):
+        return id(self)
+
 @dataclass
 class Transformer(object):
     source_namespaces: AbstractSet[URIRef] = None
