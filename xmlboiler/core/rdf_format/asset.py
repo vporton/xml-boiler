@@ -17,7 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import NamedTuple, Optional, AbstractSet, List, Any
+from typing import Optional, AbstractSet, List, Any
 
 from rdflib import URIRef
 
@@ -61,14 +61,16 @@ class CommandScriptInfo(object):
     script_URL    : Optional[str] = None
     params: list = None
 
-class WebServiceScriptInfo(NamedTuple):
-    action: URIRef
-    method: str
-    xml_field: str
+@dataclass
+class WebServiceScriptInfo(object):
+    action: URIRef = None
+    method: str = None
+    xml_field: str = None
 
-class ScriptInfo(NamedTuple):
-    base: BaseScriptInfo
-    more: object
+@dataclass
+class ScriptInfo(object):
+    base: BaseScriptInfo = None
+    more: object = None
 
     def __hash__(self):
         return id(self)
@@ -82,7 +84,8 @@ class Transformer(object):
     inwardness: Optional[bool] = None
     scripts: List[ScriptInfo] = None
 
-class Namespace(NamedTuple):
+@dataclass
+class Namespace(object):
     resource: URIRef
     validators: List[ScriptInfo]
 
