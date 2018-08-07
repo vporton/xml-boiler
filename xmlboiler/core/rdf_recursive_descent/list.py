@@ -33,5 +33,5 @@ class ListParser(NodeParserWithError):
         if not graph.value(node, RDF.first):  # FIXME: It also fails on empty list
             parse_context.throw(self.on_error,
                                 lambda: parse_context.translate("Node {node} should be a list.").format(node=list))
-        items = graph.items(node)
+        items = list(graph.items(node))  # TODO: Is list() necessary?
         return [self.subparser.parse(parse_context, graph, elt) for elt in items]

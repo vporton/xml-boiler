@@ -41,7 +41,8 @@ class MainParser(Choice):
         super().__init__([ArgumentLiteralParser(),
                           ArgumentListParser(),
                           ConcatParser(),
-                          ConstantParser()])
+                          ConstantParser(),
+                          ParamsParser()])
 
 
 class ArgumentLiteralParser(NodeParser):
