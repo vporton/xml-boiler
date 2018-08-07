@@ -107,7 +107,7 @@ class Interpeters(object):
         :param language: the URI of the language
         :param version: string or None
         """
-        main_nodes = list(self.graph.subjects(PREFIX + "lang", language))
+        main_nodes = list(self.graph.subjects(URIRef(PREFIX + "lang"), language))
         main_nodes = sorted(main_nodes, key=lambda u: self.order[u])
         for main_node in main_nodes:
             if self.check_version(min_version, max_version, main_node):
