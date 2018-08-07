@@ -17,6 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # the second algorithm from https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/Transformations/Automatic_transformation
+from networkx import NetworkXNoPath
 from rdflib import URIRef
 
 from .next_script_base import ScriptsIteratorBase
@@ -33,15 +34,18 @@ class ScriptsIterator(ScriptsIteratorBase):
         source = URIRef(element.namespaceURI)
         available_chains = self._available_chains([source], self.state.opts.target_namespaces)
 
-        first_edges = []
-        edges = available_chains.first_edges_for_shortest_path(self, frozenset([source]), self.state.opts.target_namespaces)
-        first_edges.extend(edges)
-        if not first_edges:
+        paths = []
+        for source in self.state.all_namespaces:
+            try:
+                paths.extend(nx.all_shortest_paths(available_chains,
+                                                   frozenset([source]),
+                                                   self.state.opts.target_namespaces))
+            except NetworkXNoPath:
+                pass
+        if not paths:
             raise StopIteration
 
-        # first_edges = self._checked_scripts(first_edges)  # done in base_script.py
-
-        maximal_priority_edges = self._choose_by_preservance_priority(first_edges)
+        maximal_priority_edges = self._choose_by_preservance_priority(paths)
         if not maximal_priority_edges:
             raise StopIteration
         return maximal_priority_edges[0][0]

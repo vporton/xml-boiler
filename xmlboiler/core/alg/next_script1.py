@@ -30,22 +30,26 @@ class ScriptsIterator(ScriptsIteratorBase):
     def __next__(self):
         available_chains = self._available_chains(self.state.all_namespaces, self.state.opts.target_namespaces)
 
-        first_edges = []
+        paths = []
         for source in self.state.all_namespaces:
-            edges = available_chains.first_edges_for_shortest_path(frozenset([source]), self.state.opts.target_namespaces)
-            first_edges.extend(edges)
-        if not first_edges:
+            try:
+                paths.extend(nx.all_shortest_paths(available_chains,
+                                               frozenset([source]),
+                                               self.state.opts.target_namespaces,
+                                               weight='weight'))
+            except nx.NetworkXNoPath:
+                pass
+        if not paths:
             raise StopIteration
 
-        # first_edges = self._checked_scripts(first_edges)  # done in base_script.py
-        first_edges = filter(lambda e: _precedence(e) is not None, first_edges)
+        paths = filter(lambda e: _precedence(e[0]) is not None, paths)
 
         # Choose the script among first_edges with highest precedence
-        highest_precedences = self.state.precedences_higher.maxima(first_edges, key=lambda e: _precedence(e))
+        highest_precedences = self.state.precedences_higher.maxima(paths, key=lambda e: _precedence(e[0]))
         if len(highest_precedences) != 1:  # don't know how to choose
             raise StopIteration
         highest_precedence = highest_precedences[0]
-        highest_precedence_scripts = filter(lambda e: _precedence(e) == highest_precedence, first_edges)
+        highest_precedence_scripts = filter(lambda e: _precedence(e[0]) == highest_precedence, paths)
         if len(highest_precedence_scripts) == 1:
             return highest_precedence_scripts[0]
 

@@ -45,6 +45,7 @@ class ScriptsIteratorBase(ABC):
             for w in v.childNodes:
                 scripts = self._outer_node_script(w)
                 if scripts:
+                    # FIXME: Check that scripts is a list of lists
                     scripts = self._choose_by_preservance_priority(scripts)
                     return scripts[0][0]['script']  # TODO: What if there is several of the same rating?
                 parents.append(w)
@@ -65,7 +66,7 @@ class ScriptsIteratorBase(ABC):
         available_chains.adjust()
         return available_chains
 
-    # FIXME: assumes that `scripts` is a list of lists, but it is always called as a plain list (first_edges)
+    # scripts is a list of lists
     def _choose_by_preservance_priority(self, scripts):
         # a list of lists
         minimal_preservance_paths = shortest_lists_of_edges(scripts, lambda e: Supremum(-e.base.preservance))
