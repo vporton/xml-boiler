@@ -138,7 +138,7 @@ except AssetsExhausted:
             exit(1)
 
 if output is None:
-    sys.stdout.write(state.xml_text)
+    sys.stdout.buffer.write(state.xml_text)
 else:
     with open(output, 'w') as file:
         file.write(state.xml_text)

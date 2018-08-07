@@ -17,6 +17,8 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
+import sys
+
 from dependency_injector import providers
 from subprocess import PIPE, DEVNULL
 
@@ -41,7 +43,7 @@ class RegularCommandRunner(object):
         return res
 
     async def run_pipe_impl(self, args, input):
-        t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE, stderr=DEVNULL)
+        t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE)
         try:
             stdout, stderr = await asyncio.wait_for(t.communicate(input), self.timeout)
             return t.returncode, stdout

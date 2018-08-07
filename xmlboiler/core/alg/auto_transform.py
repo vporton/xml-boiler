@@ -36,6 +36,8 @@ class AutomaticTranformation(object):
     def _step(self):
         all_namespaces = set()
 
+        self.state.dom = parseString(self.state.xml_text)
+
         # depth-first search
         parents = [self.state.dom.documentElement]
         while parents:
