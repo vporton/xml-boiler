@@ -17,9 +17,10 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # the second algorithm from https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/Transformations/Automatic_transformation
-from networkx import NetworkXNoPath
+from networkx import NetworkXNoPath, nx
 from rdflib import URIRef
 
+from xmlboiler.core.graph.path import shortest_paths_to_edges
 from .next_script_base import ScriptsIteratorBase
 
 
@@ -37,9 +38,10 @@ class ScriptsIterator(ScriptsIteratorBase):
         paths = []
         for source in self.state.all_namespaces:
             try:
-                paths.extend(nx.all_shortest_paths(available_chains.graph,
-                                                   frozenset([source]),
-                                                   self.state.opts.target_namespaces))
+                nodes = nx.all_shortest_paths(available_chains.graph,
+                                              frozenset([source]),
+                                              self.state.opts.target_namespaces)
+                paths.extend(shortest_paths_to_edges(available_chains.graph, nodes, lambda e: e['weight']))
             except NetworkXNoPath:
                 pass
         if not paths:
