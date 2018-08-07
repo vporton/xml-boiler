@@ -76,7 +76,7 @@ class ParamsParser(NodeParser):
     def parse(self, parse_context, graph, node):
         sub_parser = OnePredicate(PREFIX + 'params', MainParser(), ErrorHandler.IGNORE)
         try:
-            for i in self.params:
+            for i in parse_context.params:
                 self.current_param = i
                 l = sub_parser.parse(parse_context, graph, node)
         finally:
