@@ -80,4 +80,4 @@ class ParamsParser(NodeParser):
                 self.current_param = i
                 l = sub_parser.parse(parse_context, graph, node)
         finally:
-            self.current_param = None  # cleanup after ourselves
+            parse_context.current_param = None  # cleanup after ourselves
