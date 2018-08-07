@@ -46,12 +46,12 @@ class MainParser(Choice):
 
 class ArgumentLiteralParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        return [StringLiteral(ErrorHandler.FATAL).parse(parse_context, graph, node)]
+        return [StringLiteral(ErrorHandler.IGNORE).parse(parse_context, graph, node)]
 
 
 class ArgumentListParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        l = ListParser(MainParser()).parse(parse_context, graph, node)
+        l = ListParser(MainParser(), ErrorHandler.IGNORE).parse(parse_context, graph, node)
         return [item for sublist in l for item in sublist]  # flatten the list
 
 
