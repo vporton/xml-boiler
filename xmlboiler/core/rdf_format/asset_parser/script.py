@@ -132,10 +132,10 @@ class CommandScriptInfoParser(NodeParser):
         if str1 is not None and str2 is not None:
             msg = parse_context.translate("Both :scriptURL and :commandString can't be present in node {node}.").format(node=node)
             parse_context.throw(ErrorHandler.WARNING, msg)
-        more.scriptURL     = str1
+        more.script_URL     = str1
         more.commandString = str2
 
-        if not more.scriptURL and len(base.params) != 0:
+        if not more.script_URL and len(base.params) != 0:
             def s():
                 parse_context.translate("Cannot provide params for commandString script {node}.").\
                     format(node=node)
