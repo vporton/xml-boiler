@@ -2,8 +2,7 @@
 
 <xsl:import href="copy.xslt"/>
 
-<xsl:output method="xml" indent="yes"/>
-<xsl:strip-space elements="*"/>
+<xsl:output method="xml"/>
 
 <xsl:template match="xi:include" xmlns:xi="http://www.w3.org/2001/XInclude">
   <xsl:for-each select="document(@href)">
