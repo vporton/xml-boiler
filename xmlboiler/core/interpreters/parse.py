@@ -27,7 +27,7 @@ from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseExcepti
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
     PostProcessPredicateParser
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
-from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
+from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral, IRILiteral
 from .parse_impl import MainParser, InterpreterParseContext
 
 PREFIX = "http://portonvictor.org/ns/trans/internal/"
@@ -44,8 +44,8 @@ class Interpeters(object):
         self.graph = graph
         self.execution_context = execution_context
 
-        list_node = next(graph[:URIRef(PREFIX + "interpretersList")])
-        the_list = ListParser(ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)
+        list_node = next(graph[URIRef(PREFIX + "boiler"):URIRef(PREFIX + "interpretersList")])
+        the_list = ListParser(IRILiteral(ErrorHandler.FATAL), ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
     def check_version(self, min_version, max_version, main_node):

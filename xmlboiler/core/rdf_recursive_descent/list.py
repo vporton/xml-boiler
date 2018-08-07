@@ -22,7 +22,8 @@ from xmlboiler.core.rdf_recursive_descent.base import NodeParserWithError
 
 
 class ListParser(NodeParserWithError):
-    def __init__(self, subparser):
+    def __init__(self, subparser, error):
+        super().__init__(error)
         self.subparser = subparser
 
     def parse(self, parse_context, graph, node):
