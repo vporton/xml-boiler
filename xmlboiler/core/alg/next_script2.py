@@ -17,7 +17,8 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # the second algorithm from https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/Transformations/Automatic_transformation
-from networkx import NetworkXNoPath
+
+from networkx import nx
 from rdflib import URIRef
 
 from .next_script_base import ScriptsIteratorBase
@@ -56,7 +57,7 @@ class ScriptsIterator(ScriptsIteratorBase):
                 paths.extend(nx.all_shortest_paths(available_chains,
                                                    frozenset([source]),
                                                    self.state.opts.target_namespaces))
-            except NetworkXNoPath:
+            except nx.NetworkXNoPath:
                 pass
         if not paths:
             raise StopIteration
