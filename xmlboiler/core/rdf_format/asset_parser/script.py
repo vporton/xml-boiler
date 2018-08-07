@@ -102,7 +102,7 @@ class BaseScriptInfoParser(NodeParser):
                                             ErrorHandler.WARNING)
         result.ok_result = ok_result_parser.parse(parse_context, graph, node)
         params_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "params"),
-                                         ListParser(_ParamParser()),
+                                         ListParser(_ParamParser(), ErrorHandler.FATAL),
                                          ErrorHandler.WARNING,
                                          default_value=[])
         result.params = params_parser.parse(parse_context, graph, node)
