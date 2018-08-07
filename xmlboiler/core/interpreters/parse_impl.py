@@ -63,8 +63,9 @@ class ConcatParser(NodeParser):
 
 class ConstantParser(NodeParser):
     def parse(self, parse_context, graph, node):
+        # TODO: Be sure to differentiate .script_url and .command_string
         sub_parser = EnumParser({PREFIX + ':script': parse_context.script_url,
-                                 PREFIX + ':command': parse_context.command_string,
+                                 PREFIX + ':command': parse_context.script_url,
                                  PREFIX + ':name'  : parse_context.current_param.get(0),
                                  PREFIX + ':value' : parse_context.current_param.get(1)})
         return [sub_parser.parse(parse_context, graph, node)]

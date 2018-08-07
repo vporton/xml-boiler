@@ -16,9 +16,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from rdflib.collection import Collection
+from rdflib import RDF
 
-from xmlboiler.core.rdf_recursive_descent.base import NodeParserWithError
+from xmlboiler.core.rdf_recursive_descent.base import NodeParserWithError, ErrorHandler
 
 
 class ListParser(NodeParserWithError):
@@ -28,7 +28,10 @@ class ListParser(NodeParserWithError):
 
     def parse(self, parse_context, graph, node):
         """
-        TODO: check list validity
+        TODO: check list validity more thoroughly
         """
+        if not graph.value(node, RDF.first):
+            parse_context.throw(self.on_error,
+                                lambda: parse_context.translate("Node {node} should be a list.").format(node=list))
         items = graph.items(node)
         return [self.subparser.parse(parse_context, graph, elt) for elt in items]
