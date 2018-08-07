@@ -30,7 +30,7 @@ class ListParser(NodeParserWithError):
         """
         TODO: check list validity more thoroughly
         """
-        if not graph.value(node, RDF.first):
+        if not graph.value(node, RDF.first):  # FIXME: It also fails on empty list
             parse_context.throw(self.on_error,
                                 lambda: parse_context.translate("Node {node} should be a list.").format(node=list))
         items = graph.items(node)
