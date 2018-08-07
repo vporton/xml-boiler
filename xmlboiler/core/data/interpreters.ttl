@@ -21,7 +21,8 @@ int:xsltproc
     :langMaxVersion "1.0" ;
     :scriptCommand ("xsltproc"
                     [ :params ("--param" :name :value) ]
-                    :script) ;
+                    :script
+                    "-") ;
     :debianPackage "xsltproc" .
 
 # We don't support Saxon 6.5.5. Saxon PE and EE are also currently not supported.
