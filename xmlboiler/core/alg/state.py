@@ -46,6 +46,7 @@ class PipelineState(BaseState):
     all_namespaces: Optional[FrozenSet[URIRef]] = None
     scripts: List[EnrichedScript] = field(default_factory=list)
     executed_scripts: Set[EnrichedScript] = field(default_factory=set)  # TODO: Should be a set/frozenset?
+    failed_scripts: Set[EnrichedScript] = field(default_factory=set)
     singletons: Set[URIRef] = field(default_factory=set)
     precedences_higher: Connectivity = field(default_factory=Connectivity)
     precedences_subclasses: Connectivity = field(default_factory=Connectivity)
