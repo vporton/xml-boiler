@@ -35,5 +35,5 @@ class RealNextScript(object):
                 self.state.executed_scripts.add(script)
                 # FIXME: What about .command_line?
                 cmd = self.interpreters.construct_command_line(node, script.more.script_URL, script.more.params, bool(script.more.command_string))
-                self.state.xml_text = regular_provider.run_pipe(cmd, self.state.xml_text)
+                self.state.xml_text = regular_provider().run_pipe(cmd, self.state.xml_text)  # TODO: Use proper dependency injection
                 return
