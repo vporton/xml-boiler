@@ -27,7 +27,7 @@ class RealNextScript(object):
 
     def step(self):
         while True:
-            # FIXME: If a script was not found, this is repeated infinitely
+            # FIXME: If a script was found but there is no interpreter, this is repeated infinitely
             script = next(self.state.opts.next_script)['script']  # TODO: ['script'] here is a hack
             # TODO: Support Web requests, etc.
             node = self.interpreters.find_interpreter(script.more.language, script.more.min_version, script.more.max_version)
