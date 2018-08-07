@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from rdflib import RDF
+from rdflib import RDF, BNode
 
 from xmlboiler.core.rdf_recursive_descent.base import NodeParserWithError
 
@@ -30,7 +30,7 @@ class ListParser(NodeParserWithError):
         """
         TODO: check list validity more thoroughly
         """
-        if not graph.value(node, RDF.first):  # FIXME: It also fails on empty list
+        if not graph.value(node, RDF.nil) and (not isinstance(node, BNode) or not graph.value(node, RDF.first)):
             parse_context.throw(self.on_error,
                                 lambda: parse_context.translate("Node {node} should be a list.").format(node=list))
         items = list(graph.items(node))  # TODO: Is list() necessary?
