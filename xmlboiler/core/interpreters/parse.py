@@ -62,7 +62,7 @@ class Interpeters(object):
 
         parse_context = ParseContext(self.execution_context)
         version_parser = Choice([PostProcessPredicateParser(StringLiteral(), VersionWrapper),
-                                 Enum({PREFIX + ':fromPackageVersion': _FromPackageVersion()})])
+                                 Enum({PREFIX + 'fromPackageVersion': _FromPackageVersion()})])
         lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", version_parser, ErrorHandler.FATAL). \
