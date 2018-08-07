@@ -21,6 +21,7 @@ from xmlboiler.core.rdf_recursive_descent.compound import Choice, OnePredicate
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral
+from xmlboiler.core.urls import OurOpeners, CannotConvertURLToLocalFile
 
 PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
@@ -64,9 +65,13 @@ class ConcatParser(NodeParser):
 
 class ConstantParser(NodeParser):
     def parse(self, parse_context, graph, node):
+        try:
+            filearg = OurOpeners.url_to_file(str(parse_context.script_url))
+        except CannotConvertURLToLocalFile:
+            filearg = str(parse_context.script_url)
         # TODO: Be sure to differentiate .script_url and .command_string
-        sub_parser = EnumParser({PREFIX + 'script': parse_context.script_url,
-                                 PREFIX + 'command': parse_context.script_url,
+        sub_parser = EnumParser({PREFIX + 'script': filearg,
+                                 PREFIX + 'command': str(parse_context.script_url),
                                  PREFIX + 'name'  : parse_context.current_param and parse_context.current_param.get(0),
                                  PREFIX + 'value' : parse_context.current_param and parse_context.current_param.get(1)})
         return [sub_parser.parse(parse_context, graph, node)]
