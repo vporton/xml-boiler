@@ -92,7 +92,7 @@ class ScriptsIteratorBase(ABC):
         available_chains = self._available_chains(frozenset(NSs), self.state.opts.target_namespaces)
         try:
             # list() to force exception if there is no path
-            paths = list(nx.all_shortest_paths(available_chains.graph, frozenset(NSs), self.state.opts.target_namespaces, weight='weight'))
+            paths = list(nx.all_shortest_paths(available_chains.graph.graph, frozenset(NSs), self.state.opts.target_namespaces, weight='weight'))
         except nx.NetworkXNoPath:
             return None
         p2 = shortest_paths_to_edges(available_chains.graph, paths, lambda e: e['weight'])

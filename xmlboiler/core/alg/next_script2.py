@@ -54,7 +54,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         paths = []
         for source in namespaces:
             try:
-                paths.extend(nx.all_shortest_paths(available_chains,
+                paths.extend(nx.all_shortest_paths(available_chains.graph,
                                                    frozenset([source]),
                                                    self.state.opts.target_namespaces))
             except nx.NetworkXNoPath:
