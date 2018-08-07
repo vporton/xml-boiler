@@ -32,7 +32,7 @@ class RealNextScript(object):
             # TODO: Support Web requests, etc.
             node = self.interpreters.find_interpreter(script.more.language, script.more.min_version, script.more.max_version)
             if node is not None:
-                self.state.executed_scripts.append(script)
+                self.state.executed_scripts.add(script)
                 # FIXME: What about .command_line?
                 cmd = self.interpreters.construct_command_line(node, script.more.script_URL, script.more.params, bool(script.more.command_string))
                 self.state.xml_text = regular_provider.run_pipe(cmd, self.state.xml_text)
