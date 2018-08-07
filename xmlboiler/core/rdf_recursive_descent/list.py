@@ -18,7 +18,7 @@
 
 from rdflib import RDF
 
-from xmlboiler.core.rdf_recursive_descent.base import NodeParserWithError, ErrorHandler
+from xmlboiler.core.rdf_recursive_descent.base import NodeParserWithError
 
 
 class ListParser(NodeParserWithError):

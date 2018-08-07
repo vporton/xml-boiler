@@ -75,9 +75,11 @@ class ConstantParser(NodeParser):
 class ParamsParser(NodeParser):
     def parse(self, parse_context, graph, node):
         sub_parser = OnePredicate(PREFIX + 'params', MainParser(), ErrorHandler.IGNORE)
+        l = []
         try:
             for i in parse_context.params:
                 self.current_param = i
-                l = sub_parser.parse(parse_context, graph, node)
+                l.extend(sub_parser.parse(parse_context, graph, node))
         finally:
             parse_context.current_param = None  # cleanup after ourselves
+        return l
