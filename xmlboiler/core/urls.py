@@ -45,7 +45,7 @@ def _url_to_file(url):
     # TODO: Some code duplication with the above
     filename = re.sub(r'(?i)^local:', '', url)
     if filename != url:  # substitution happened
-        return xmlboiler.data.Global.get_filename(filename)
+        return xmlboiler.core.data.Global.get_filename(filename)
     filename = re.sub(r'(?i)^file:///?', '', url)
     if filename != url:
         return '/' + filename  # TODO: Windows support
