@@ -49,7 +49,7 @@ class BaseScriptInfo(object):
     preference  : float = None
     transformer_kind: TransformerKindEnum = None
     validator_kind  : ValidatorKindEnum = None
-    okResult: Optional[str] = None
+    ok_result: Optional[str] = None
 
 @dataclass
 class CommandScriptInfo(object):
