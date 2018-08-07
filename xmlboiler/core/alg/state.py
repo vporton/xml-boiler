@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 from dataclasses import dataclass, field
-from typing import NamedTuple, Set, FrozenSet, List, Optional
+from typing import Set, FrozenSet, List, Optional
 
 import xml.dom.minidom
 from rdflib import URIRef
@@ -27,9 +27,10 @@ from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
 from xmlboiler.core.rdf_format.asset import ScriptInfo, Transformer
 
 
-class EnrichedScript(NamedTuple):
-    script: ScriptInfo
-    transformer: Transformer
+@dataclass
+class EnrichedScript(object):
+    script: ScriptInfo = None
+    transformer: Transformer = None
 
 
 @dataclass
