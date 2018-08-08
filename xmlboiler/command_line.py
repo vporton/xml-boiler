@@ -58,7 +58,7 @@ def main(argv):
     chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
     chain_parser.add_argument('-o', '--output', nargs=1, help='output file (defaults to stdout)')
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
-    chain_parser.add_argument('-s', '--next-script', help='"next script" algorithm',
+    chain_parser.add_argument('-s', '--next-script', help='"next script" algorithm ("precedence" is not supported)',
                               choices=['precedence', 'doc1', 'doc2'], default='doc1')  # TODO: subject to change notation
     chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not in target NS',
                               choices=['ignore', 'remove', 'error'])
