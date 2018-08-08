@@ -99,6 +99,7 @@ class ScriptsIteratorBase(ABC):
         return [path for path in p2 if not path[0]['script'].base.transformer.inwardness]
 
     # FIXME: This does not support universal scripts
+    # Almost duplicate code with first_childs_in_target()
     def all_childs_in_target_hash(self):
         result = set()
 
@@ -116,3 +117,18 @@ class ScriptsIteratorBase(ABC):
                 stack.append(w)
 
         return result
+
+    # FIXME: This does not support universal scripts
+    # Almost duplicate code with all_childs_in_target_hash()
+    def first_childs_in_target(self):
+        # use depth-first search
+        stack = []
+        stack.append(self.state.dom.documentElement)
+        while stack:
+            v = stack.pop()
+            if not v.childNodes:
+                for x in reversed(stack):
+                    return x
+            for w in v.childNodes:
+                stack.append(w)
+        return None

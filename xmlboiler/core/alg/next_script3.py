@@ -30,7 +30,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         if next_outer is not None:
             return next_outer
 
-        element = self.all_childs_in_target_hash()[0]  # TODO: may be not quick enough
+        element = self.first_childs_in_target()
 
         source = URIRef(element.namespaceURI)
         available_chains = self._available_chains([source], self.state.opts.target_namespaces)
