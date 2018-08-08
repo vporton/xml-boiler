@@ -46,7 +46,6 @@ class Global(object):
     @staticmethod
     def load_rdf(filename):
         g = rdflib.Graph()
-        stream = Global.get_resource_stream(filename)
-        g.load(stream, format='turtle')
-        stream.close()
+        with Global.get_resource_stream(filename) as stream:
+            g.load(stream, format='turtle')
         return g
