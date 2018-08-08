@@ -38,6 +38,12 @@ class Global(object):
             return pkg_resources.resource_stream('xmlboiler', filename)
 
     @staticmethod
+    def get_resource_bytes(filename):
+        filename = Global.get_filename(filename)
+        with open(filename, "rb") as file:
+            return file.read()
+
+    @staticmethod
     def load_rdf(filename):
         g = rdflib.Graph()
         g.load(Global.get_resource_stream(filename), format='turtle')
