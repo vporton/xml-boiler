@@ -47,7 +47,7 @@ class ScriptsIteratorBase(ABC):
                 if scripts:
                     # FIXME: Check that scripts is a list of lists
                     scripts = self._choose_by_preservance_priority(scripts)
-                    return scripts[0][0]['script']  # TODO: What if there is several of the same rating?
+                    return scripts[0][0]  # TODO: What if there is several of the same rating?
                 parents.append(w)
         return None
 
