@@ -1,17 +1,17 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
 
+# FIXME: Make it an outward script/transformation
 _:xinclude
    a :Transformer ;
-   :sourceNamespace <http://portonvictor.org/ns/comment> ;
+   :sourceNamespace <http://www.w3.org/2001/XInclude> ;
    :universal true ;
    #:targetNamespace <...> ;
-   :precedence :precedence-include ; # FIXME
-   :inward false ;
+   :precedence :precedence-include ;
    :script [
      a :Command ;
      :language lang:XSLT ;
-     :scriptURL <local:scripts/comment.xslt> ;
+     :scriptURL <local:scripts/xinclude.xslt> ;
      :transformerKind :entire ;
      :preservance 1.0 ;
      :stability 1.0 ;
