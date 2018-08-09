@@ -39,24 +39,17 @@ def change_dir(new_dir):
         os.chdir(old_dir)
 
 
-def stub_stdin(testcase_inst, inputs):
+@contextlib.contextmanager
+def capture_stdin_and_stdout():
     stdin = sys.stdin
-
-    def cleanup():
-        sys.stdin = stdin
-
-    testcase_inst.addCleanup(cleanup)
-    sys.stdin = StringIO(inputs)
-
-
-def stub_stdout(testcase_inst):
     stdout = sys.stdout
-
-    def cleanup():
+    try:
+        sys.stdin  = TextIOWrapper(BytesIO(), sys.stdin.encoding)
+        sys.stdout = TextIOWrapper(BytesIO(), sys.stdout.encoding)
+        yield
+    finally:
+        sys.stdin = stdin
         sys.stdout = stdout
-
-    testcase_inst.addCleanup(cleanup)
-    sys.stdout = TextIOWrapper(BytesIO(), sys.stdout.encoding)
 
 
 def setup_with_context_manager(testcase, cm):
@@ -79,46 +72,26 @@ class TestUtility(unittest.TestCase):
     def setUp(self):
         self.v = setup_with_context_manager(self, change_dir(Global.get_filename("tests/core/data/xml")))
 
-    def test_run1(self):
+    def test_run_xinlude(self):
         # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
-        stub_stdout(self)
-        command_line.main(['chain',
-                           Global.get_filename("tests/core/data/xml/xinclude.xml"),
-                           '-u',
-                           'http://portonvictor.org/ns/trans/precedence-include',
-                           '-s',
-                           'doc1'])
-        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
+        for next_script_mode in ['doc1', 'doc2']:
+            with capture_stdin_and_stdout():
+                command_line.main(['chain',
+                                   Global.get_filename("tests/core/data/xml/xinclude.xml"),
+                                   '-u',
+                                   'http://portonvictor.org/ns/trans/precedence-include',
+                                   '-s',
+                                   next_script_mode])
+                self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output, "for %s" % next_script_mode)
 
-    def test_run2(self):
-        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
-        stub_stdout(self)
-        command_line.main(['chain',
-                           Global.get_filename("tests/core/data/xml/xinclude.xml"),
-                           '-u',
-                           'http://portonvictor.org/ns/trans/precedence-include',
-                           '-s',
-                           'doc2'])
-        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
-
-    def test_run3(self):
-        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
-        stub_stdout(self)
-        command_line.main(['chain',
-                           Global.get_filename("tests/core/data/xml/comment.xml"),
-                           '-u',
-                           'http://portonvictor.org/ns/trans/precedence-include',
-                           '-s',
-                           'doc1'])
-        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
-
-    def test_run4(self):
-        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
-        stub_stdout(self)
-        command_line.main(['chain',
-                           Global.get_filename("tests/core/data/xml/comment.xml"),
-                           '-u',
-                           'http://portonvictor.org/ns/trans/precedence-include',
-                           '-s',
-                           'doc2'])
-        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+    def test_run_comment(self):
+        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/comment.xml"))
+        for next_script_mode in ['doc1', 'doc2']:
+            with capture_stdin_and_stdout():
+                command_line.main(['chain',
+                                   Global.get_filename("tests/core/data/xml/comment.xml"),
+                                   '-u',
+                                   'http://portonvictor.org/ns/trans/precedence-include',
+                                   '-s',
+                                   next_script_mode])
+                self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output, "for %s" % next_script_mode)
