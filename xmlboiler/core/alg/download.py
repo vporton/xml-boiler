@@ -87,7 +87,7 @@ class NoDownloader(BaseDownloadAlgorithm):
 
     def _iter(self):
         for downloaders in self.state.opts.recursive_options.downloaders:
-            for assets in self.state.opts.initial_assets:
+            for assets in self.state.opts.recursive_options.initial_assets:
                 yield assets
 
 
@@ -114,9 +114,9 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     # because in our_depth_first_based_download() we need to discard multiple assets.
     def _our_depth_first_based_download(self):
         for downloaders in self.state.opts.recursive_options.downloaders:
-            for assets in self.state.opts.initial_assets:
+            for assets in self.state.opts.recursive_options.initial_assets:
                 yield assets  # FIXME: yield asset URIs, asset infos or don't yield at all?
-            for asset in self.state.opts.initial_assets:
+            for asset in self.state.opts.recursive_options.initial_assets:
                 try:
                     iter = self.depth_first_download(asset, downloaders)
                     next(iter)  # do not repeat the above
