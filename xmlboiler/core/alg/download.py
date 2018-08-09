@@ -99,7 +99,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
         if ns in self.state.assets:
             return
         self.state.assets.add(ns)
-        parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(parse_context, self.subclasses)
+        parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
         assets = []
         for graph in [downloader(ns) for downloader in downloaders if ns is not None]:
             asset_info = parser.parse(graph)
