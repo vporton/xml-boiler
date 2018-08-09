@@ -71,6 +71,10 @@ class TestUtility(unittest.TestCase):
                       b'<y xmlns:xi="http://www.w3.org/2001/XInclude">' + b"\n" + \
                       b'    <x/>' + b"\n" + \
                       b'</y>' + b"\n"
+    comment_output = b'<?xml version="1.0"?>' + b"\n" + \
+                     b'<x>' + b"\n" + \
+                     b'    ' + b"\n" + \
+                     b'</x>' + b"\n"
 
     def setUp(self):
         self.v = setup_with_context_manager(self, change_dir(Global.get_filename("tests/core/data/xml")))
@@ -96,3 +100,25 @@ class TestUtility(unittest.TestCase):
                            '-s',
                            'doc2'])
         self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
+
+    def test_run3(self):
+        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
+        stub_stdout(self)
+        command_line.main(['chain',
+                           Global.get_filename("tests/core/data/xml/comment.xml"),
+                           '-u',
+                           'http://portonvictor.org/ns/trans/precedence-include',
+                           '-s',
+                           'doc1'])
+        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+
+    def test_run4(self):
+        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
+        stub_stdout(self)
+        command_line.main(['chain',
+                           Global.get_filename("tests/core/data/xml/comment.xml"),
+                           '-u',
+                           'http://portonvictor.org/ns/trans/precedence-include',
+                           '-s',
+                           'doc2'])
+        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
