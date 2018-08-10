@@ -72,6 +72,7 @@ class TestUtility(unittest.TestCase):
     def setUp(self):
         self.v = setup_with_context_manager(self, change_dir(Global.get_filename("tests/core/data/xml")))
 
+    # TODO: Use https://docs.python.org/3/library/unittest.html#distinguishing-test-iterations-using-subtests
     def test_run_xinlude(self):
         # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
         for next_script_mode in ['doc1', 'doc2']:
