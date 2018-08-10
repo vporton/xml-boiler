@@ -91,8 +91,8 @@ class TestUtility(unittest.TestCase):
     def test_run_comment(self):
         # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/comment.xml"))
         for next_script_mode in ['doc1', 'doc2']:
-            with capture_stdin_and_stdout():
-                for order in ['breadth', 'depth']:
+            for order in ['breadth', 'depth']:
+                with capture_stdin_and_stdout():
                     command_line.main(['-r',
                                        order,
                                        'chain',
