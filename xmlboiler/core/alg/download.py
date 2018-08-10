@@ -108,7 +108,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
         yield assets
         for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):
             # if ns2 not in self.state.assets: # checked above
-            self.depth_first_download(ns2, downloaders)  # recursion
+            yield from self.depth_first_download(ns2, downloaders)  # recursion
 
     # Every yield produces a list of assets (not individual assets),
     # because in our_depth_first_based_download() we need to discard multiple assets.
