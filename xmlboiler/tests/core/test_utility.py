@@ -72,34 +72,33 @@ class TestUtility(unittest.TestCase):
     def setUp(self):
         self.v = setup_with_context_manager(self, change_dir(Global.get_filename("tests/core/data/xml")))
 
-    def test_run_xinlude(self):
-        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
-        for next_script_mode in ['doc1', 'doc2']:
-            for order in ['breadth', 'depth']:
-                with self.subTest(next_script=next_script_mode, order=order):
-                    with capture_stdin_and_stdout():
-                        command_line.main(['-r',
-                                           order,
-                                           'chain',
-                                           Global.get_filename("tests/core/data/xml/xinclude.xml"),
-                                           '-u',
-                                           'http://portonvictor.org/ns/trans/precedence-include',
-                                           '-s',
-                                           next_script_mode])
-                        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
+    def do_run_xinlude(self, order, next_script_mode):
+        command_line.main(['-r',
+                           order,
+                           'chain',
+                           Global.get_filename("tests/core/data/xml/xinclude.xml"),
+                           '-u',
+                           'http://portonvictor.org/ns/trans/precedence-include',
+                           '-s',
+                           next_script_mode])
+        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
 
-    def test_run_comment(self):
-        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/comment.xml"))
-        for next_script_mode in ['doc1', 'doc2']:
-            for order in ['breadth', 'depth']:
-                with self.subTest(next_script=next_script_mode, order=order):
-                    with capture_stdin_and_stdout():
-                        command_line.main(['-r',
-                                           order,
-                                           'chain',
-                                           Global.get_filename("tests/core/data/xml/comment.xml"),
-                                           '-u',
-                                           'http://portonvictor.org/ns/trans/precedence-include',
-                                           '-s',
-                                           next_script_mode])
-                        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+    def do_run_comment(self, order, next_script_mode):
+        command_line.main(['-r',
+                           order,
+                           'chain',
+                           Global.get_filename("tests/core/data/xml/comment.xml"),
+                           '-u',
+                           'http://portonvictor.org/ns/trans/precedence-include',
+                           '-s',
+                           next_script_mode])
+        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+
+    def test_run(self):
+        # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
+        for func in [self.do_run_xinlude, self.do_run_comment]:
+            for next_script_mode in ['doc1', 'doc2']:
+                for order in ['breadth', 'depth']:
+                    with self.subTest(next_script=next_script_mode, order=order):
+                        with capture_stdin_and_stdout():
+                            func(order, next_script_mode)
