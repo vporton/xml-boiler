@@ -99,6 +99,6 @@ class TestUtility(unittest.TestCase):
         for func in [self.do_run_xinlude, self.do_run_comment]:
             for next_script_mode in ['doc1', 'doc2']:
                 for order in ['breadth', 'depth']:
-                    with self.subTest(next_script=next_script_mode, order=order):
+                    with self.subTest(func=func.__name__, next_script=next_script_mode, order=order):
                         with capture_stdin_and_stdout():
                             func(order, next_script_mode)
