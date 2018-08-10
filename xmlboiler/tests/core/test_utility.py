@@ -38,7 +38,7 @@ def change_dir(new_dir):
     finally:
         os.chdir(old_dir)
 
-
+# TODO: probably use `from contextlib import redirect_stdout`
 @contextlib.contextmanager
 def capture_stdin_and_stdout():
     stdin = sys.stdin
