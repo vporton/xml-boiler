@@ -85,7 +85,8 @@ class TestUtility(unittest.TestCase):
                                        'http://portonvictor.org/ns/trans/precedence-include',
                                        '-s',
                                        next_script_mode])
-                    self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output, "for %s" % next_script_mode)
+                    self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output,
+                                     "for next_script=%s, order=%s" % (next_script_mode, order))
 
     def test_run_comment(self):
         # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/comment.xml"))
@@ -100,4 +101,5 @@ class TestUtility(unittest.TestCase):
                                        'http://portonvictor.org/ns/trans/precedence-include',
                                        '-s',
                                        next_script_mode])
-                    self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output, "for %s" % next_script_mode)
+                    self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output,
+                                     "for next_script=%s, order=%s" % (next_script_mode, order))
