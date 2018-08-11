@@ -104,7 +104,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
             asset_info = parser.parse(graph)
             self.state.add_asset(asset_info)
         yield
-        for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):  # FIXME: control may not reach here!
+        for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):
             # if ns2 not in self.state.assets: # checked above
             yield from self.depth_first_download(ns2, downloaders)  # recursion
 
