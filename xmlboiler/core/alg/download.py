@@ -115,6 +115,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     def _our_depth_first_based_download(self):
         for downloaders in self.state.opts.recursive_options.downloaders:
             for assets in self.state.opts.recursive_options.initial_assets:
+                # FIXME: process this asset
                 yield
             for asset in self.state.opts.recursive_options.initial_assets:
                 try:
