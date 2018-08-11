@@ -132,7 +132,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
                     pass
 
         # all other assets
-        for ns in self.state.opts.target_namespaces:
+        for ns in itertools.chain(_enumerate_xml_namespaces(self.state), self.state.opts.target_namespaces):
             if ns not in self.state.assets:
                 yield from self.depth_first_download(ns, downloaders)  # recursion
 
