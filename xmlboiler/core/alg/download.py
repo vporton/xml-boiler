@@ -133,7 +133,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
 
         # all other assets
         for ns in self.state.opts.target_namespaces:
-            if ns not in self.state.assets: # checked above
+            if ns not in self.state.assets:
                 yield from self.depth_first_download(ns, downloaders)  # recursion
 
     # Merge list of lists (in fact, iterators) into one list
