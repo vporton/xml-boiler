@@ -100,11 +100,9 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
             return
         self.state.assets.add(ns)
         parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
-        assets = []
         for graph in [downloader(ns) for downloader in downloaders if ns is not None]:
             asset_info = parser.parse(graph)
             self.state.add_asset(asset_info)
-            assets.append(asset_info)
         yield
         for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):
             # if ns2 not in self.state.assets: # checked above
@@ -114,8 +112,14 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     # because in our_depth_first_based_download() we need to discard multiple assets.
     def _our_depth_first_based_download(self):
         for downloaders in self.state.opts.recursive_options.downloaders:
-            for assets in self.state.opts.recursive_options.initial_assets:
-                # FIXME: process this asset
+            for ns in self.state.opts.recursive_options.initial_assets:
+                if ns in self.state.assets:
+                    break
+                self.state.assets.add(ns)
+                parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
+                for graph in [downloader(ns) for downloader in downloaders]:
+                    asset_info = parser.parse(graph)
+                    self.state.add_asset(asset_info)
                 yield
             for asset in self.state.opts.recursive_options.initial_assets:
                 try:
