@@ -58,15 +58,13 @@ def _enumerate_child_namespaces(state, asset):
     for order_part in state.opts.recursive_options.retrieval_priority:
         priority += 1
         if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
-            if asset:
-                for t in asset.transformers:
-                    for s in t.source_namespaces:
-                        yield PrioritizedNS(priority, s)
+            for t in asset.transformers:
+                for s in t.source_namespaces:
+                    yield PrioritizedNS(priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.TARGETS:
-            if asset:
-                for t in asset.transformers:
-                    for s in t.target_namespaces:
-                        yield PrioritizedNS(priority, s)
+            for t in asset.transformers:
+                for s in t.target_namespaces:
+                    yield PrioritizedNS(priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
             # TODO: It may happen atmost once, may optimize not to run it again
             yield from [PrioritizedNS(priority, ns) for ns in state.opts.target_namespaces]
@@ -134,9 +132,9 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
                     pass
 
         # all other assets
-        for ns2 in _enumerate_child_namespaces_without_priority(self.state, None):
-            # if ns2 not in self.state.assets: # checked above
-            yield from self.depth_first_download(ns2, downloaders)  # recursion
+        for ns in self.state.opts.target_namespaces:
+            if ns not in self.state.assets: # checked above
+                yield from self.depth_first_download(ns, downloaders)  # recursion
 
     # Merge list of lists (in fact, iterators) into one list
     def download_iterator(self):
