@@ -116,7 +116,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     def _our_depth_first_based_download(self):
         parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
 
-        # initial assets and their chilren
+        # initial assets and their children
         for downloaders in self.state.opts.recursive_options.downloaders:
             for ns in self.state.opts.recursive_options.initial_assets:
                 if ns in self.state.assets:
