@@ -58,13 +58,15 @@ def _enumerate_child_namespaces(state, asset):
     for order_part in state.opts.recursive_options.retrieval_priority:
         priority += 1
         if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
-            for t in asset.transformers:
-                for s in t.source_namespaces:
-                    yield PrioritizedNS(priority, s)
+            if asset:
+                for t in asset.transformers:
+                    for s in t.source_namespaces:
+                        yield PrioritizedNS(priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.TARGETS:
-            for t in asset.transformers:
-                for s in t.target_namespaces:
-                    yield PrioritizedNS(priority, s)
+            if asset:
+                for t in asset.transformers:
+                    for s in t.target_namespaces:
+                        yield PrioritizedNS(priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
             # TODO: It may happen atmost once, may optimize not to run it again
             yield from [PrioritizedNS(priority, ns) for ns in state.opts.target_namespaces]
@@ -112,12 +114,14 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     # because in our_depth_first_based_download() we need to discard multiple assets.
     # FIXME: Process namespace in the document
     def _our_depth_first_based_download(self):
+        parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
+
+        # initial assets and their chilren
         for downloaders in self.state.opts.recursive_options.downloaders:
             for ns in self.state.opts.recursive_options.initial_assets:
                 if ns in self.state.assets:
                     break
                 self.state.assets.add(ns)
-                parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
                 for graph in [downloader(ns) for downloader in downloaders]:
                     asset_info = parser.parse(graph)
                     self.state.add_asset(asset_info)
@@ -129,6 +133,11 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
                     yield from iter
                 except StopIteration:
                     pass
+
+        # all other assets
+        for ns2 in _enumerate_child_namespaces_without_priority(self.state, None):
+            # if ns2 not in self.state.assets: # checked above
+            yield from self.depth_first_download(ns2, downloaders)  # recursion
 
     # Merge list of lists (in fact, iterators) into one list
     def download_iterator(self):
