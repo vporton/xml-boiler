@@ -35,6 +35,8 @@ import xmlboiler.core.rdf_format.asset_parser.asset
 from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
 
 
+# TODO: We yield an array of assets. Instead we could yield an array of Nones (what probably could be faster)
+
 def _enumerate_xml_namespaces(state):
     stack = [state.dom.documentElement]
     while stack:
@@ -100,10 +102,12 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
             return
         self.state.assets.add(ns)
         parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
+        assets = []
         for graph in [downloader(ns) for downloader in downloaders if ns is not None]:
             asset_info = parser.parse(graph)
             self.state.add_asset(asset_info)
-        yield
+            assets.append(asset_info)
+        yield assets
         for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):
             if ns2 not in self.state.assets:
                 yield from self.depth_first_download(ns2, downloaders)  # recursion
@@ -119,10 +123,12 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
                 if ns in self.state.assets:
                     break
                 self.state.assets.add(ns)
+                assets = []
                 for graph in [downloader(ns) for downloader in downloaders]:
                     asset_info = parser.parse(graph)
                     self.state.add_asset(asset_info)
-                yield
+                    assets.append(asset_info)
+                yield assets
             for asset in self.state.opts.recursive_options.initial_assets:
                 try:
                     iter = self.depth_first_download(asset, downloaders)
@@ -163,12 +169,14 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
             for child in childs:
                 ns2 = child.ns
                 if ns2 not in self.state.assets:
+                    assets = []
                     self.state.assets.add(ns2)  # mark as visited
                     for graph in [downloader(ns2) for downloader in downloaders if ns2 is not None]:
                         asset_info = parser.parse(graph)
                         self.state.add_asset(asset_info)
-                        yield
+                        assets.append(asset_info)
                         Q.put(PrioritizedNS(child.ns, asset_info))  # FIXME: Wrong priority here
+                    yield assets
 
     def download_iterator(self):
         iter = [self._breadth_first_download(downloaders) for downloaders in self.state.opts.recursive_options.downloaders]
