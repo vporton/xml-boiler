@@ -112,7 +112,6 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
 
     # Every yield produces a list of assets (not individual assets),
     # because in our_depth_first_based_download() we need to discard multiple assets.
-    # FIXME: Process namespace in the document
     def _our_depth_first_based_download(self):
         parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
 
