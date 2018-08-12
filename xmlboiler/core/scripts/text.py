@@ -57,7 +57,6 @@ class _RunInlineCommand(object):
 # TODO: WebService
 class RunCommand(object):
     def __init__(self, script, interpreters):
-        # FIXME: Check that we can execute the script when the asset loads, not now
         assert isinstance(script, CommandScriptInfo)
         if script.script_URL:
             self.impl = _RunScriptCommand(script)
