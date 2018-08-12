@@ -49,7 +49,6 @@ class AutomaticTranformation(object):
 
         self.state.all_namespaces = frozenset(all_namespaces)  # TODO: Is it worth to freeze?
 
-        # FIXME: What to do in the case of universal transformations? (and don't forget to update the specification)
         if self.state.all_namespaces <= self.state.opts.target_namespaces:
             return False  # The transformation finished!
 
