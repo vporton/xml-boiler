@@ -97,7 +97,6 @@ class ScriptsIteratorBase(ABC):
         p2 = shortest_paths_to_edges(available_chains.graph, paths, lambda e: e['weight'])
         return [path for path in p2 if not path[0]['script'].base.transformer.inwardness]
 
-    # FIXME: This does not support universal scripts
     # Almost duplicate code with first_childs_in_target()
     def all_childs_in_target_hash(self):
         result = set()
@@ -117,7 +116,6 @@ class ScriptsIteratorBase(ABC):
 
         return result
 
-    # FIXME: This does not support universal scripts
     # Almost duplicate code with all_childs_in_target_hash()
     def first_childs_in_target(self):
         # use depth-first search
