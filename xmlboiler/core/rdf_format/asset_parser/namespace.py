@@ -34,8 +34,10 @@ class NSParser(NodeParser):
         klass = URIRef(MAIN_NAMESPACE + "Namespace")
         check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorHandler.IGNORE)
 
-        script_node_parser = ScriptInfoParser(None, self.subclasses, ScriptKindEnum.VALIDATOR)  # FIXME: passing None as transformer arg is an error
-        script_parser = OneOrMorePredicate(URIRef(MAIN_NAMESPACE + "validator"), script_node_parser, ErrorHandler.WARNING)
-        validators = script_parser.parse(parse_context, graph, node)
+        result = Namespace(resource=node)
 
-        return Namespace(resource=node, validators=validators)
+        script_node_parser = ScriptInfoParser(result, self.subclasses, ScriptKindEnum.VALIDATOR)
+        script_parser = OneOrMorePredicate(URIRef(MAIN_NAMESPACE + "validator"), script_node_parser, ErrorHandler.WARNING)
+        result.validators = script_parser.parse(parse_context, graph, node)
+
+        return result
