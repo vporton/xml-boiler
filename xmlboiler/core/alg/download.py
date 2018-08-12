@@ -58,7 +58,7 @@ def _enumerate_child_namespaces(state, asset):
     priority = 0
     yield from [PrioritizedNS(priority, ns) for ns in _enumerate_xml_namespaces(state)]
     for order_part in state.opts.recursive_options.retrieval_priority:
-        priority += 1
+        priority += 1   # note: below is used priority=0 to be above all these
         if order_part == RecursiveRetrievalPriorityOrderElement.SOURCES:
             for t in asset.transformers:
                 for s in t.source_namespaces:
@@ -165,7 +165,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
             if v.root:  # enumerate the top level differently
                 # use priority above all other priorities
                 childs = [(100, info) for info in self.state.opts.recursive_options.initial_assets]
-                childs.extend([PrioritizedNS(0, ns) for ns in _enumerate_xml_namespaces(self.state)])  # FIXME: Is 0 right priority?
+                childs.extend([PrioritizedNS(0, ns) for ns in _enumerate_xml_namespaces(self.state)])  # below all priorities in _enumerate_child_namespaces()
             else:
                 childs = _enumerate_child_namespaces(self.state, v.ns)
             for child in childs:
