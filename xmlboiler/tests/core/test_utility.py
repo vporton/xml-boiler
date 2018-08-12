@@ -89,7 +89,7 @@ class TestUtility(unittest.TestCase):
                            'chain',
                            Global.get_filename("tests/core/data/xml/comment.xml"),
                            '-u',
-                           'http://portonvictor.org/ns/trans/precedence-include',
+                           'http://portonvictor.org/ns/trans/precedence-comment',
                            '-s',
                            next_script_mode])
         self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)

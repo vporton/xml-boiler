@@ -6,7 +6,7 @@ _:xinclude
    :sourceNamespace <http://portonvictor.org/ns/comment> ;
    :universal true ;
    #:targetNamespace <...> ;
-   :precedence :precedence-include ; # FIXME
+   :precedence :precedence-comment ;
    :inward false ;
    :script [
      a :Command ;
