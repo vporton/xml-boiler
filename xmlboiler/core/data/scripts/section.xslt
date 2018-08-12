@@ -10,11 +10,11 @@
 
   <xsl:output method="xml"/>
 
-  <!--<xsl:template match="struct:toc">-->
-    <!--<xsl:for-each select="//h:html/h:body">-->
-      <!--<xsl:call-template name="struct:toc"/>-->
-    <!--</xsl:for-each>-->
-  <!--</xsl:template>-->
+  <xsl:template match="struct:toc">
+    <xsl:for-each select="//h:html/h:body">
+      <xsl:call-template name="struct:toc"/>
+    </xsl:for-each>
+  </xsl:template>
 
   <xsl:template name="struct:toc">
     <xsl:if test="struct:section">

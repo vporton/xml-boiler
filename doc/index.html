@@ -6,11 +6,56 @@
 </head>
 <body>
 
+    <h1>XML Boiler program</h1>
+
+    <h2>Table of Contents</h2>
+
+    <struct:toc/>
+
+    <p>XML Boiler is a command line program (in the future I am going to make also HTTP(S) proxy interface)
+    which automatically processes XML based on its namespaces.</p>
+
     <struct:section>
-        <struct:title>Test section</struct:title>
-        <p>Test.</p>
+        <struct:title>Introduction</struct:title>
+
+        <p>Consider an XML file with XInclude:</p>
+
+        <pre>
+&lt;y xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+    &lt;xi:include href="simple.xml"/&gt;
+&lt;/y&gt;
+        </pre>
+
+        <p>We run XML Boiler as follows:</p>
+        <pre>xmlboiler -r order chain tests/core/data/xml/xinclude.xml -u http://portonvictor.org/ns/trans/precedence-include</pre>
     </struct:section>
 
+    <struct:section>
+        <struct:title>Supported namespaces</struct:title>
+
+        <p>It produces the file with namespaces (in our case the namespace <code>xi:</code>) of priority above
+            <code>http://portonvictor.org/ns/trans/precedence-include</code> to be automatically processed.</p>
+
+        <p>We support also the following namespaces:</p>
+
+        <struct:section>
+            <struct:title><code>http://www.w3.org/2001/XInclude</code> (XInclude)</struct:title>
+            <p>TODO</p>
+        </struct:section>
+
+        <struct:section>
+            <struct:title><code>http://portonvictor.org/ns/comment</code> (Comment)</struct:title>
+            <p>Tags <code>c:comment</code> of this namespace are simply removed from the XML.</p>
+        </struct:section>
+
+        <struct:section>
+            <struct:title><code>http://portonvictor.org/ns/myxhtml/struct</code> (Structure)</struct:title>
+            <p>See the source of this document for example. <code>&lt;h?&gt;</code> tags of the correct nesting are
+            automatically created. This allows to generate <code>&lt;h?&gt;</code> tags of correct nesting.</p>
+            <p><code>&lt;struct:toc/&gt;</code> automatically generates a table of contents.</p>
+        </struct:section>
+
+    </struct:section>
 
 </body>
 </html>
