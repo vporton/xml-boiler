@@ -23,6 +23,7 @@ import sys
 from ordered_set import OrderedSet
 
 import xmlboiler.core.urls
+from xmlboiler.core import execution_context_builders
 from xmlboiler.core.alg.auto_transform import AutomaticTranformation, AssetsExhausted
 from xmlboiler.core.alg.download import NoDownloader, DepthFirstDownloader, BreadthFirstDownloader, download_providers
 from xmlboiler.core.alg.state import PipelineState
@@ -70,7 +71,8 @@ def main(argv):
         parser.print_usage()
         return 1
 
-    options = args.options_object()
+    # FIXME: Dependency injection
+    options = args.options_object(execution_context=execution_context_builders.Contexts.execution_context())
 
     options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else args.preload)
 

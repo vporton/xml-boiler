@@ -33,6 +33,7 @@ class RealNextScript(object):
             if node is None:
                 self.state.failed_scripts.add(script)
             else:
+                self.state.opts.execution_context.logger.info("Executed script {s}".format(s=script.more.script_URL)) # FIXME: Localization
                 self.state.executed_scripts.add(script)
                 # FIXME: What about .command_line?
                 cmd = self.interpreters.construct_command_line(node, script.more.script_URL, script.more.params, bool(script.more.command_string))
