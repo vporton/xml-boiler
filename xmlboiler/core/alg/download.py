@@ -84,6 +84,11 @@ class BaseDownloadAlgorithm(object):
         self.parse_context = parse_context
         self.subclasses = subclasses
 
+    def add_ns(self, ns):
+        msg = self.parse_context.execution_context.translations.gettext("Loaded asset for namespace {ns}.").format(ns=ns)
+        self.parse_context.execution_context.logger.info(msg)
+        self.state.assets.add(ns)
+
 
 class NoDownloader(BaseDownloadAlgorithm):
     def download_iterator(self):
@@ -102,7 +107,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     def depth_first_download(self, ns, downloaders):
         if ns in self.state.assets:
             return
-        self.state.assets.add(ns)
+        self.add_ns(ns)
         parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
         assets = []
         for graph in [downloader(ns) for downloader in downloaders if ns is not None]:
@@ -124,7 +129,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
             for ns in self.state.opts.recursive_options.initial_assets:
                 if ns in self.state.assets:
                     break
-                self.state.assets.add(ns)
+                self.add_ns(ns)
                 assets = []
                 for graph in [downloader(ns) for downloader in downloaders]:
                     asset_info = parser.parse(graph)
@@ -172,7 +177,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
                 ns2 = child.ns
                 if ns2 not in self.state.assets:
                     assets = []
-                    self.state.assets.add(ns2)  # mark as visited
+                    self.add_ns(ns2)  # mark as visited
                     for graph in [downloader(ns2) for downloader in downloaders if ns2 is not None]:
                         asset_info = parser.parse(graph)
                         self.state.add_asset(asset_info)
