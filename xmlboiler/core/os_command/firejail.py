@@ -22,13 +22,20 @@ from .regular import RegularCommandRunner
 
 
 class FirejailCommandRunner(object):
+    """
+    This does not isolate from X11 on Linux because of abstract sockets!
+    """
+
     def __init__(self, netfilter, timeout=None, timeout2=None):
         self.base = RegularCommandRunner(timeout=timeout, timeout2=timeout2)  # TODO: Use provider
         self.netfilter = netfilter
 
     def run_pipe(self, args, input):
-        # TODO: --rlimit-* --timeout
-        # FIXME: This does not isolate from X11 on Linux because of abstract sockets!
+        """
+        This does not isolate from X11 on Linux because of abstract sockets!
+
+        TODO: --rlimit-* --timeout
+        """
         fj = ['firejail', '--shell=none', '-c', '--quiet', '--caps.drop=all', '--disable-mnt',
               '--protocol=unix,inet',  # TODO: Also enable IPv6 (after creating the firewall)
               '--netfilter=' + self.netfilter,
