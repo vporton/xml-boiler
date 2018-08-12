@@ -41,7 +41,12 @@ def init_locale(lang=None):
     return trans
 
 
+def my_logger():
+    logger = providers.ThreadSafeSingleton(logging.getLogger)()
+    logger.setLevel(logging.INFO)
+    return logger
+
 class Contexts(containers.DeclarativeContainer):
-    default_logger = providers.ThreadSafeSingleton(logging.getLogger)
+    default_logger = providers.Callable(my_logger)
     default_translations = providers.ThreadSafeSingleton(init_locale)
     execution_context = providers.Factory(ExecutionContext, logger=default_logger, translations=default_translations)
