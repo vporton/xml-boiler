@@ -109,7 +109,6 @@ class ScriptsIteratorBase(ABC):
             v = stack.pop()
             if not v.childNodes:
                 for x in reversed(stack):
-                    # FIXME: Exchange two following operators?
                     result.add(x)
                     if x.namespaceURI is None or URIRef(x.namespaceURI) not in self.state.opts.target_namespaces:
                         break
@@ -129,7 +128,6 @@ class ScriptsIteratorBase(ABC):
             if not v.childNodes:
                 last_result = None
                 for x in reversed(stack):
-                    # FIXME: Exchange two following operators?
                     last_result = x
                     if x.namespaceURI is None or URIRef(x.namespaceURI) not in self.state.opts.target_namespaces:
                         break
