@@ -45,7 +45,6 @@ class AssetParser(object):
             NSParser(self.subclasses), URIRef(MAIN_NAMESPACE + "Namespace"), self.subclasses)
         result.namespaces = nsParser.parse(self.parse_context, graph)
 
-        # FIXME: Use it
         result.see_also_transform = self.scan_see_also(graph, MAIN_NAMESPACE + "transform")
         result.see_also_validate  = self.scan_see_also(graph, MAIN_NAMESPACE + "validate")
 
