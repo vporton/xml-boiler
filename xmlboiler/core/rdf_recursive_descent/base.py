@@ -110,7 +110,7 @@ class NodeParserWithError(NodeParser):
         self.on_error = on_error
 
     def throw(self, str):
-        self.execution_context.throw(self.on_error, str)
+        self.execution_context.throw(self.on_error, str)  # FIXME
 
 
 class PredicateParserWithError(PredicateParser):
@@ -119,7 +119,7 @@ class PredicateParserWithError(PredicateParser):
         self.on_error = on_error
 
     def throw(self, str):
-        parse_context.throw(self.on_error, str)
+        self.execution_context.throw(self.on_error, str)  # FIXME
 
 
 default_parse_context = providers.Factory(ParseContext, execution_context=Contexts.execution_context)
