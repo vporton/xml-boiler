@@ -1,0 +1,17 @@
+@prefix : <http://portonvictor.org/ns/trans/> .
+@prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+
+_:struct
+   a :Transformer ;
+   :sourceNamespace <http://portonvictor.org/ns/myxhtml/struct> ;
+   :targetNamespace <http://www.w3.org/1999/xhtml> ;
+   :precedence :precedence-syntax ;
+   :script [
+     a :Command ;
+     :language lang:XSLT ;
+     :scriptURL <local:scripts/section.xslt> ;
+     :transformerKind :entire ;
+     :preservance 1.0 ;
+     :stability 1.0 ;
+     :preference 1.0
+   ] .
