@@ -117,7 +117,6 @@ class ScriptsIteratorBase(ABC):
 
         return result
 
-    # FIXME: This does not support universal scripts
     # Almost duplicate code with all_childs_in_target_hash()
     def first_childs_in_target(self):
         # use depth-first search
