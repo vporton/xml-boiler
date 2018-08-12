@@ -39,13 +39,14 @@ class PostProcessPredicateParser(PredicateParser):
         return self.f(self.child.parse(parse_context, graph, node))
 
 
-class Choice(NodeParser):
+class Choice(NodeParserWithError):
     """
     TODO: If the node conforms to more than one choice, this class does
     not conform to the specification.
     """
 
-    def __init__(self, choices):
+    def __init__(self, choices, on_error=ErrorHandler.IGNORE):  # TODO: Remove default arg value?
+        super().__init__(on_error)
         self.choices = choices
 
     def parse(self, parse_context, graph, node):
@@ -54,7 +55,10 @@ class Choice(NodeParser):
                 return p.parse(parse_context, graph, node)
             except ParseException:
                 pass
-        parse_context.throw(ErrorHandler.WARNING, "No variant")  # FIXME: Allow to specify the error mode and give more clear error message
+
+        def s():
+            parse_context.translate("No variant for node {node}.").format(node=node)
+        parse_context.throw(self.on_error, s)
 
 
 class ZeroOrMorePredicate(PredicateParser):
