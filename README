@@ -2,7 +2,7 @@ Automatically transform between XML namespaces.
 
 https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces
 
-This is a work in progress. It does not work yet.
+This is a pre-alpha. It is already useful to process XInclude and XML comments.
 
 This project supersedes failed project
 https://github.com/vporton/xml-boiler-java
