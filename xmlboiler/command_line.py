@@ -21,6 +21,7 @@ import re
 import sys
 
 from ordered_set import OrderedSet
+from rdflib import URIRef
 
 import xmlboiler.core.urls
 from xmlboiler.core import execution_context_builders
@@ -104,7 +105,7 @@ def main(argv):
         (xmlboiler.core.urls.our_opener.open(args.source) if re.match(r'^[a-zA-Z]+:', args.source) else open(args.source))
     output = None if args.output == '-' else args.output
 
-    options.target_namespaces = frozenset([] if args.target is None else args.target)
+    options.target_namespaces = frozenset([] if args.target is None else [URIRef(t) for t in args.target])
 
     options.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
                              'remove': NotInTargetNamespace.REMOVE,
