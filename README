@@ -2,7 +2,8 @@ Automatically transform between XML namespaces.
 
 https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces
 
-This is a pre-alpha. It is already useful to process XInclude and XML comments.
+This is a pre-alpha. It is already useful to process XInclude, XML comments,
+and some home-made XHTML extensions.
 
 This project supersedes failed project
 https://github.com/vporton/xml-boiler-java
