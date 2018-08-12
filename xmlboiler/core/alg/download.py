@@ -71,7 +71,7 @@ def _enumerate_child_namespaces(state, asset):
             # TODO: It may happen atmost once, may optimize not to run it again
             yield from [PrioritizedNS(priority, ns) for ns in state.opts.target_namespaces]
     priority += 1
-    yield from [PrioritizedNS(priority, ns) for ns in asset.see_also_transform] # FIXME: Support for validation
+    yield from [PrioritizedNS(priority, ns) for ns in asset.see_also_transform] # TODO: Support for validation
 
 
 def _enumerate_child_namespaces_without_priority(state, asset):
