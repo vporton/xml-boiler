@@ -54,23 +54,22 @@ class GraphOfScripts(object):
                     if not self.graph.has_edge(i, j):
                         self.graph.add_edge(i, j, weight=0)
 
-    # TODO: Is this function used?
-    def first_edges_for_shortest_path(self, source, target):
-        paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')
-        edges = []
-        try:
-            # FIXME: What if path is empty (or empty after removing interset edges)?
-            for path in paths:
-                script_found = False
-                for i in range(len(path) - 1):
-                    if script_found:
-                        break
-                    for _, edge in self.graph[path[i]][path[i+1]].items():
-                        script = edge.get('script')
-                        if script is not None:
-                            edges.append(script)
-                            script_found = True
-                            break
-        except nx.NetworkXNoPath:
-            pass
-        return edges
+    # def first_edges_for_shortest_path(self, source, target):
+    #     paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')
+    #     edges = []
+    #     try:
+    #         # What if path is empty (or empty after removing interset edges)?
+    #         for path in paths:
+    #             script_found = False
+    #             for i in range(len(path) - 1):
+    #                 if script_found:
+    #                     break
+    #                 for _, edge in self.graph[path[i]][path[i+1]].items():
+    #                     script = edge.get('script')
+    #                     if script is not None:
+    #                         edges.append(script)
+    #                         script_found = True
+    #                         break
+    #     except nx.NetworkXNoPath:
+    #         pass
+    #     return edges
