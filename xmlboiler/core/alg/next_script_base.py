@@ -117,7 +117,6 @@ class ScriptsIteratorBase(ABC):
 
         return result
 
-    # FIXME: Why does it not check the target?
     # FIXME: This does not support universal scripts
     # Almost duplicate code with all_childs_in_target_hash()
     def first_childs_in_target(self):
@@ -127,8 +126,11 @@ class ScriptsIteratorBase(ABC):
         while stack:
             v = stack.pop()
             if not v.childNodes:
+                last_result = None
                 for x in reversed(stack):
-                    return x
+                    last_result = x
+                    if x.namespaceURI is None or URIRef(x.namespaceURI) not in self.state.opts.target_namespaces:
+                        break
+                return last_result
             for w in v.childNodes:
                 stack.append(w)
-        return None
