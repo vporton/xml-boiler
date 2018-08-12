@@ -35,8 +35,6 @@ import xmlboiler.core.rdf_format.asset_parser.asset
 from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
 
 
-# FIXME: It seems that we have priorities REVERSE to the proper order
-
 # TODO: We yield an array of assets. Instead we could yield an array of Nones (what probably could be faster)
 
 def _enumerate_xml_namespaces(state):
