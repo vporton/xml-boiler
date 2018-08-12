@@ -1,4 +1,13 @@
+from coverage.annotate import os
 from setuptools import setup
+from setuptools.command.build_py import build_py as DistutilsBuild
+
+
+class MyBuild(DistutilsBuild):
+    def run(self):
+        DistutilsBuild.run(self)
+        os.system('make')
+
 
 setup(
     name='xml-boiler',
@@ -16,4 +25,6 @@ setup(
         ('/etc/xmlboiler', ['etc/config-cli.ttl'])
     ],
     test_suite="xmlboiler.tests",
+
+    cmdclass={'build_py': MyBuild},
 )
