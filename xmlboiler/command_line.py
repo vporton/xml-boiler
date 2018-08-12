@@ -103,7 +103,7 @@ def main(argv):
 
     source = sys.stdin if args.source is None or args.source == '-' else \
         (xmlboiler.core.urls.our_opener.open(args.source) if re.match(r'^[a-zA-Z]+:', args.source) else open(args.source))
-    output = None if args.output and args.output[0] == '-' else args.output[0]
+    output = None if not args.output or args.output[0] == '-' else args.output[0]
 
     options.target_namespaces = frozenset([] if args.target is None else [URIRef(t) for t in args.target])
 
