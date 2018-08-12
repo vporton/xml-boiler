@@ -177,7 +177,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
                         asset_info = parser.parse(graph)
                         self.state.add_asset(asset_info)
                         assets.append(asset_info)
-                        Q.put(PrioritizedNS(child.ns, asset_info))  # FIXME: Wrong priority here
+                        Q.put(PrioritizedNS(child.priority, asset_info))
                     yield assets
 
     def download_iterator(self):
