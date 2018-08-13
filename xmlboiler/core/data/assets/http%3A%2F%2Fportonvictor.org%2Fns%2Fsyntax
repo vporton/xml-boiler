@@ -1,0 +1,23 @@
+@prefix : <http://portonvictor.org/ns/trans/> .
+@prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+
+_:syntax
+   a :Transformer ;
+   :sourceNamespace <http://portonvictor.org/ns/syntax> ;
+   :targetNamespace <http://www.w3.org/1999/xhtml> ;
+   :precedence :precedence-formatting ;
+   :inward false ;
+   :script [
+     a :Command ;
+     :language lang:Syntax ;
+     :params [
+        [ :name "lexer" ;
+          :value: [ :attribute [ :NS "http://portonvictor.org/ns/comment" ; :name "format" ] ]
+        ] ;
+        [ :name "formatter" ; :value "html" ]
+     ] ;
+     :transformerKind :entire ;
+     :preservance 1.0 ;
+     :stability 1.0 ;
+     :preference 1.0
+   ] .

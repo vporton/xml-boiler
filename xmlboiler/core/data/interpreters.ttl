@@ -39,8 +39,8 @@ int:Saxon
     :packageMinVersion "9.5" .
 
 int:Pygments
-    :lang lang:HTMLSyntax ;
+    :lang lang:Syntax ;
     :commandLine ("pygmentize"
                   "-l" [ :param "lexer" ]
-                  "-f" "html") ;
+                  "-f" [ :param "formatter" ]) ;
     :debianPackage "python-pygments" .
