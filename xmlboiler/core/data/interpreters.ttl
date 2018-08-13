@@ -8,6 +8,7 @@
 (
     int:xsltproc
     int:Saxon
+    int:Pygments
 ) .
 
 # Don't confuse language version and package version.
@@ -36,3 +37,10 @@ int:Saxon
                     [ :params [ :concat (:name "=" :value) ]]) ;
     :debianPackage "libsaxonhe-java" ;
     :packageMinVersion "9.5" .
+
+int:Pygments
+    :lang lang:HTMLSyntax ;
+    :commandLine ("pygmentize"
+                  "-l" [ :attribute [ :NS "http://portonvictor.org/ns/comment" ; :name "format" ] ]
+                  "-f" "html")
+    :debianPackage "python-pygments" .
