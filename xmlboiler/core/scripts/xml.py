@@ -36,6 +36,7 @@ class XMLRunCommandWrapper(object):
             TransformerKindEnum.SIMPLE_SEQUENTIAL: self._run_simple_seq,
             TransformerKindEnum.SUBDOCUMENT_SEQUENTIAL: self._run_subdoc_seq,
             TransformerKindEnum.DOWN_UP: self._run_down_up,
+            TransformerKindEnum.PLAIN_TEXT: self._run_plain_text,
         }
         return map[self.kind](input)
 
@@ -102,6 +103,9 @@ class XMLRunCommandWrapper(object):
             for w in v.childNodes:
                 parents.append(w)
         return None
+
+    def _run_plain_text(self, input: bytes) -> bytes:
+        pass  # TODO
 
     # Should be moved to a more general class?
     def _is_primary_node(self, node):
