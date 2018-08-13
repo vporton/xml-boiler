@@ -41,6 +41,6 @@ int:Saxon
 int:Pygments
     :lang lang:HTMLSyntax ;
     :commandLine ("pygmentize"
-                  "-l" [ :attribute [ :NS "http://portonvictor.org/ns/comment" ; :name "format" ] ]
-                  "-f" "html")
+                  "-l" [ :param "lexer" ]
+                  "-f" "html") ;
     :debianPackage "python-pygments" .
