@@ -43,6 +43,7 @@ class MainParser(Choice):
                           ArgumentListParser(),
                           ConcatParser(),
                           ConstantParser(),
+                          ParamParser(),
                           ParamsParser()])
 
 
@@ -75,6 +76,16 @@ class ConstantParser(NodeParser):
                                  PREFIX + 'name'  : parse_context.current_param and parse_context.current_param.get(0),
                                  PREFIX + 'value' : parse_context.current_param and parse_context.current_param.get(1)})
         return [sub_parser.parse(parse_context, graph, node)]
+
+
+class ParamParser(NodeParser):
+    def parse(self, parse_context, graph, node):
+        sub_parser = OnePredicate(PREFIX + 'param', StringLiteral(ErrorHandler.FATAL), ErrorHandler.IGNORE)
+        string = sub_parser.parse(parse_context, graph, node)
+        for name, value in parse_context.params:
+            if name == string:
+                return value
+        parse_context.throw(ErrorHandler.FATAL, parse_context.translate("No {s} param in {node}.").format(s=string, node=node))
 
 
 class ParamsParser(NodeParser):
