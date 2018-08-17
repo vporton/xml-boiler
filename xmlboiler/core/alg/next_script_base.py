@@ -63,7 +63,7 @@ class ScriptsIteratorBase(ABC):
         # TODO: Need to add BOTH sources and its elements?
         for source in sources:
             available_chains.graph.add_node(frozenset([source]))
-        # available_chains.graph.add_node(sources)
+        available_chains.graph.add_node(frozenset(sources))
         available_chains.adjust()
         return available_chains
 
