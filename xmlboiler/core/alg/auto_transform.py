@@ -44,10 +44,15 @@ class AutomaticTranformation(object):
             v = parents.pop()
             if v.namespaceURI is not None:
                 all_namespaces.add(URIRef(v.namespaceURI))
+            if v.attributes:
+                for a in v.attributes.values():
+                    if a.namespaceURI is not None:
+                        all_namespaces.add(URIRef(a.namespaceURI))
             for w in v.childNodes:
                 parents.append(w)
 
-        self.state.all_namespaces = frozenset(all_namespaces)  # TODO: Is it worth to freeze?
+        # hack
+        self.state.all_namespaces = frozenset(filter(lambda x: x != URIRef('http://www.w3.org/2000/xmlns/'), all_namespaces))  # TODO: Is it worth to freeze?
 
         if self.state.all_namespaces <= self.state.opts.target_namespaces:
             return False  # The transformation finished!
