@@ -57,10 +57,6 @@ class AttributeParam(NamedTuple):
     name: str
 
 class _ParamValueParser(NodeParser):
-    def __init__(self, script_base):
-        super().__init__()
-        self.script_base = script_base
-
     def parse(self, parse_context, graph, node):
         ns = OnePredicate(URIRef(MAIN_NAMESPACE + "NS"), StringLiteral(), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
@@ -70,10 +66,6 @@ class _ParamValueParser(NodeParser):
 
 
 class _ParamParser(NodeParser):
-    def __init__(self, script):
-        super().__init__()
-        self.script = script
-
     def parse(self, parse_context, graph, node):
         return Choice([_RegularParamParser(), _ParamValueParser()], ErrorHandler.FATAL)
 
@@ -173,7 +165,7 @@ class CommandScriptInfoParser(NodeParser):
         more.language = language_parser.parse(parse_context, graph, node)
 
         params_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "params"),
-                                         ListParser(_ParamParser(base), ErrorHandler.FATAL),
+                                         ListParser(_ParamParser(), ErrorHandler.FATAL),
                                          ErrorHandler.WARNING,
                                          default_value=[])
         more.params = params_parser.parse(parse_context, graph, node)
