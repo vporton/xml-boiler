@@ -107,6 +107,18 @@ class XMLRunCommandWrapper(object):
         return None
 
     def _run_plain_text(self, input: bytes) -> bytes:
+        doc = parseString(input)
+        our_elements = []
+        # depth-first search
+        parents = [doc.documentElement]
+        while parents:
+            v = parents.pop()
+            for w in v.childNodes:
+                if w.namespaceURI in self.script.transformer.source_namespaces or \
+                        any(a.namespaceURI in self.script.transformer.source_namespaces for a in w.attributes.values()):
+                    our_elements.append(w)
+                parents.append(w)
+
         pass  # TODO
 
     # Should be moved to a more general class?
