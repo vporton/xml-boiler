@@ -10,12 +10,11 @@ _:syntax
    :script [
      a :Command ;
      :language lang:Syntax ;
-     :params [
+     :params
         [ :name "lexer" ;
-          :value: [ :attribute [ :NS http://portonvictor.org/ns/syntax ; :name "format" ] ]
-        ] ;
-        [ :name "formatter" ; :value "html" ]
-     ] ;
+          :value [ :attribute [ :NS <http://portonvictor.org/ns/syntax> ; :name "format" ] ]
+        ] ,
+        [ :name "formatter" ; :value "html" ] ;
      :transformerKind :entire ;
      :preservance 1.0 ;
      :stability 1.0 ;
