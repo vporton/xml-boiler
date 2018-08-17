@@ -21,6 +21,8 @@ from rdflib import URIRef
 from xmlboiler.core.rdf_format.asset import TransformerKindEnum
 
 # TODO: Don't parse directly after serializing (for efficiency)
+from xmlboiler.core.rdf_format.asset_parser.script import AttributeParam
+
 
 class XMLRunCommandWrapper(object):
     """
@@ -74,7 +76,7 @@ class XMLRunCommandWrapper(object):
             for w in v.childNodes:
                 if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces:
                     str = w.toxml()
-                    str2 = self.script.run(str)
+                    str2 = self.script.run(str, self.adjust_params(w))
                     frag = parseString(str2)
                     v.replaceChild(w, frag.documentElement)
                 parents.append(w)
@@ -96,7 +98,7 @@ class XMLRunCommandWrapper(object):
                 for node in reversed(parents):
                     if self._is_primary_node(node):
                         str = node.toxml()
-                        str2 = self.script.run(str)
+                        str2 = self.script.run(str, self.adjust_params(node))
                         frag = parseString(str2)
                         node.parentNode.replaceChild(node, frag.documentElement)
                         return doc.toxml()
@@ -120,6 +122,16 @@ class XMLRunCommandWrapper(object):
             return True
         return any(a.namespaceURI != node.namespaceURI and URIRef(a.namespaceURI) in self.script.transformer.source_namespaces \
                    for a in node.attributes.values())
+
+    def adjust_params(self, node):
+        result = []
+        for p in self.script.params:
+            p2 = p[1]
+            if isinstance(p2, AttributeParam):
+                result.append(node.getAttributeNS(str(p2.ns), p.name))
+            else:
+                result.append(p2)
+        return result
 
 
 class XMLRunCommand(XMLRunCommandWrapper):

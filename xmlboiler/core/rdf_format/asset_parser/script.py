@@ -62,7 +62,7 @@ class _ParamAttributeParser(NodeParser):
             parse(parse_context, graph, node)
         name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
-        return AttributeParam(ns, name)
+        return (name, AttributeParam(ns, name))
 
 
 class _ParamParser(NodeParser):
