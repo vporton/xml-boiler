@@ -143,9 +143,9 @@ class CommandScriptInfoParser(NodeParser):
         str1 = str1_parser.parse(parse_context, graph, node)
         str2_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "commandString"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
         str2 = str2_parser.parse(parse_context, graph, node)
-        if str1 is None and str2 is None:
-            msg = parse_context.translate("Both :scriptURL and :commandString can't be missing in node {node}.").format(node=node)
-            parse_context.throw(ErrorHandler.WARNING, msg)
+        # if str1 is None and str2 is None:
+        #     msg = parse_context.translate("Both :scriptURL and :commandString can't be missing in node {node}.").format(node=node)
+        #     parse_context.throw(ErrorHandler.WARNING, msg)
         if str1 is not None and str2 is not None:
             msg = parse_context.translate("Both :scriptURL and :commandString can't be present in node {node}.").format(node=node)
             parse_context.throw(ErrorHandler.WARNING, msg)
