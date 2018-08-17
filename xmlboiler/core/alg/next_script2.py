@@ -47,7 +47,10 @@ class ScriptsIterator(ScriptsIteratorBase):
             for w in v.childNodes:
                 stack.append(w)
 
-        namespaces = frozenset([URIRef(e.namespaceURI) for e in elements if e.namespaceURI is not None])
+        ns1 = [URIRef(e.namespaceURI) for e in elements if e.namespaceURI is not None]
+        ns1.extend([URIRef(a.namespaceURI) for e in elements if e.attributes for a in e.attributes.values() \
+                    if a.namespaceURI is not None and a.namespaceURI != 'http://www.w3.org/2000/xmlns/'])
+        namespaces = frozenset(ns1)
 
         # Check that for this element there is a known inwardly processed script
         available_chains = self._available_chains(namespaces, self.state.opts.target_namespaces)
