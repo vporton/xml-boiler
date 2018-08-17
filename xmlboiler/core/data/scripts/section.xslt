@@ -21,7 +21,7 @@
       <ul class="ToC">
         <xsl:for-each select="struct:section">
           <li>
-            <a href="#{generate-id()}"> <!-- TODO: xml:lang -->
+            <a href="#{generate-id()}"> <!-- TODO: xml:lang --> <!-- FIXME: What if it already has an ID? -->
               <xsl:apply-templates select="struct:title/node()"/>
             </a>
             <xsl:call-template name="struct:toc"/>
