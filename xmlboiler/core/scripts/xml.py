@@ -114,12 +114,22 @@ class XMLRunCommandWrapper(object):
         while parents:
             v = parents.pop()
             for w in v.childNodes:
-                if w.namespaceURI in self.script.transformer.source_namespaces or \
-                        any(a.namespaceURI in self.script.transformer.source_namespaces for a in w.attributes.values()):
-                    our_elements.append(w)
                 parents.append(w)
+                if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces or \
+                        any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in w.attributes.values()):
+                    if len(w.childNodes) > 1 or (len(w.childNodes) == 1 and w.childNodes[0].nodeType != w.childNodes[0].TEXT_NODE):
+                        raise Exception("Non-text tag content in plain text transformer.")  # TODO: More specific exception
+                    our_elements.append((w, w.childNodes[0]))
 
-        pass  # TODO
+        for node, text in our_elements:
+            input = self._run_down_up_step(text, self.adjust_params(node))
+            if URIRef(node.namespaceURI) in self.script.transformer.source_namespaces:
+                node.parentNode.replaceChild(input, node)
+            else:
+                node.firstChild.replaceWholeText(input)
+                for a in node.attributes.values():
+                    if URIRef(a.namespaceURI) in self.script.transformer.source_namespaces:
+                        node.removeAttributeNS(a.namespaceURI, a.localName)
 
     # Should be moved to a more general class?
     def _is_primary_node(self, node):
