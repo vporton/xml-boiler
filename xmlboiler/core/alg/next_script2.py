@@ -58,6 +58,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         paths = []
         for source in namespaces:
             try:
+                # FIXME: (Here and in other places) exclude paths of zero length
                 nodes = nx.all_shortest_paths(available_chains.graph,
                                               frozenset([source]),
                                               self.state.opts.target_namespaces)
