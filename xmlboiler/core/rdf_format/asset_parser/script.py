@@ -56,7 +56,7 @@ class AttributeParam(NamedTuple):
     ns: URIRef
     name: str
 
-class _ParamValueParser(NodeParser):
+class _ParamAttributeParser(NodeParser):
     def parse(self, parse_context, graph, node):
         ns = OnePredicate(URIRef(MAIN_NAMESPACE + "NS"), StringLiteral(), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
@@ -67,7 +67,9 @@ class _ParamValueParser(NodeParser):
 
 class _ParamParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        return Choice([_RegularParamParser(), _ParamValueParser()], ErrorHandler.FATAL)
+        return Choice([_RegularParamParser(),
+                       OnePredicate(URIRef(MAIN_NAMESPACE + "attribute"), _ParamAttributeParser(), ErrorHandler.IGNORE)],
+                      ErrorHandler.FATAL)
 
 
 class BaseScriptInfoParser(NodeParser):
