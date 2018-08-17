@@ -1,4 +1,4 @@
-* It seems I skip the document element when doing depth-first search.
+* It seems I skip the document element (and top in general) when doing depth-first search.
 
 * Stop transfomation if source XML == destination XML to avoid infinite loop.
 
