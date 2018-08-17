@@ -60,8 +60,10 @@ class ScriptsIteratorBase(ABC):
         available_chains = GraphOfScripts(None, self.state.opts.universal_precedence, self.state.precedences_higher)
         available_chains.add_scripts(frozenset(self._checked_scripts(self.state.scripts)) - self.state.failed_scripts)  # slow
         available_chains.graph.add_node(self.state.opts.target_namespaces)
+        # TODO: Need to add BOTH sources and its elements?
         for source in sources:
             available_chains.graph.add_node(frozenset([source]))
+        # available_chains.graph.add_node(sources)
         available_chains.adjust()
         return available_chains
 
@@ -80,7 +82,8 @@ class ScriptsIteratorBase(ABC):
             result = []
         if getattr(node, 'attributes', None) is None:
             return None
-        attr_nodes = [URIRef(attr.namespaceURI) for attr in node.attributes.values() if attr.namespaceURI is not None]
+        attr_nodes = [URIRef(attr.namespaceURI) for attr in node.attributes.values() \
+                      if attr.namespaceURI is not None and attr.namespaceURI != 'http://www.w3.org/2000/xmlns/']  # TODO: hack
         result.extend(sorted(set(attr_nodes)))  # set() to avoid repetitions
         return result
 
