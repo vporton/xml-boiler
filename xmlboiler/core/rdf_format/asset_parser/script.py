@@ -15,6 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+from typing import NamedTuple
 
 from dependency_injector.providers import ThreadLocalSingleton
 from dependency_injector.containers import DeclarativeContainer
@@ -42,13 +43,39 @@ class ScriptInfoParser(Choice):
     # def parse(self, parse_context, graph, node):
 
 
-class _ParamParser(NodeParser):
+class _RegularParamParser(NodeParser):
     def parse(self, parse_context, graph, node):
         name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
         value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"), StringLiteral(), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
         return (name, value)
+
+
+class AttributeParam(NamedTuple):
+    ns: URIRef
+    name: str
+
+class _ParamValueParser(NodeParser):
+    def __init__(self, script_base):
+        super().__init__()
+        self.script_base = script_base
+
+    def parse(self, parse_context, graph, node):
+        ns = OnePredicate(URIRef(MAIN_NAMESPACE + "NS"), StringLiteral(), ErrorHandler.WARNING).\
+            parse(parse_context, graph, node)
+        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(), ErrorHandler.WARNING).\
+            parse(parse_context, graph, node)
+        return AttributeParam(ns, name)
+
+
+class _ParamParser(NodeParser):
+    def __init__(self, script):
+        super().__init__()
+        self.script = script
+
+    def parse(self, parse_context, graph, node):
+        return Choice([_RegularParamParser(), _ParamValueParser()], ErrorHandler.FATAL)
 
 
 class BaseScriptInfoParser(NodeParser):
@@ -146,7 +173,7 @@ class CommandScriptInfoParser(NodeParser):
         more.language = language_parser.parse(parse_context, graph, node)
 
         params_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "params"),
-                                         ListParser(_ParamParser(), ErrorHandler.FATAL),
+                                         ListParser(_ParamParser(base), ErrorHandler.FATAL),
                                          ErrorHandler.WARNING,
                                          default_value=[])
         more.params = params_parser.parse(parse_context, graph, node)
