@@ -152,7 +152,7 @@ class CommandScriptInfoParser(NodeParser):
         more.script_URL     = str1
         more.commandString = str2
 
-        if not more.script_URL and len(base.params) != 0:
+        if not more.script_URL and len(more.params) != 0:
             def s():
                 parse_context.translate("Cannot provide params for commandString script {node}.").\
                     format(node=node)

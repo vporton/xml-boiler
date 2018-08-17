@@ -60,7 +60,7 @@ class CommandScriptInfo(object):
     # either one of the following must be None
     command_string: Optional[str] = None
     script_URL    : Optional[str] = None
-    params: list = None
+    params: list = field(default_factory=list)
 
 @dataclass
 class WebServiceScriptInfo(object):
