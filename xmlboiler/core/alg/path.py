@@ -39,10 +39,10 @@ class GraphWithProxy(object):
     """
     def __init__(self, graph1, graph2):
         self.composite_graph = nx.MultiDiGraph()
-        for u, v, d in graph1.edges_iter(data=True):
+        for u, v, d in graph1.edges(data=True):
             self.composite_graph.add_edge((0, u), (1, v), attr_dict=d)
             self.composite_graph.add_edge((1, u), (1, v), attr_dict=d)
-        for u, v, d in graph2.edges_iter(data=True):
+        for u, v, d in graph2.edges(data=True):
             self.composite_graph.add_edge((0, u), (0, v), attr_dict=d)
             self.composite_graph.add_edge((1, u), (1, v), attr_dict=d)
 
@@ -78,6 +78,9 @@ class GraphOfScripts(object):
                     if not self.graph2.has_edge(i, j):
                         self.graph2.add_edge(i, j, weight=0)
         self.graph = GraphWithProxy(self.graph1, self.graph2)
+
+    def all_shortest_paths(self, source, target, weight=None):
+        return self.graph.all_shortest_paths(source, target, weight)
 
     # def first_edges_for_shortest_path(self, source, target):
     #     paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')
