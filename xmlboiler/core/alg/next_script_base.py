@@ -66,6 +66,7 @@ class ScriptsIteratorBase(ABC):
         available_chains.graph.add_node(frozenset(sources))
         available_chains.adjust()
         return available_chains
+        # FIXME: It returns an empty path, what is an error
 
     # scripts is a list of lists
     def _choose_by_preservance_priority(self, scripts):
