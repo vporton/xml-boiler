@@ -46,7 +46,7 @@ def _enumerate_xml_namespaces(state):
                 yield URIRef(w.namespaceURI)
             if w.attributes:
                 for a in w.attributes.values():
-                    if a.namespaceURI is not None:
+                    if a.namespaceURI is not None and a.namespaceURI != 'http://www.w3.org/2000/xmlns/':  # hack
                         yield URIRef(a.namespaceURI)
             stack.append(w)
 
@@ -122,9 +122,10 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
             self.state.add_asset(asset_info)
             assets.append(asset_info)
         yield assets
-        for ns2 in _enumerate_child_namespaces_without_priority(self.state, ns):
-            if ns2 not in self.state.assets:
-                yield from self.depth_first_download(ns2, downloaders)  # recursion
+        for asset in assets:
+            for ns2 in _enumerate_child_namespaces_without_priority(self.state, asset):
+                if ns2 not in self.state.assets:
+                    yield from self.depth_first_download(ns2, downloaders)  # recursion
 
     # Every yield produces a list of assets (not individual assets),
     # because in our_depth_first_based_download() we need to discard multiple assets.
