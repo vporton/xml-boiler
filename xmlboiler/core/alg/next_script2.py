@@ -60,6 +60,7 @@ class ScriptsIterator(ScriptsIteratorBase):
             try:
                 # FIXME: (Here and in other places) exclude paths of zero length
                 nodes = nx.all_shortest_paths(available_chains.graph,
+                                              # frozenset(frozenset([source]) - self.state.opts.target_namespaces),
                                               frozenset([source]),
                                               self.state.opts.target_namespaces)
                 paths.extend(shortest_paths_to_edges(available_chains.graph, nodes, lambda e: e['weight']))
