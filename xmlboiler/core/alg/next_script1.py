@@ -34,10 +34,9 @@ class ScriptsIterator(ScriptsIteratorBase):
         paths = []
         for source in self.state.all_namespaces:
             try:
-                nodes = nx.all_shortest_paths(available_chains.graph,
-                                              frozenset([source]),
-                                              self.state.opts.target_namespaces,
-                                              weight='weight')
+                nodes = available_chains.all_shortest_paths(frozenset([source]),
+                                                            self.state.opts.target_namespaces,
+                                                            weight='weight')
                 paths.extend(shortest_paths_to_edges(available_chains.graph, nodes,
                                                      lambda e: e['weight']))
             except nx.NetworkXNoPath:

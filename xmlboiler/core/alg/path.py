@@ -27,11 +27,35 @@ import networkx as nx
 from xmlboiler.core.alg.state import EnrichedScript
 
 
+# TODO: Wrap it also with "double graph" (https://cs.stackexchange.com/a/96348/39512) to have no adjanced
+# edges from graph2 (to increase the performance by reducing the number of paths of the same weight).
+class GraphWithProxy(object):
+    """
+    We have two directed multigraphs. A traversal must has at least one edge of the first graph.
+
+    https://cs.stackexchange.com/a/96348/39512 for the algorithm.
+
+    i^- is represented as (0, i) and i^+ is represented as (1, i)
+    """
+    def __init__(self, graph1, graph2):
+        self.composite_graph = nx.MultiDiGraph()
+        for u, v, d in graph1.edges_iter(data=True):
+            self.composite_graph.add_edge((0, u), (1, v), attr_dict=d)
+            self.composite_graph.add_edge((1, u), (1, v), attr_dict=d)
+        for u, v, d in graph2.edges_iter(data=True):
+            self.composite_graph.add_edge((0, u), (0, v), attr_dict=d)
+            self.composite_graph.add_edge((1, u), (1, v), attr_dict=d)
+
+    def all_shortest_paths(self, source, target, weight=None):
+        return nx.all_shortest_paths(self.composite_graph, (0, source), (1, target), weight)
+
+
+# TODO: Silly logic
 class GraphOfScripts(object):
     def __init__(self, graph, universal_precedence, precedences_graph):
         self.universal_precedence = universal_precedence
         self.precedences_graph = precedences_graph
-        self.graph = graph or nx.MultiDiGraph()
+        self.graph1 = graph or nx.MultiDiGraph()
 
     def add_scripts(self, enriched_scripts):
         for scr in enriched_scripts:
@@ -44,15 +68,16 @@ class GraphOfScripts(object):
                 target = frozenset()
             self.graph.add_edge(source, target, script=scr, weight=weight)
 
-
     # to be called before use
     def adjust(self):
+        self.graph2 = nx.MultiDiGraph()
         # TODO: The below is inefficient
-        for i in self.graph.nodes:
-            for j in self.graph.nodes:
+        for i in self.graph1.nodes:
+            for j in self.graph1.nodes:
                 if i < j:
-                    if not self.graph.has_edge(i, j):
-                        self.graph.add_edge(i, j, weight=0)
+                    if not self.graph2.has_edge(i, j):
+                        self.graph2.add_edge(i, j, weight=0)
+        self.graph = GraphWithProxy(self.graph1, self.graph2)
 
     # def first_edges_for_shortest_path(self, source, target):
     #     paths = nx.all_shortest_paths(self.graph, source, target, weight='weight')
