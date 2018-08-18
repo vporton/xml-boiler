@@ -66,7 +66,7 @@ class GraphOfScripts(object):
             if scr.base.transformer.universal and \
                     self.precedences_graph.is_connected(self.universal_precedence, scr.base.transformer.precedence):
                 target = frozenset()
-            self.graph.add_edge(source, target, script=scr, weight=weight)
+            self.graph1.add_edge(source, target, script=scr, weight=weight)
 
     # to be called before use
     def adjust(self):
