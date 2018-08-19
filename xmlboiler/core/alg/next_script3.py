@@ -39,7 +39,8 @@ class ScriptsIterator(ScriptsIteratorBase):
         for source in self.state.all_namespaces:
             try:
                 nodes = available_chains.all_shortest_paths(frozenset([source]),
-                                                            self.state.opts.target_namespaces)
+                                                            self.state.opts.target_namespaces,
+                                                            weight='weight')
                 paths.extend(shortest_paths_to_edges(available_chains.graph.composite_graph, nodes, lambda e: e['weight']))
             except NetworkXNoPath:
                 pass
