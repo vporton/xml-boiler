@@ -150,7 +150,7 @@ class CommandScriptInfoParser(NodeParser):
             msg = parse_context.translate("Both :scriptURL and :commandString can't be present in node {node}.").format(node=node)
             parse_context.throw(ErrorHandler.WARNING, msg)
         more.script_URL     = str1
-        more.commandString = str2
+        more.command_string = str2
 
         if not more.script_URL and len(more.params) != 0:
             def s():
