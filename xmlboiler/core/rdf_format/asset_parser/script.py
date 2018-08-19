@@ -45,9 +45,9 @@ class ScriptInfoParser(Choice):
 
 class _RegularParamParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
+        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorHandler.IGNORE), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
-        value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
+        value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"), StringLiteral(ErrorHandler.IGNORE), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
         return (name, value)
 
