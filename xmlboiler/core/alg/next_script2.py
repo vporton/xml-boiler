@@ -58,7 +58,6 @@ class ScriptsIterator(ScriptsIteratorBase):
         paths = []
         for source in namespaces:
             try:
-                # FIXME: (Here and in other places) exclude paths of zero length
                 nodes = available_chains.all_shortest_paths(frozenset([source]),
                                                             self.state.opts.target_namespaces)
                 paths.extend(shortest_paths_to_edges(available_chains.graph, nodes, lambda e: e['weight']))
