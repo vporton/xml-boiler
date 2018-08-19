@@ -45,9 +45,9 @@ class ScriptInfoParser(Choice):
 
 class _RegularParamParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(), ErrorHandler.WARNING).\
+        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
-        value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"), StringLiteral(), ErrorHandler.WARNING).\
+        value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
         return (name, value)
 
@@ -65,11 +65,11 @@ class _ParamAttributeParser(NodeParser):
         return (name, AttributeParam(ns, name))
 
 
-class _ParamParser(NodeParser):
-    def parse(self, parse_context, graph, node):
-        return Choice([_RegularParamParser(),
-                       OnePredicate(URIRef(MAIN_NAMESPACE + "attribute"), _ParamAttributeParser(), ErrorHandler.IGNORE)],
-                      ErrorHandler.FATAL)
+class _ParamParser(Choice):
+    def __init__(self):
+        super().__init__([_RegularParamParser(),
+                          OnePredicate(URIRef(MAIN_NAMESPACE + "attribute"), _ParamAttributeParser(), ErrorHandler.IGNORE)],
+                         ErrorHandler.WARNING)
 
 
 class BaseScriptInfoParser(NodeParser):
