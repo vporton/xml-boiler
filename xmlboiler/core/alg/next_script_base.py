@@ -93,6 +93,9 @@ class ScriptsIteratorBase(ABC):
             return None
         available_chains = self._available_chains(frozenset(NSs), self.state.opts.target_namespaces)
         try:
+            # FIXME: While the graph of available_chains is yet empty,
+            # (frozenset(NSs), self.state.opts.target_namespaces are not vertices of this graph
+            # what causes an exception.
             # list() to force exception if there is no path
             paths = list(available_chains.all_shortest_paths(frozenset(NSs), self.state.opts.target_namespaces, weight='weight'))
         except nx.NetworkXNoPath:
