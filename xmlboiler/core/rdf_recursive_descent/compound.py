@@ -57,7 +57,7 @@ class Choice(NodeParserWithError):
                 pass
 
         def s():
-            parse_context.translate("No variant for node {node}.").format(node=node)
+            return parse_context.translate("No variant for node {node}.").format(node=node)
         parse_context.throw(self.on_error, s)
 
 
@@ -81,7 +81,7 @@ class OneOrMorePredicate(PredicateParserWithError):
         value = parent.parse(parse_context, graph, node)
         if len(value) == 0:
             def s():
-                parse_context.translate("Must have at least one predicate {pred} for node {node}.").\
+                return parse_context.translate("Must have at least one predicate {pred} for node {node}.").\
                     format(pred=self.predicate, node=node)
             parse_context.throw(self.on_error, s)
         return value
@@ -96,7 +96,7 @@ class OnePredicate(PredicateParserWithError):
         v = list(graph.objects(node, self.predicate))
         if len(v) != 1:
             def s():
-                parse_context.translate("Exactly one predicate {pred} required for node {node}.").\
+                return parse_context.translate("Exactly one predicate {pred} required for node {node}.").\
                     format(pred=self.predicate, node=node)
             parse_context.throw(self.on_error, s)
         return self.child.parse(parse_context, graph, v[0])
