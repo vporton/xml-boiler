@@ -15,6 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+from rdflib import URIRef
 
 from xmlboiler.core.rdf_recursive_descent.base import ParseContext, NodeParser, ErrorHandler
 from xmlboiler.core.rdf_recursive_descent.compound import Choice, OnePredicate
@@ -60,7 +61,7 @@ class ArgumentListParser(NodeParser):
 
 class ConcatParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        sub_parser = OnePredicate(PREFIX + 'concat', MainParser(), ErrorHandler.IGNORE)
+        sub_parser = OnePredicate(URIRef(PREFIX + 'concat'), MainParser(), ErrorHandler.IGNORE)
         return ''.join(sub_parser.parse(parse_context, graph, node))
 
 
@@ -71,16 +72,16 @@ class ConstantParser(NodeParser):
         except CannotConvertURLToLocalFile:
             filearg = str(parse_context.script_url)
         # TODO: Be sure to differentiate .script_url and .command_string
-        sub_parser = EnumParser({PREFIX + 'script': filearg,
-                                 PREFIX + 'command': str(parse_context.script_url),
-                                 PREFIX + 'name'  : parse_context.current_param and parse_context.current_param.get(0),
-                                 PREFIX + 'value' : parse_context.current_param and parse_context.current_param.get(1)})
+        sub_parser = EnumParser({URIRef(PREFIX + 'script'): filearg,
+                                 URIRef(PREFIX + 'command'): str(parse_context.script_url),
+                                 URIRef(PREFIX + 'name'): parse_context.current_param and parse_context.current_param.get(0),
+                                 URIRef(PREFIX + 'value'): parse_context.current_param and parse_context.current_param.get(1)})
         return [sub_parser.parse(parse_context, graph, node)]
 
 
 class ParamParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        sub_parser = OnePredicate(PREFIX + 'param', StringLiteral(ErrorHandler.FATAL), ErrorHandler.IGNORE)
+        sub_parser = OnePredicate(URIRef(PREFIX + 'param'), StringLiteral(ErrorHandler.FATAL), ErrorHandler.IGNORE)
         string = sub_parser.parse(parse_context, graph, node)
         for name, value in parse_context.params:
             if name == string:
@@ -90,7 +91,7 @@ class ParamParser(NodeParser):
 
 class ParamsParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        sub_parser = OnePredicate(PREFIX + 'params', MainParser(), ErrorHandler.IGNORE)
+        sub_parser = OnePredicate(URIRef(PREFIX + 'params'), MainParser(), ErrorHandler.IGNORE)
         l = []
         try:
             for i in parse_context.params:

@@ -62,10 +62,10 @@ class Interpeters(object):
 
         parse_context = ParseContext(self.execution_context)
         version_parser = Choice([PostProcessPredicateParser(StringLiteral(), VersionWrapper),
-                                 Enum({PREFIX + 'fromPackageVersion': _FromPackageVersion()})])
-        lang_min_version = ZeroOnePredicate(PREFIX + "langMinVersion", version_parser, ErrorHandler.FATAL). \
+                                 Enum({URIRef(PREFIX + 'fromPackageVersion'): _FromPackageVersion()})])
+        lang_min_version = ZeroOnePredicate(URIRef(PREFIX + "langMinVersion"), version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
-        lang_max_version = ZeroOnePredicate(PREFIX + "langMaxVersion", version_parser, ErrorHandler.FATAL). \
+        lang_max_version = ZeroOnePredicate(URIRef(PREFIX + "langMaxVersion"), version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         lang_min_version = lang_min_version or VersionWrapper(float('-inf'))
         lang_max_version = lang_max_version or VersionWrapper(float('inf'))
@@ -76,9 +76,9 @@ class Interpeters(object):
         if not isinstance(lang_max_version, _FromPackageVersion) and min_version > lang_max_version:
             return False
 
-        pmin_version = ZeroOnePredicate(PREFIX + "packageMinVersion", StringLiteral(), ErrorHandler.FATAL). \
+        pmin_version = ZeroOnePredicate(URIRef(PREFIX + "packageMinVersion"), StringLiteral(), ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
-        pmax_version = ZeroOnePredicate(PREFIX + "packageMaxVersion", StringLiteral(), ErrorHandler.FATAL). \
+        pmax_version = ZeroOnePredicate(URIRef(PREFIX + "packageMaxVersion"), StringLiteral(), ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         if lang_min_version is _FromPackageVersion or lang_max_version is _FromPackageVersion or \
                 pmin_version is not None or pmax_version is not None:
