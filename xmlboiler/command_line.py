@@ -30,11 +30,13 @@ from xmlboiler.core.alg.download import NoDownloader, DepthFirstDownloader, Brea
 from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader
 import xmlboiler.core.interpreters.parse
+from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions, \
     RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace
 import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
 import xmlboiler.core.alg.next_script3
+from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
 
 
 def main(argv):
@@ -124,10 +126,12 @@ def main(argv):
     options.next_script = map[args.next_script](state)
 
     # TODO: Refactor
+    execution_context = context_for_logger(Contexts.execution_context(), Contexts.default_logger('asset'))
     options.recursive_options.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
-         'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](state).download_iterator()
+         'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](\
+            state, parse_context=default_parse_context(execution_context=execution_context)).download_iterator()
 
     # TODO: Use a factory of algorithms
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory()
