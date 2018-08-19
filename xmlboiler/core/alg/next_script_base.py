@@ -97,7 +97,7 @@ class ScriptsIteratorBase(ABC):
             paths = list(available_chains.all_shortest_paths(frozenset(NSs), self.state.opts.target_namespaces, weight='weight'))
         except nx.NetworkXNoPath:
             return None
-        p2 = shortest_paths_to_edges(available_chains.graph, paths, lambda e: e['weight'])
+        p2 = shortest_paths_to_edges(available_chains.graph.composite_graph, paths, lambda e: e['weight'])
         return [path for path in p2 if not path[0]['script'].base.transformer.inwardness]
 
     # Almost duplicate code with first_childs_in_target()

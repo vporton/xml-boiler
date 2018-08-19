@@ -37,7 +37,7 @@ class ScriptsIterator(ScriptsIteratorBase):
                 nodes = available_chains.all_shortest_paths(frozenset([source]),
                                                             self.state.opts.target_namespaces,
                                                             weight='weight')
-                paths.extend(shortest_paths_to_edges(available_chains.graph, nodes,
+                paths.extend(shortest_paths_to_edges(available_chains.graph.composite_graph, nodes,
                                                      lambda e: e['weight']))
             except nx.NetworkXNoPath:
                 pass
