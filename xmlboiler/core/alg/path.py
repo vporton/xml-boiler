@@ -43,6 +43,10 @@ class GraphWithProxy(object):
         self.graph2 = graph2
 
     def adjust(self):
+        for u in self.graph1.nodes():
+            # TODO: Need both 0 and 1?
+            self.composite_graph.add_node((0, u))
+            self.composite_graph.add_node((1, u))
         for u, v, d in self.graph1.edges(data=True):
             self.composite_graph.add_edge((0, u), (1, v), attr_dict=d)
             self.composite_graph.add_edge((1, u), (1, v), attr_dict=d)
