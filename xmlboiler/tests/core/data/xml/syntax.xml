@@ -1,0 +1,4 @@
+<pre xmlns:syntax="http://portonvictor.org/ns/syntax" syntax:format="xml">
+&lt;y xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+    &lt;xi:include href="simple.xml"/&gt;
+&lt;/y&gt;</pre>
