@@ -40,7 +40,7 @@ int:Saxon
 
 int:Pygments
     :lang lang:Syntax ;
-    :commandLine ("pygmentize"
-                  "-l" [ :param "lexer" ]
-                  "-f" [ :param "formatter" ]) ;
+    :inlineCommand ("pygmentize"
+                    "-l" [ :param "lexer" ]
+                    "-f" [ :param "formatter" ]) ;
     :debianPackage "python-pygments" .
