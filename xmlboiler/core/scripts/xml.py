@@ -127,17 +127,18 @@ class XMLRunCommandWrapper(object):
 
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))
-            input = RunCommand(self.script, self.interpreters).run(str(text).encode('utf-8'), self.adjust_params(node))
+            input = RunCommand(self.script, self.interpreters).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
+            doc2 = parseString(input)
             if node.namespaceURI and URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces:
-                node.parentNode.replaceChild(input, node)
+                node.parentNode.replaceChild(doc2.documentElement, node)
             else:
-                node.firstChild.replaceWholeText(input)
+                node.replaceChild(doc2.documentElement, node.firstChild)
                 lst = list(node.attributes.values())  # "RuntimeError: dictionary changed size during iteration" without this
                 for a in lst:
                     if URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces:
                         node.removeAttributeNS(a.namespaceURI, a.localName)
 
-        return input
+        return doc.toxml('utf-8')
 
     # Should be moved to a more general class?
     def _is_primary_node(self, node):
