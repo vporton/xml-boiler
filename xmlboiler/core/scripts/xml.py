@@ -136,6 +136,8 @@ class XMLRunCommandWrapper(object):
                     if URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces:
                         node.removeAttributeNS(a.namespaceURI, a.localName)
 
+        return input
+
     # Should be moved to a more general class?
     def _is_primary_node(self, node):
         # TODO: https://bugs.python.org/issue34306
