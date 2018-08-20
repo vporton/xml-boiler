@@ -55,18 +55,14 @@ class ScriptsIteratorBase(ABC):
             return scripts
         return self.state.executed_scripts.intersection(scripts)
 
-    def _available_chains(self, sources, destinations):
+    def _available_chains(self, sources, destinations):  # TODO: `destinations` not used
         # TODO: inefficient? should hold the graph, not re-create it
         available_chains = GraphOfScripts(None, self.state.opts.universal_precedence, self.state.precedences_higher)
-        available_chains.add_scripts(frozenset(self._checked_scripts(self.state.scripts)) - self.state.failed_scripts)  # slow
+        available_chains.add_scripts(frozenset(frozenset(self._checked_scripts(self.state.scripts)) - self.state.failed_scripts))  # slow
 
-        # TODO: Need to add BOTH sources and its elements?
-        for target in self.state.opts.target_namespaces:
-            available_chains.graph1.add_node(frozenset([target]))
-        available_chains.graph1.add_node(frozenset(self.state.opts.target_namespaces))
+        available_chains.graph1.add_node(self.state.opts.target_namespaces)
         for source in sources:
-            available_chains.graph1.add_node(frozenset([source]))
-        available_chains.graph1.add_node(frozenset(sources))
+            available_chains.graph1.add_node(source)
 
         available_chains.adjust()
         return available_chains
@@ -85,14 +81,14 @@ class ScriptsIteratorBase(ABC):
         else:
             result = []
         if getattr(node, 'attributes', None) is None:
-            return None
+            return result
         attr_nodes = [URIRef(attr.namespaceURI) for attr in node.attributes.values() \
                       if attr.namespaceURI is not None and attr.namespaceURI != 'http://www.w3.org/2000/xmlns/']  # TODO: hack
         result.extend(sorted(set(attr_nodes)))  # set() to avoid repetitions
         return result
 
     def _outer_node_script(self, node):
-        NSs = self._get_ns(node)
+        NSs = [frozenset([URIRef(ns)]) for ns in self._get_ns(node)]
         if not NSs:
             return None
         available_chains = self._available_chains(NSs, self.state.opts.target_namespaces)
@@ -100,7 +96,7 @@ class ScriptsIteratorBase(ABC):
             # list() to force exception if there is no path
             paths = list()
             for ns in NSs:
-                paths.extend(available_chains.all_shortest_paths(frozenset([ns]), self.state.opts.target_namespaces, weight='weight'))
+                paths.extend(available_chains.all_shortest_paths(ns, self.state.opts.target_namespaces, weight='weight'))
         except nx.NetworkXNoPath:
             return None
         p2 = shortest_paths_to_edges(available_chains.graph.composite_graph, paths, lambda e: e['weight'])
