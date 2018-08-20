@@ -22,15 +22,17 @@ from xmlboiler.core.rdf_format.asset import TransformerKindEnum
 
 # TODO: Don't parse directly after serializing (for efficiency)
 from xmlboiler.core.rdf_format.asset_parser.script import AttributeParam
+from xmlboiler.core.scripts.text import RunCommand
 
 
 class XMLRunCommandWrapper(object):
     """
     Don't use it directly, use XMLRunCommand
     """
-    def __init__(self, script, kind):
+    def __init__(self, script, kind, interpreters):
         self.script = script
         self.kind = kind
+        self.interpreters = interpreters
 
     def run(self, input: bytes) -> bytes:
         map = {
@@ -43,7 +45,7 @@ class XMLRunCommandWrapper(object):
         return map[self.kind](input)
 
     def _run_entire(self, input: bytes) -> bytes:
-        return self.script.run(input)
+        return RunCommand(self.script, self.interpreters).run(input)
 
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
@@ -65,7 +67,7 @@ class XMLRunCommandWrapper(object):
                     parents.append(w)
             if not found:
                 return input  # TODO: Check XML validity? (point this in the specification)
-            input = self.script.run(input)
+            input = RunCommand(self.script, self.interpreters).run(input)
 
     def _run_subdoc_seq(self, input: bytes) -> bytes:
         doc = parseString(input)
@@ -76,7 +78,7 @@ class XMLRunCommandWrapper(object):
             for w in v.childNodes:
                 if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces:
                     str = w.toxml()
-                    str2 = self.script.run(str, self.adjust_params(w))
+                    str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(w))
                     frag = parseString(str2)
                     v.replaceChild(w, frag.documentElement)
                 parents.append(w)
@@ -98,7 +100,7 @@ class XMLRunCommandWrapper(object):
                 for node in reversed(parents):
                     if self._is_primary_node(node):
                         str = node.toxml()
-                        str2 = self.script.run(str, self.adjust_params(node))
+                        str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(node))
                         frag = parseString(str2)
                         node.parentNode.replaceChild(node, frag.documentElement)
                         return doc.toxml()
@@ -158,5 +160,5 @@ class XMLRunCommandWrapper(object):
 
 # FIXME: Use it!
 class XMLRunCommand(XMLRunCommandWrapper):
-    def __init__(self, script):
-        super().__init__(script, script.base.transformer_kind)
+    def __init__(self, script, interpreters):
+        super().__init__(script, script.base.transformer_kind, interpreters)

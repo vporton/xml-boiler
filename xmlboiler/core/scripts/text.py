@@ -17,13 +17,12 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # This is an object which receives bytes and produces bytes
-from xmlboiler.core.interpreters.parse import interpreters
 from xmlboiler.core.os_command.regular import regular_provider
 from xmlboiler.core.rdf_format.asset import CommandScriptInfo
 
 
 class _RunScriptCommand(object):
-    def __init__(self, script, params=None):
+    def __init__(self, script, interpeters, params=None):
         self.script = script
         self.interpreters = interpreters
         if not params:
@@ -59,8 +58,8 @@ class _RunInlineCommand(object):
 # TODO: WebService
 class RunCommand(object):
     def __init__(self, script, interpreters):
-        assert isinstance(script, CommandScriptInfo)
-        if script.script_URL:
+        assert isinstance(script.more, CommandScriptInfo)
+        if script.more.script_URL:
             self.impl = _RunScriptCommand(script)
         else:
             self.impl = _RunInlineCommand(script)

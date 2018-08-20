@@ -40,8 +40,8 @@ class RealNextScript(object):
                 self.state.executed_scripts.add(script)
 
                 # FIXME: What about .command_line?
-                cmd = self.interpreters.construct_command_line(node, script.more.script_URL, script.more.params, not bool(script.more.script_URL))
+                cmd = self.interpreters.construct_command_line(node, script.more.script_URL, script.more.params, not bool(script.more.script_URL))  # FIXME
                 # TODO: Check subprocess's exit code
-                self.state.xml_text = regular_provider().run_pipe(cmd, self.state.xml_text)[1]  # TODO: Use proper dependency injection
-                # self.state.xml_text = XMLRunCommand(script).run(self.state.xml_text)
+                # self.state.xml_text = regular_provider().run_pipe(cmd, self.state.xml_text)[1]  # TODO: Use proper dependency injection
+                self.state.xml_text = XMLRunCommand(script, self.interpreters).run(self.state.xml_text)
                 return
