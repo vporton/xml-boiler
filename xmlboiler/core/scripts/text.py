@@ -26,21 +26,21 @@ class _RunScriptCommand(object):
         self.script = script
         self.interpreters = interpreters
         if not params:
-            self.params = script.params
+            self.params = script.more.params
 
     def run(self, input: bytes) -> bytes:
-        assert isinstance(self.script, CommandScriptInfo) and \
-               self.script.script_URL is not None and self.script.command_string is None
+        assert isinstance(self.script.more, CommandScriptInfo) and \
+               self.script.more.script_URL is not None and self.script.more.command_string is None
 
-        node = self.interpreters.find_interpreter(self.script.language, self.script.min_version, self.script.max_version)
-        args = self.interpreters.construct_command_line(node, self.script.script_URL, self.params, inline=False)
+        node = self.interpreters.find_interpreter(self.script.more.language, self.script.more.min_version, self.script.more.max_version)
+        args = self.interpreters.construct_command_line(node, self.script.more.script_URL, self.params, inline=False)
 
         # TODO: Use dependency injection
-        return regular_provider.run_pipe(args, input)
+        return regular_provider().run_pipe(args, input)
 
 
 class _RunInlineCommand(object):
-    def __init__(self, script):
+    def __init__(self, script, interpreters):
         self.script = script
         self.interpreters = interpreters
 
