@@ -20,6 +20,9 @@ from xmlboiler.core.os_command.regular import regular_provider
 
 
 # it skips scripts for which there is no interpreter
+from xmlboiler.core.scripts.xml import XMLRunCommand
+
+
 class RealNextScript(object):
     def __init__(self, state, interpreters):
         self.state = state
@@ -35,8 +38,10 @@ class RealNextScript(object):
             else:
                 self.state.opts.execution_context.logger.info("Executed script {s}".format(s=script.more.script_URL)) # FIXME: Localization
                 self.state.executed_scripts.add(script)
+
                 # FIXME: What about .command_line?
                 cmd = self.interpreters.construct_command_line(node, script.more.script_URL, script.more.params, not bool(script.more.script_URL))
                 # TODO: Check subprocess's exit code
                 self.state.xml_text = regular_provider().run_pipe(cmd, self.state.xml_text)[1]  # TODO: Use proper dependency injection
+                # self.state.xml_text = XMLRunCommand(script).run(self.state.xml_text)
                 return
