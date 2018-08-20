@@ -81,12 +81,10 @@ class GraphOfScripts(object):
         self.graph2 = nx.MultiDiGraph()
         # TODO: The below is inefficient
         for i in self.graph1.nodes:
-            if isinstance(i, frozenset):
-                for j in self.graph1.nodes:
-                    if isinstance(j, frozenset):
-                        if i < j:
-                            if not self.graph2.has_edge(i, j):
-                                self.graph2.add_edge(i, j, weight=0)
+            for j in self.graph1.nodes:
+                if i < j:
+                    if not self.graph2.has_edge(i, j):
+                        self.graph2.add_edge(i, j, weight=0)
         self.graph = GraphWithProxy(self.graph1, self.graph2)
         self.graph.adjust()
 
