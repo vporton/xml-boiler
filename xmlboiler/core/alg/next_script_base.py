@@ -61,7 +61,7 @@ class ScriptsIteratorBase(ABC):
         available_chains.add_scripts(frozenset(frozenset(self._checked_scripts(self.state.scripts)) - self.state.failed_scripts))  # slow
 
         available_chains.graph1.add_node(self.state.opts.target_namespaces)
-        for source in sources:
+        for source in frozenset(sources):
             available_chains.graph1.add_node(source)
 
         available_chains.adjust()
