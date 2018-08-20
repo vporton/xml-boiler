@@ -104,10 +104,16 @@ class TestUtility(unittest.TestCase):
                             func(order, next_script_mode)
 
     def test_last(self):
-        with capture_stdin_and_stdout():
-            command_line.main(['chain',
-                               Global.get_filename("tests/core/data/xml/syntax.xml"),
-                               '-t', 'http://www.w3.org/1999/xhtml',
-                               '-n', 'error'])
-            # sys.stdout.buffer.write(b'<pre>...')
-            self.assertRegex(sys.stdout.buffer.getvalue().decode('utf-8'), r'<pre>')
+        for next_script_mode in ['doc1', 'doc2']:
+            for order in ['breadth', 'depth']:
+                with self.subTest(next_script=next_script_mode, order=order):
+                    with capture_stdin_and_stdout():
+                        command_line.main(['-r',
+                                           order,
+                                           'chain',
+                                           Global.get_filename("tests/core/data/xml/syntax.xml"),
+                                           '-t', 'http://www.w3.org/1999/xhtml',
+                                           '-n', 'error',
+                                           '-s', next_script_mode])
+                        # sys.stdout.buffer.write(b'<pre>...')
+                        self.assertRegex(sys.stdout.buffer.getvalue().decode('utf-8'), r'<pre>')
