@@ -22,7 +22,7 @@ from xmlboiler.core.rdf_format.asset import CommandScriptInfo
 
 
 class _RunScriptCommand(object):
-    def __init__(self, script, interpeters, params=None):
+    def __init__(self, script, interpreters, params=None):
         self.script = script
         self.interpreters = interpreters
         if not params:
@@ -60,9 +60,9 @@ class RunCommand(object):
     def __init__(self, script, interpreters):
         assert isinstance(script.more, CommandScriptInfo)
         if script.more.script_URL:
-            self.impl = _RunScriptCommand(script)
+            self.impl = _RunScriptCommand(script, interpreters)
         else:
-            self.impl = _RunInlineCommand(script)
+            self.impl = _RunInlineCommand(script, interpreters)
 
     def run(self, input: bytes) -> bytes:
         return self.impl.run(input)

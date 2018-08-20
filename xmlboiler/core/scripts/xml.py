@@ -118,7 +118,7 @@ class XMLRunCommandWrapper(object):
             for w in v.childNodes:
                 parents.append(w)
                 if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces or \
-                        any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in w.attributes.values()):
+                        (w.attributes and any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in w.attributes.values())):
                     if len(w.childNodes) > 1 or (len(w.childNodes) == 1 and w.childNodes[0].nodeType != w.childNodes[0].TEXT_NODE):
                         raise Exception("Non-text tag content in plain text transformer.")  # TODO: More specific exception
                     our_elements.append((w, w.childNodes[0]))
