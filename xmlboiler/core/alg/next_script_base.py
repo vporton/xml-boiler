@@ -104,7 +104,7 @@ class ScriptsIteratorBase(ABC):
         p2 = shortest_paths_to_edges(available_chains.graph.composite_graph, paths, lambda e: e['weight'])
         return [path for path in p2 if not path[0]['script'].base.transformer.inwardness]
 
-    # Almost duplicate code with first_childs_in_target()
+    # Almost duplicate code with first_child_in_target()
     def all_childs_in_target_hash(self):
         result = set()
 
@@ -124,7 +124,7 @@ class ScriptsIteratorBase(ABC):
         return result
 
     # Almost duplicate code with all_childs_in_target_hash()
-    def first_childs_in_target(self):
+    def first_child_in_target(self):
         # use depth-first search
         stack = []
         stack.append(self.state.dom.documentElement)

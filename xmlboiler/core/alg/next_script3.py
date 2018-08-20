@@ -30,7 +30,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         if next_outer is not None:
             return next_outer
 
-        element = self.first_childs_in_target()
+        element = self.first_child_in_target()
 
         # FIXME: element.namespaceURI may be None
         source = URIRef(element.namespaceURI)
