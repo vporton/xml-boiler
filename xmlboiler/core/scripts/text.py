@@ -54,7 +54,7 @@ class _RunInlineCommand(object):
         args = self.interpreters.construct_command_line(node, self.script.more.command_string, params, inline=True)
 
         # TODO: Use dependency injection
-        return regular_provider().run_pipe(args, input)
+        return regular_provider().run_pipe(args, input)[1]
 
 
 # TODO: WebService
