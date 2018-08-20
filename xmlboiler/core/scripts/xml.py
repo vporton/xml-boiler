@@ -154,9 +154,9 @@ class XMLRunCommandWrapper(object):
         for p in self.script.more.params:
             p2 = p[1]
             if isinstance(p2, AttributeParam):
-                result.append(node.getAttributeNS(str(p2.ns), p2.name))  # TODO: Catch the exception
+                result.append((p[0], node.getAttributeNS(str(p2.ns), p2.name)))  # TODO: Catch the exception
             else:
-                result.append(p2)
+                result.append(p)
         return result
 
 
