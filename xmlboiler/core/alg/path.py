@@ -80,8 +80,8 @@ class GraphOfScripts(object):
     def adjust(self):
         self.graph2 = nx.MultiDiGraph()
         # TODO: The below is inefficient
-        for i in self.graph1.nodes:
-            for j in self.graph1.nodes:
+        for i in self.graph2.nodes:
+            for j in self.graph2.nodes:
                 if i < j:
                     if not self.graph2.has_edge(i, j):
                         self.graph2.add_edge(i, j, weight=0)

@@ -55,7 +55,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         available_chains = self._available_chains(ns1, self.state.opts.target_namespaces)
 
         paths = []
-        for source in namespaces:
+        for source in ns1:
             try:
                 # TODO: list() was added for debuggin
                 nodes = list(available_chains.all_shortest_paths(frozenset([source]),
