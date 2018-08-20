@@ -46,7 +46,7 @@ class _RunInlineCommand(object):
 
     def run(self, input: bytes) -> bytes:
         assert isinstance(self.script, CommandScriptInfo) and \
-               self.script.script_URL is None and self.script.command_string is not None
+               (self.script.script_URL is None or self.script.command_string is not None)
 
         node = self.interpreters.find_interpreter(self.script.language, self.script.min_version, self.script.max_version)
         args = self.interpreters.construct_command_line(node, self.script.command_string, self.params, inline=True)

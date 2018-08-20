@@ -124,7 +124,8 @@ class XMLRunCommandWrapper(object):
                     our_elements.append((w, w.childNodes[0]))
 
         for node, text in our_elements:
-            input = self._run_down_up_step(text)
+            # input = self._run_down_up_step(str(text).encode('utf-8'))
+            input = RunCommand(self.script, self.interpreters).run(str(text).encode('utf-8'))
             if URIRef(node.namespaceURI) in self.script.transformer.source_namespaces:
                 node.parentNode.replaceChild(input, node)
             else:
