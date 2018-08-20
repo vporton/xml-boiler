@@ -69,7 +69,7 @@ class _ParamAttributeParser(NodeParser):
             parse(parse_context, graph, node)
         name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
-        return (name, AttributeParam(ns, name))
+        return AttributeParam(ns, name)
 
 
 class BaseScriptInfoParser(NodeParser):

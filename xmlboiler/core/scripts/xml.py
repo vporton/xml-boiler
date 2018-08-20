@@ -33,6 +33,7 @@ class XMLRunCommandWrapper(object):
         self.script = script
         self.kind = kind
         self.interpreters = interpreters
+        self.params = self.script.more.params
 
     def run(self, input: bytes) -> bytes:
         map = {
@@ -45,7 +46,7 @@ class XMLRunCommandWrapper(object):
         return map[self.kind](input)
 
     def _run_entire(self, input: bytes) -> bytes:
-        return RunCommand(self.script, self.interpreters).run(input)
+        return RunCommand(self.script, self.interpreters).run(input, self.params)
 
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
@@ -67,7 +68,7 @@ class XMLRunCommandWrapper(object):
                     parents.append(w)
             if not found:
                 return input  # TODO: Check XML validity? (point this in the specification)
-            input = RunCommand(self.script, self.interpreters).run(input)
+            input = RunCommand(self.script, self.interpreters).run(input, self.params)
 
     def _run_subdoc_seq(self, input: bytes) -> bytes:
         doc = parseString(input)
@@ -125,7 +126,7 @@ class XMLRunCommandWrapper(object):
 
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))
-            input = RunCommand(self.script, self.interpreters).run(str(text).encode('utf-8'))
+            input = RunCommand(self.script, self.interpreters).run(str(text).encode('utf-8'), self.adjust_params(node))
             if URIRef(node.namespaceURI) in self.script.transformer.source_namespaces:
                 node.parentNode.replaceChild(input, node)
             else:
@@ -153,7 +154,7 @@ class XMLRunCommandWrapper(object):
         for p in self.script.more.params:
             p2 = p[1]
             if isinstance(p2, AttributeParam):
-                result.append(node.getAttributeNS(str(p2.ns), p.name))  # TODO: Catch the exception
+                result.append(node.getAttributeNS(str(p2.ns), p2.name))  # TODO: Catch the exception
             else:
                 result.append(p2)
         return result
