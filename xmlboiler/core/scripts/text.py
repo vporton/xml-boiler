@@ -30,7 +30,7 @@ class _RunScriptCommand(object):
 
     def run(self, input: bytes) -> bytes:
         assert isinstance(self.script.more, CommandScriptInfo) and \
-               self.script.more.script_URL is not None and self.script.more.command_string is None
+               (self.script.more.script_URL is not None or self.script.more.command_string is not None)
 
         node = self.interpreters.find_interpreter(self.script.more.language, self.script.more.min_version, self.script.more.max_version)
         args = self.interpreters.construct_command_line(node, self.script.more.script_URL, self.params, inline=False)
@@ -40,19 +40,21 @@ class _RunScriptCommand(object):
 
 
 class _RunInlineCommand(object):
-    def __init__(self, script, interpreters):
+    def __init__(self, script, interpreters, params=None):
         self.script = script
         self.interpreters = interpreters
+        if not params:
+            self.params = script.more.params
 
     def run(self, input: bytes) -> bytes:
-        assert isinstance(self.script, CommandScriptInfo) and \
-               (self.script.script_URL is None or self.script.command_string is not None)
+        assert isinstance(self.script.more, CommandScriptInfo) and \
+               (self.script.more.script_URL is None or self.script.more.command_string is not None)
 
-        node = self.interpreters.find_interpreter(self.script.language, self.script.min_version, self.script.max_version)
-        args = self.interpreters.construct_command_line(node, self.script.command_string, self.params, inline=True)
+        node = self.interpreters.find_interpreter(self.script.more.language, self.script.more.min_version, self.script.more.max_version)
+        args = self.interpreters.construct_command_line(node, self.script.more.command_string, self.params, inline=True)
 
         # TODO: Use dependency injection
-        return regular_provider.run_pipe(args, input)
+        return regular_provider().run_pipe(args, input)
 
 
 # TODO: WebService
