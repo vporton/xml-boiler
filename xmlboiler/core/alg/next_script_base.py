@@ -50,6 +50,7 @@ class ScriptsIteratorBase(ABC):
                 parents.append(w)
         return None
 
+    # FIXME: It excludes script which it shouldn't!
     def _checked_scripts(self, scripts):
         if self.state.executed_scripts.isdisjoint(scripts):
             return scripts
