@@ -127,12 +127,13 @@ class XMLRunCommandWrapper(object):
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))
             input = RunCommand(self.script, self.interpreters).run(str(text).encode('utf-8'), self.adjust_params(node))
-            if URIRef(node.namespaceURI) in self.script.transformer.source_namespaces:
+            if node.namespaceURI and URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces:
                 node.parentNode.replaceChild(input, node)
             else:
                 node.firstChild.replaceWholeText(input)
-                for a in node.attributes.values():
-                    if URIRef(a.namespaceURI) in self.script.transformer.source_namespaces:
+                lst = list(node.attributes.values())  # "RuntimeError: dictionary changed size during iteration" without this
+                for a in lst:
+                    if URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces:
                         node.removeAttributeNS(a.namespaceURI, a.localName)
 
     # Should be moved to a more general class?
