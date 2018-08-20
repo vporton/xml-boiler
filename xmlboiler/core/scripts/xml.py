@@ -51,7 +51,7 @@ class XMLRunCommandWrapper(object):
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
             doc = parseString(input)
-            # depth-first search
+            # depth-first search (TODO: check the alg)
             parents = [doc.documentElement]
             found = False
             while parents and not found:
@@ -72,7 +72,7 @@ class XMLRunCommandWrapper(object):
 
     def _run_subdoc_seq(self, input: bytes) -> bytes:
         doc = parseString(input)
-        # depth-first search
+        # depth-first search (TODO: check the alg)
         parents = [doc.documentElement]
         while parents:
             v = parents.pop()
@@ -116,13 +116,13 @@ class XMLRunCommandWrapper(object):
         parents = [doc.documentElement]
         while parents:
             v = parents.pop()
+            if v.namespaceURI and URIRef(v.namespaceURI) in self.script.base.transformer.source_namespaces or \
+                    (v.attributes and any(URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces for a in v.attributes.values())):
+                if len(v.childNodes) > 1 or (len(v.childNodes) == 1 and v.childNodes[0].nodeType != v.childNodes[0].TEXT_NODE):
+                    raise Exception("Non-text tag content in plain text transformer.")  # TODO: More specific exception
+                our_elements.append((v, v.childNodes[0]))
             for w in v.childNodes:
                 parents.append(w)
-                if w.namespaceURI and URIRef(w.namespaceURI) in self.script.base.transformer.source_namespaces or \
-                        (w.attributes and any(URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces for a in w.attributes.values())):
-                    if len(w.childNodes) > 1 or (len(w.childNodes) == 1 and w.childNodes[0].nodeType != w.childNodes[0].TEXT_NODE):
-                        raise Exception("Non-text tag content in plain text transformer.")  # TODO: More specific exception
-                    our_elements.append((w, w.childNodes[0]))
 
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))

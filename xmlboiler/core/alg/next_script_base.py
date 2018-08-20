@@ -42,11 +42,11 @@ class ScriptsIteratorBase(ABC):
         # depth-first search
         while parents:
             v = parents.pop()
+            scripts = self._outer_node_script(v)
+            if scripts:
+                scripts = self._choose_by_preservance_priority(scripts)
+                return scripts[0][0]  # TODO: What if there is several of the same rating?
             for w in v.childNodes:
-                scripts = self._outer_node_script(w)
-                if scripts:
-                    scripts = self._choose_by_preservance_priority(scripts)
-                    return scripts[0][0]  # TODO: What if there is several of the same rating?
                 parents.append(w)
         return None
 
