@@ -77,12 +77,12 @@ class XMLRunCommandWrapper(object):
             v = parents.pop()
             for w in v.childNodes:
                 if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces:
-                    str = w.toxml()
+                    str = w.toxml('utf-8')
                     str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(w))
                     frag = parseString(str2)
                     v.replaceChild(w, frag.documentElement)
                 parents.append(w)
-        return doc.toxml()
+        return doc.toxml('utf-8')
 
     def _run_down_up(self, input: bytes) -> bytes:
         while True:
@@ -99,11 +99,11 @@ class XMLRunCommandWrapper(object):
             if not v.childNodes:
                 for node in reversed(parents):
                     if self._is_primary_node(node):
-                        str = node.toxml()
-                        str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(node))
+                        str = node.toxml('utf-8')
+                        str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(node))  # TODO: Don't run adjust_params() in  a loop
                         frag = parseString(str2)
                         node.parentNode.replaceChild(node, frag.documentElement)
-                        return doc.toxml()
+                        return doc.toxml('utf-8')
             for w in v.childNodes:
                 parents.append(w)
         return None
@@ -124,7 +124,7 @@ class XMLRunCommandWrapper(object):
                     our_elements.append((w, w.childNodes[0]))
 
         for node, text in our_elements:
-            input = self._run_down_up_step(text, self.adjust_params(node))
+            input = self._run_down_up_step(text)
             if URIRef(node.namespaceURI) in self.script.transformer.source_namespaces:
                 node.parentNode.replaceChild(input, node)
             else:
