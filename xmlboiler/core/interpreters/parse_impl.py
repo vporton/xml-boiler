@@ -85,7 +85,7 @@ class ParamParser(NodeParser):
         string = sub_parser.parse(parse_context, graph, node)
         for name, value in parse_context.params:
             if name == string:
-                return value
+                return [value]
         parse_context.throw(ErrorHandler.FATAL, parse_context.translate("No {s} param in {node}.").format(s=string, node=node))
 
 
