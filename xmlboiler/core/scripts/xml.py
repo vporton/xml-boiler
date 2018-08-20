@@ -156,6 +156,7 @@ class XMLRunCommandWrapper(object):
         return result
 
 
+# FIXME: Use it!
 class XMLRunCommand(XMLRunCommandWrapper):
     def __init__(self, script):
         super().__init__(script, script.transformer_kind)
