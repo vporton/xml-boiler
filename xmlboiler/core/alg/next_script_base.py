@@ -55,7 +55,7 @@ class ScriptsIteratorBase(ABC):
             return scripts
         return self.state.executed_scripts.intersection(scripts)
 
-    def _available_chains(self, sources, destinations):  # TODO: `destinations` not used
+    def _available_chains(self, sources):  # TODO: `destinations` not used
         # TODO: inefficient? should hold the graph, not re-create it
         available_chains = GraphOfScripts(None, self.state.opts.universal_precedence, self.state.precedences_higher)
         available_chains.add_scripts(frozenset(frozenset(self._checked_scripts(self.state.scripts)) - self.state.failed_scripts))  # slow
@@ -91,7 +91,7 @@ class ScriptsIteratorBase(ABC):
         NSs = [frozenset([URIRef(ns)]) for ns in self._get_ns(node)]
         if not NSs:
             return None
-        available_chains = self._available_chains(NSs, self.state.opts.target_namespaces)
+        available_chains = self._available_chains(NSs)
         try:
             # list() to force exception if there is no path
             paths = list()

@@ -52,7 +52,7 @@ class ScriptsIterator(ScriptsIteratorBase):
                     if a.namespaceURI is not None and a.namespaceURI != 'http://www.w3.org/2000/xmlns/'])
 
         # Check that for this element there is a known inwardly processed script
-        available_chains = self._available_chains([frozenset([ns]) for ns in ns1], self.state.opts.target_namespaces)
+        available_chains = self._available_chains([frozenset([ns]) for ns in ns1])
 
         paths = []
         for source in ns1:

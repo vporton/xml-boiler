@@ -1,6 +1,3 @@
-* both self._available_chains() and available_chains.all_shortest_paths() are called
-  once with a frozenset as the source. Need to add every namespace individually.
-
 * Stop transfomation if source XML == destination XML to avoid infinite loop.
 
 * setup.py should distribute all our data files.
