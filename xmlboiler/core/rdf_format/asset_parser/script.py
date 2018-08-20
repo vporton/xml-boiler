@@ -43,11 +43,18 @@ class ScriptInfoParser(Choice):
     # def parse(self, parse_context, graph, node):
 
 
-class _RegularParamParser(NodeParser):
+class _AttributeParamParser(NodeParser):
+    def parse(self, parse_context, graph, node):
+        return OnePredicate(URIRef(MAIN_NAMESPACE + "attribute"), _ParamAttributeParser(), ErrorHandler.WARNING).parse(parse_context, graph, node)
+
+
+class _ParamParser(NodeParser):
     def parse(self, parse_context, graph, node):
         name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorHandler.IGNORE), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
-        value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"), StringLiteral(ErrorHandler.IGNORE), ErrorHandler.WARNING).\
+        value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"),
+                             Choice([StringLiteral(ErrorHandler.IGNORE), _AttributeParamParser()]),
+                             ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
         return (name, value)
 
@@ -58,18 +65,11 @@ class AttributeParam(NamedTuple):
 
 class _ParamAttributeParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        ns = OnePredicate(URIRef(MAIN_NAMESPACE + "NS"), StringLiteral(), ErrorHandler.WARNING).\
+        ns = OnePredicate(URIRef(MAIN_NAMESPACE + "NS"), IRILiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
-        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(), ErrorHandler.WARNING).\
+        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
             parse(parse_context, graph, node)
         return (name, AttributeParam(ns, name))
-
-
-class _ParamParser(Choice):
-    def __init__(self):
-        super().__init__([_RegularParamParser(),
-                          OnePredicate(URIRef(MAIN_NAMESPACE + "attribute"), _ParamAttributeParser(), ErrorHandler.IGNORE)],
-                         ErrorHandler.WARNING)
 
 
 class BaseScriptInfoParser(NodeParser):
