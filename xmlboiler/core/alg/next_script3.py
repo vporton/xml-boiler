@@ -33,7 +33,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         element = self.first_childs_in_target()
 
         source = URIRef(element.namespaceURI)
-        available_chains = self._available_chains([source], self.state.opts.target_namespaces)
+        available_chains = self._available_chains([frozenset([source])], self.state.opts.target_namespaces)
 
         paths = []
         for source in self.state.all_namespaces:
