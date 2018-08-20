@@ -66,8 +66,8 @@ class ScriptsIteratorBase(ABC):
         available_chains.graph1.add_node(self.state.opts.target_namespaces)
         for source in sources:
             available_chains.graph1.add_node(frozenset([source]))
+        available_chains.graph1.add_node(frozenset([sources]))
 
-        available_chains.graph1.add_node(frozenset(sources))
         available_chains.adjust()
         return available_chains
 
@@ -95,10 +95,12 @@ class ScriptsIteratorBase(ABC):
         NSs = self._get_ns(node)
         if not NSs:
             return None
-        available_chains = self._available_chains(frozenset(NSs), self.state.opts.target_namespaces)
+        available_chains = self._available_chains([frozenset([ns]) for ns in NSs], self.state.opts.target_namespaces)
         try:
             # list() to force exception if there is no path
-            paths = list(available_chains.all_shortest_paths(frozenset(NSs), self.state.opts.target_namespaces, weight='weight'))
+            paths = list()
+            for ns in NSs:
+                paths.extend(available_chains.all_shortest_paths(frozenset([ns]), self.state.opts.target_namespaces, weight='weight'))
         except nx.NetworkXNoPath:
             return None
         p2 = shortest_paths_to_edges(available_chains.graph.composite_graph, paths, lambda e: e['weight'])
