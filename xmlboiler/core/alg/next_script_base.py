@@ -126,8 +126,7 @@ class ScriptsIteratorBase(ABC):
     # Almost duplicate code with all_childs_in_target_hash()
     def first_child_in_target(self):
         # use depth-first search
-        stack = []
-        stack.append(self.state.dom.documentElement)
+        stack = [self.state.dom.documentElement]
         while stack:
             v = stack.pop()
             if not v.childNodes:
