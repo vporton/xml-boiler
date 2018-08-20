@@ -144,7 +144,7 @@ class XMLRunCommandWrapper(object):
     def _is_primary_node(self, node):
         # TODO: https://bugs.python.org/issue34306
         if node.parentNode.parentNode is None:  # if parentNode is minidom.Document
-            if URIRef(node.namespaceURI) in self.script.transformer.source_namespaces or \
+            if node.namespaceURI and URIRef(node.namespaceURI) in self.script.transformer.source_namespaces or \
                     any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in node.attributes.values()):
                 return True
             return False
