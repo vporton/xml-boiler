@@ -118,6 +118,8 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
         parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
         assets = []
         for graph in [downloader(ns) for downloader in downloaders if ns is not None]:
+            if graph is None:
+                continue
             asset_info = parser.parse(graph)
             self.state.add_asset(asset_info)
             assets.append(asset_info)
@@ -140,6 +142,8 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
                 self.add_ns(ns)
                 assets = []
                 for graph in [downloader(ns) for downloader in downloaders]:
+                    if graph is None:
+                        continue
                     asset_info = parser.parse(graph)
                     self.state.add_asset(asset_info)
                     assets.append(asset_info)
@@ -187,6 +191,8 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
                     assets = []
                     self.add_ns(ns2)  # mark as visited
                     for graph in [downloader(ns2) for downloader in downloaders if ns2 is not None]:
+                        if graph is None:
+                            continue
                         asset_info = parser.parse(graph)
                         self.state.add_asset(asset_info)
                         assets.append(asset_info)
