@@ -51,11 +51,9 @@ class ScriptsIteratorBase(ABC):
         return None
 
     def _checked_scripts(self, scripts):
-        return scripts
-        # FIXME: The below code excludes script which it shouldn't!
-        # if self.state.executed_scripts.isdisjoint(scripts):
-        #     return scripts
-        # return self.state.executed_scripts.intersection(scripts)
+        if self.state.executed_scripts.isdisjoint(scripts):
+            return scripts
+        return self.state.executed_scripts.intersection(scripts)
 
     def _available_chains(self, sources):  # TODO: `destinations` not used
         # TODO: inefficient? should hold the graph, not re-create it
