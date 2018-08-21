@@ -97,14 +97,14 @@ class TestUtility(unittest.TestCase):
     def test_run(self):
         # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
         for func in [self.do_run_xinlude, self.do_run_comment]:
-            for next_script_mode in ['doc1']:
+            for next_script_mode in ['doc']:
                 for order in ['breadth', 'depth']:
                     with self.subTest(func=func.__name__, next_script=next_script_mode, order=order):
                         with capture_stdin_and_stdout():
                             func(order, next_script_mode)
 
     def test_syntax(self):
-        for next_script_mode in ['doc1']:
+        for next_script_mode in ['doc']:
             for order in ['breadth', 'depth']:
                 with self.subTest(next_script=next_script_mode, order=order):
                     with capture_stdin_and_stdout():
