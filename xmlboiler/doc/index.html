@@ -19,7 +19,8 @@
     which automatically processes XML based on its namespaces.</p>
 
     <p>This program (well, almost) conforms to
-        <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">the specification</a>.</p>
+        <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">the specification</a>.
+    See the specification for more details of what this program does and what is it purpose.</p>
 
     <struct:section>
         <struct:title>Introduction</struct:title>
@@ -34,6 +35,45 @@
 
         <p>We run XML Boiler as follows:</p>
         <pre>xmlboiler -r order chain tests/core/data/xml/xinclude.xml -u http://portonvictor.org/ns/trans/precedence-include</pre>
+    </struct:section>
+
+    <struct:section>
+        <struct:title>Command line</struct:title>
+
+        <struct:section>
+            <struct:title>Common options</struct:title>
+
+            <dl>
+                <dt><code>-h</code>, <code>--help</code></dt>
+                <dd>Help message</dd>
+                <dt><code>-p <i>NAMESPACE</i></code>, <code>--preload <i>NAMESPACE</i></code></dt>
+                <dd>Load the specified asset before the main loop.</dd>
+                <dt><code>-r <i>{none,breadth,depth}</i></code>, <code>--recursive <i>{none,breadth,depth}</i></code></dt>
+                <dd>recursive download mode (none, breadth-first, depth-first)</dd>
+                <dt><code>-d <i>DOWNLOADERS</i></code>, <code>--downloaders <i>DOWNLOADERS</i></code></dt>
+                <dd>currently the only supported value is "builtin"</dd>
+            </dl>
+        </struct:section>
+        <struct:section>
+            <struct:title>Chain</struct:title>
+
+            <p><code>chain</code> or <code>c</code> command (<code>boiler chain ...</code>) runs an automatic
+                transformation pipeline (see the specification). It accepts the name of the input file
+                (none or <code>-</code> for stdin) and the following options:</p>
+            <dl>
+                <dt><code>-o <i>OUTPUT</i></code></dt>
+                <dd>output file (defaults to stdout)</dd>
+                <dt><code>-t <i>NAMESPACE</i></code>, <code>--target <i>NAMESPACE</i></code></dt>
+                <dd>target namespace (often the XHTML namespace <code>http://www.w3.org/1999/xhtml</code>)</dd>
+                <dt><code>-s <i>{precedence,doc}</i></code>, <code>--next-script <i>{precedence,doc}</i></code></dt>
+                <dd><q>next script</q> algorithm (<q>precedence</q> is not supported)</dd>
+                <dt><code>-n <i>{ignore,remove,error}</i></code>, <code>--not-in-target <i>{ignore,remove,error}</i></code></dt>
+                <dd>What to do if the result XML file contains namespaces not in the target. <q>remove</q> is
+                not supported.</dd>
+                <dt><code>-u <i>URL</i></code>, <code>--universal-precedence <i>URL</i></code></dt>
+                <dd>universal precedence (see the specification)</dd>
+            </dl>
+        </struct:section>
     </struct:section>
 
     <struct:section>
