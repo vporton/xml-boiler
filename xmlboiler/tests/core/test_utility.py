@@ -103,7 +103,7 @@ class TestUtility(unittest.TestCase):
                         with capture_stdin_and_stdout():
                             func(order, next_script_mode)
 
-    def test_last(self):
+    def test_syntax(self):
         for next_script_mode in ['doc1', 'doc2']:
             for order in ['breadth', 'depth']:
                 with self.subTest(next_script=next_script_mode, order=order):
@@ -122,14 +122,14 @@ class TestUtility(unittest.TestCase):
         with capture_stdin_and_stdout():
             command_line.main(['-r', 'breadth',
                                'chain',
-                               Global.get_filename("tests/core/data/xml/syntax.xml"),
+                               Global.get_filename("doc/index.html"),
                                '-t', 'http://www.w3.org/1999/xhtml',
                                '-n', 'error'])
             breadth = sys.stdout.buffer.getvalue()
         with capture_stdin_and_stdout():
             command_line.main(['-r', 'depth',
                                'chain',
-                               Global.get_filename("tests/core/data/xml/syntax.xml"),
+                               Global.get_filename("doc/index.html"),
                                '-t', 'http://www.w3.org/1999/xhtml',
                                '-n', 'error'])
             depth = sys.stdout.buffer.getvalue()
@@ -138,14 +138,14 @@ class TestUtility(unittest.TestCase):
     def test_doc2(self):
         with capture_stdin_and_stdout():
             command_line.main(['chain',
-                               Global.get_filename("tests/core/data/xml/syntax.xml"),
+                               Global.get_filename("doc/index.html"),
                                '-s', 'doc1',
                                '-t', 'http://www.w3.org/1999/xhtml',
                                '-n', 'error'])
             doc1 = sys.stdout.buffer.getvalue()
         with capture_stdin_and_stdout():
             command_line.main(['chain',
-                               Global.get_filename("tests/core/data/xml/syntax.xml"),
+                               Global.get_filename("doc/index.html"),
                                '-s', 'doc2',
                                '-t', 'http://www.w3.org/1999/xhtml',
                                '-n', 'error'])
