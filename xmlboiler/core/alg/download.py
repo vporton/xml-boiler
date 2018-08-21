@@ -141,8 +141,6 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
         # initial assets and their children
         for downloaders in self.state.opts.recursive_options.downloaders:
             for ns in self.state.opts.recursive_options.initial_assets:
-                if ns in self.state.assets:
-                    break
                 yield self.process_assets(downloaders, ns)
             for asset in self.state.opts.recursive_options.initial_assets:
                 try:
@@ -154,8 +152,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
 
         # all other assets
         for ns in itertools.chain(_enumerate_xml_namespaces(self.state), self.state.opts.target_namespaces):
-            if ns not in self.state.assets:
-                yield from self.depth_first_download(ns, downloaders)  # recursion
+            yield from self.depth_first_download(ns, downloaders)  # recursion
 
     # Merge list of lists (in fact, iterators) into one list
     def download_iterator(self):
