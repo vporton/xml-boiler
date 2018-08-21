@@ -32,7 +32,10 @@ class ScriptsIterator(ScriptsIteratorBase):
 
         element = self.first_child_in_target()
 
-        # FIXME: element.namespaceURI may be None
+        # FIXME: Does not conform to the specification?
+        if not element.namespaceURI:
+            raise StopIteration()
+
         source = URIRef(element.namespaceURI)
         available_chains = self._available_chains([frozenset([source])])
 
