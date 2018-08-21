@@ -67,6 +67,9 @@ class ScriptsIterator(ScriptsIteratorBase):
         if not paths:
             raise StopIteration
 
+        first_edges = frozenset(self._checked_scripts([p[0]['script'] for p in paths]))
+        paths = [p for p in paths if p[0]['script'] in first_edges]
+
         maximal_priority_edges = self._choose_by_preservance_priority(paths)
         if not maximal_priority_edges:
             raise StopIteration

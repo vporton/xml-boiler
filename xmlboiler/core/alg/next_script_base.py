@@ -51,7 +51,6 @@ class ScriptsIteratorBase(ABC):
         return None
 
     def _checked_scripts(self, scripts):
-        return scripts  # FIXME: workaround of a bug
         if self.state.executed_scripts.isdisjoint(scripts):
             return scripts
         return self.state.executed_scripts.intersection(scripts)
@@ -59,7 +58,8 @@ class ScriptsIteratorBase(ABC):
     def _available_chains(self, sources):  # TODO: `destinations` not used
         # TODO: inefficient? should hold the graph, not re-create it
         available_chains = GraphOfScripts(None, self.state.opts.universal_precedence, self.state.precedences_higher)
-        available_chains.add_scripts(frozenset(frozenset(self._checked_scripts(self.state.scripts)) - self.state.failed_scripts))  # slow
+        # available_chains.add_scripts(frozenset(frozenset(self._checked_scripts(self.state.scripts)) - self.state.failed_scripts))  # slow
+        available_chains.add_scripts(frozenset(frozenset(self.state.scripts) - self.state.failed_scripts))  # slow
 
         available_chains.graph1.add_node(self.state.opts.target_namespaces)
         for source in frozenset(sources):
