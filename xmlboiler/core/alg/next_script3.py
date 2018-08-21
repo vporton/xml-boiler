@@ -42,6 +42,7 @@ class ScriptsIterator(ScriptsIteratorBase):
         paths = []
         for source in self.state.all_namespaces:
             try:
+                # FIXME: Returns empty list if for example source==target=='http://www.w3.org/1999/xhtml'
                 nodes = available_chains.all_shortest_paths(frozenset([source]),
                                                             self.state.opts.target_namespaces,
                                                             weight='weight')
