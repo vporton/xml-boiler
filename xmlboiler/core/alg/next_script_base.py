@@ -51,6 +51,7 @@ class ScriptsIteratorBase(ABC):
         return None
 
     def _checked_scripts(self, scripts):
+        return scripts  # FIXME: workaround of a bug
         if self.state.executed_scripts.isdisjoint(scripts):
             return scripts
         return self.state.executed_scripts.intersection(scripts)
