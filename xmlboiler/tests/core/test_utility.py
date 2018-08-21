@@ -97,14 +97,14 @@ class TestUtility(unittest.TestCase):
     def test_run(self):
         # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
         for func in [self.do_run_xinlude, self.do_run_comment]:
-            for next_script_mode in ['doc1', 'doc2']:
+            for next_script_mode in ['doc1']:
                 for order in ['breadth', 'depth']:
                     with self.subTest(func=func.__name__, next_script=next_script_mode, order=order):
                         with capture_stdin_and_stdout():
                             func(order, next_script_mode)
 
     def test_syntax(self):
-        for next_script_mode in ['doc1', 'doc2']:
+        for next_script_mode in ['doc1']:
             for order in ['breadth', 'depth']:
                 with self.subTest(next_script=next_script_mode, order=order):
                     with capture_stdin_and_stdout():
@@ -118,7 +118,7 @@ class TestUtility(unittest.TestCase):
                         # sys.stdout.buffer.write(b'<pre>...')
                         self.assertRegex(sys.stdout.buffer.getvalue().decode('utf-8'), r'<pre>')
 
-    def test_doc1(self):
+    def test_doc(self):
         with capture_stdin_and_stdout():
             command_line.main(['-r', 'breadth',
                                'chain',
@@ -134,20 +134,3 @@ class TestUtility(unittest.TestCase):
                                '-n', 'error'])
             depth = sys.stdout.buffer.getvalue()
         self.assertEqual(breadth, depth)
-
-    def test_doc2(self):
-        with capture_stdin_and_stdout():
-            command_line.main(['chain',
-                               Global.get_filename("doc/index.html"),
-                               '-s', 'doc1',
-                               '-t', 'http://www.w3.org/1999/xhtml',
-                               '-n', 'error'])
-            doc1 = sys.stdout.buffer.getvalue()
-        with capture_stdin_and_stdout():
-            command_line.main(['chain',
-                               Global.get_filename("doc/index.html"),
-                               '-s', 'doc2',
-                               '-t', 'http://www.w3.org/1999/xhtml',
-                               '-n', 'error'])
-            doc2 = sys.stdout.buffer.getvalue()
-        self.assertEqual(doc1, doc2)
