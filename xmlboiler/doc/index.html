@@ -15,14 +15,14 @@
 
     <struct:toc/>
 
-    <p>XML Boiler is a command line program (in the future I am going to make also HTTP(S) proxy interface)
+    <p><a href="https://github.com/vporton/xml-boiler">XML Boiler</a> is a command line program (in the future I am going to make also HTTP(S) proxy interface)
     which automatically processes XML based on its namespaces.</p>
 
     <p>This is a rough alpha (not thoroughly tested) release.</p>
 
     <p>This program (well, almost) conforms to
         <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">the specification</a>.
-    See the specification for more details of what this program does and what is it purpose.</p>
+    See the specification for more details of what this program does and what is its purpose.</p>
 
     <struct:section>
         <struct:title>Introduction</struct:title>
@@ -103,7 +103,18 @@
             <p><code>&lt;struct:toc/&gt;</code> automatically generates a table of contents.</p>
         </struct:section>
 
+        <struct:section>
+            <struct:title>Syntax highlighting</struct:title>
+            <pre syntax:format="xml">&lt;pre syntax:format="JavaScript">function() { return 123 }&lt;/pre&gt;</pre>
+            <p>produces</p>
+            <pre syntax:format="JavaScript">function() { return 123 }</pre>
+        </struct:section>
+
     </struct:section>
+
+    <hr/>
+
+    <p>Copyright &#169; Victor Porton 2018</p>
 
 </body>
 </html>
