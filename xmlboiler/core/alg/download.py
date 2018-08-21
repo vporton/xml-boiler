@@ -96,6 +96,20 @@ class BaseDownloadAlgorithm(object):
             self.parse_context.execution_context.logger.info(msg)
             self.state.assets.add(ns)
 
+    def process_assets(self, downloaders, ns):
+        if ns is None:
+            return []
+        self.add_ns(ns)
+        parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
+        assets = []
+        for graph in [downloader(ns) for downloader in downloaders]:
+            if graph is None:
+                continue
+            asset_info = parser.parse(graph)
+            self.state.add_asset(asset_info)
+            assets.append(asset_info)
+            yield asset_info
+
 
 class NoDownloader(BaseDownloadAlgorithm):
     def download_iterator(self):
@@ -103,8 +117,8 @@ class NoDownloader(BaseDownloadAlgorithm):
 
     def _iter(self):
         for downloaders in self.state.opts.recursive_options.downloaders:
-            for assets in self.state.opts.recursive_options.initial_assets:
-                yield  # FIXME: Forgotten to load initial assets!
+            for ns in self.state.opts.recursive_options.initial_assets:
+                yield self.process_assets(downloaders, ns)
 
 
 class DepthFirstDownloader(BaseDownloadAlgorithm):
@@ -114,15 +128,7 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     def depth_first_download(self, ns, downloaders):
         if ns in self.state.assets:
             return
-        self.add_ns(ns)
-        parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
-        assets = []
-        for graph in [downloader(ns) for downloader in downloaders if ns is not None]:
-            if graph is None:
-                continue
-            asset_info = parser.parse(graph)
-            self.state.add_asset(asset_info)
-            assets.append(asset_info)
+        assets = self.process_assets(downloaders, ns)
         yield assets
         for asset in assets:
             for ns2 in _enumerate_child_namespaces_without_priority(self.state, asset):
@@ -132,22 +138,12 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
     # Every yield produces a list of assets (not individual assets),
     # because in our_depth_first_based_download() we need to discard multiple assets.
     def _our_depth_first_based_download(self):
-        parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
-
         # initial assets and their children
         for downloaders in self.state.opts.recursive_options.downloaders:
             for ns in self.state.opts.recursive_options.initial_assets:
                 if ns in self.state.assets:
                     break
-                self.add_ns(ns)
-                assets = []
-                for graph in [downloader(ns) for downloader in downloaders]:
-                    if graph is None:
-                        continue
-                    asset_info = parser.parse(graph)
-                    self.state.add_asset(asset_info)
-                    assets.append(asset_info)
-                yield assets
+                yield self.process_assets(downloaders, ns)
             for asset in self.state.opts.recursive_options.initial_assets:
                 try:
                     iter = self.depth_first_download(asset, downloaders)
@@ -188,14 +184,8 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
             for child in childs:
                 ns2 = child.ns
                 if ns2 not in self.state.assets:
-                    assets = []
-                    self.add_ns(ns2)  # mark as visited
-                    for graph in [downloader(ns2) for downloader in downloaders if ns2 is not None]:
-                        if graph is None:
-                            continue
-                        asset_info = parser.parse(graph)
-                        self.state.add_asset(asset_info)
-                        assets.append(asset_info)
+                    assets = self.process_assets(downloaders, ns2)
+                    for asset_info in assets:
                         Q.put(PrioritizedNS(child.priority, asset_info))
                     yield assets
 
