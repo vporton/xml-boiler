@@ -136,4 +136,5 @@ class ScriptsIteratorBase(ABC):
                         break
                 return last_result
             for w in v.childNodes:
-                stack.append(w)
+                if w.nodeType == w.ELEMENT_NODE:
+                    stack.append(w)
