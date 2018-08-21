@@ -118,7 +118,7 @@ class TestUtility(unittest.TestCase):
                         # sys.stdout.buffer.write(b'<pre>...')
                         self.assertRegex(sys.stdout.buffer.getvalue().decode('utf-8'), r'<pre>')
 
-    def test_doc(self):
+    def test_doc1(self):
         with capture_stdin_and_stdout():
             command_line.main(['-r', 'breadth',
                                'chain',
@@ -134,3 +134,20 @@ class TestUtility(unittest.TestCase):
                                '-n', 'error'])
             depth = sys.stdout.buffer.getvalue()
         self.assertEqual(breadth, depth)
+
+    def test_doc2(self):
+        with capture_stdin_and_stdout():
+            command_line.main(['chain',
+                               Global.get_filename("tests/core/data/xml/syntax.xml"),
+                               '-s', 'doc1',
+                               '-t', 'http://www.w3.org/1999/xhtml',
+                               '-n', 'error'])
+            doc1 = sys.stdout.buffer.getvalue()
+        with capture_stdin_and_stdout():
+            command_line.main(['chain',
+                               Global.get_filename("tests/core/data/xml/syntax.xml"),
+                               '-s', 'doc2',
+                               '-t', 'http://www.w3.org/1999/xhtml',
+                               '-n', 'error'])
+            doc2 = sys.stdout.buffer.getvalue()
+        self.assertEqual(doc1, doc2)
