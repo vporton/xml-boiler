@@ -104,7 +104,7 @@ class NoDownloader(BaseDownloadAlgorithm):
     def _iter(self):
         for downloaders in self.state.opts.recursive_options.downloaders:
             for assets in self.state.opts.recursive_options.initial_assets:
-                yield
+                yield  # FIXME: Forgotten to load initial assets!
 
 
 class DepthFirstDownloader(BaseDownloadAlgorithm):
