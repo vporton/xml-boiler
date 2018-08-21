@@ -1,5 +1,5 @@
 from coverage.annotate import os
-from setuptools import setup
+from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py as DistutilsBuild
 
 
@@ -18,8 +18,8 @@ setup(
     author_email='porton@narod.ru',
     description='Automatically transform between XML namespaces',
 
-    packages = ['xmlboiler'],
-    package_data={'xmlboiler': ['*.ttl']},
+    packages=find_packages(),
+    package_data={'': ['*.ttl', '*.xml']},
     scripts=['bin/boiler'],
     data_files = [
         ('/etc/xmlboiler', ['etc/config-cli.ttl'])
