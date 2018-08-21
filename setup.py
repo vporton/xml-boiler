@@ -19,7 +19,8 @@ setup(
     description='Automatically transform between XML namespaces',
 
     packages=find_packages(),
-    package_data={'': ['*.ttl', '*.xml']},
+    package_data={'': ['*.xml', '**/*.xml', '*.ttl', '**/*.ttl', '*.net', '**/*.net', 'data/assets/*', 'data/scripts/*.xslt',
+                       'tests/core/data/xml/*.xml', 'doc/*.html']},
     scripts=['bin/boiler'],
     data_files = [
         ('/etc/xmlboiler', ['etc/config-cli.ttl'])
