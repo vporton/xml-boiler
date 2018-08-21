@@ -117,3 +117,20 @@ class TestUtility(unittest.TestCase):
                                            '-s', next_script_mode])
                         # sys.stdout.buffer.write(b'<pre>...')
                         self.assertRegex(sys.stdout.buffer.getvalue().decode('utf-8'), r'<pre>')
+
+    def test_doc(self):
+        with capture_stdin_and_stdout():
+            command_line.main(['-r', 'breadth',
+                               'chain',
+                               Global.get_filename("tests/core/data/xml/syntax.xml"),
+                               '-t', 'http://www.w3.org/1999/xhtml',
+                               '-n', 'error'])
+            breadth = sys.stdout.buffer.getvalue()
+        with capture_stdin_and_stdout():
+            command_line.main(['-r', 'depth',
+                               'chain',
+                               Global.get_filename("tests/core/data/xml/syntax.xml"),
+                               '-t', 'http://www.w3.org/1999/xhtml',
+                               '-n', 'error'])
+            depth = sys.stdout.buffer.getvalue()
+        self.assertEqual(breadth, depth)
