@@ -15,6 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+import sys
 
 from xmlboiler.core.os_command.regular import regular_provider
 
@@ -42,6 +43,9 @@ class RealNextScript(object):
                 # FIXME: What about .command_line?
                 cmd = self.interpreters.construct_command_line(node, script.more.script_URL, script.more.params, not bool(script.more.script_URL))  # FIXME
                 # TODO: Check subprocess's exit code
-                # self.state.xml_text = regular_provider().run_pipe(cmd, self.state.xml_text)[1]  # TODO: Use proper dependency injection
-                self.state.xml_text = XMLRunCommand(script, self.interpreters).run(self.state.xml_text)
+                new_xml_text = XMLRunCommand(script, self.interpreters).run(self.state.xml_text)  # TODO: Use proper dependency injection
+                if new_xml_text == self.state.xml_text:
+                    # TODO: Don't write to stderr, use a generic interfact
+                    sys.stderr.write("Iteration stopped to avoid infinite loop.\n")  # TODO: Localization
+                self.state.xml_text = new_xml_text
                 return

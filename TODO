@@ -1,5 +1,3 @@
-* Stop transfomation if source XML == destination XML to avoid infinite loop.
-
 * setup.py should distribute all our data files.
 
 * https://pypi.org/project/executor/ for spawning processes?
