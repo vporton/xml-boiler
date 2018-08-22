@@ -53,8 +53,9 @@ def main(argv):
     parser.add_argument('-x', '--recursive-order', metavar='ORDER',
                         help='recursive download order (comma separated "sources", "targets", "workflowtargets")')
     parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS', choices=['builtin'],
-                        help='currently the only supported value is "builtin"')
-                        # Should be: 'a plus-separated list of comma-separated lists of "builtin","ns"
+                        help='a plus-separated list of comma-separated lists of "builtin","DIR"')
+    parser.add_argument('-y', '--directory', help='additional directory with assets', metavar='NAME=DIR', action='append')
+
 
     chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
     chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
@@ -75,6 +76,15 @@ def main(argv):
 
     # FIXME: Dependency injection
     options = args.options_object(execution_context=execution_context_builders.Contexts.execution_context())
+
+    directories_map = {}
+    if args.directory is not None:
+        for eq in args.directory:
+            m = re.match(r'([^=]+)=(.*)', eq, re.S)
+            if not m:
+                sys.stderr.write("Wrong --directory flag format")
+                return 1
+            directories_map[m[1]] = m[2]
 
     options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else args.preload)
 
@@ -100,7 +110,7 @@ def main(argv):
 
     # Don't execute commands from remote scripts (without not yet properly working jail).
     # So downloading from URLs does not make sense yet.
-    options.recursive_options.downloaders = [[local_asset_downloader]]
+    options.recursive_options.downloaders = [[local_asset_downloader]]  # TODO
 
     source = sys.stdin if args.source is None or args.source == '-' else \
         (xmlboiler.core.urls.our_opener.open(args.source) if re.match(r'^[a-zA-Z]+:', args.source) else open(args.source))
