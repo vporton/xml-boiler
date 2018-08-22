@@ -52,8 +52,12 @@
                 <dd>Load the specified asset before the main loop.</dd>
                 <dt><code>-r <i>{none,breadth,depth}</i></code>, <code>--recursive <i>{none,breadth,depth}</i></code></dt>
                 <dd>recursive download mode (none, breadth-first, depth-first)</dd>
+                <dt><code>-y <i>NAME</i>=<i>DIR</i></code>, <code>--directory <i>NAME</i>=<i>DIR</i></code></dt>
+                <dd>additional directory with assets</dd>
                 <dt><code>-d <i>DOWNLOADERS</i></code>, <code>--downloaders <i>DOWNLOADERS</i></code></dt>
-                <dd>currently the only supported value is "builtin"</dd>
+                <dd>assets to be loaded before the main loop; a plus-separated list of comma-separated lists of
+                    "builtin","<i>DIR</i>" (<i>DIR</i> is given by <code>--directory</code> option,
+                    "builtin" is the assets distributed with XML Boiler)</dd>
             </dl>
         </struct:section>
         <struct:section>

@@ -134,3 +134,14 @@ class TestUtility(unittest.TestCase):
                                '-n', 'error'])
             depth = sys.stdout.buffer.getvalue()
         self.assertEqual(breadth, depth)
+
+    def test_nodownload(self):
+        with capture_stdin_and_stdout():
+            command_line.main(['-r', 'none',
+                               '-p', 'http://portonvictor.org/ns/comment',
+                               'chain',
+                               Global.get_filename("tests/core/data/xml/comment.xml"),
+                               '-u',
+                               'http://portonvictor.org/ns/trans/precedence-comment',
+                               '-s', 'doc'])
+            self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)

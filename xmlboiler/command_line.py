@@ -28,7 +28,7 @@ from xmlboiler.core import execution_context_builders
 from xmlboiler.core.alg.auto_transform import AutomaticTranformation, AssetsExhausted
 from xmlboiler.core.alg.download import NoDownloader, DepthFirstDownloader, BreadthFirstDownloader, download_providers
 from xmlboiler.core.alg.state import PipelineState
-from xmlboiler.core.asset_downloaders import local_asset_downloader
+from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_asset_downloader
 import xmlboiler.core.interpreters.parse
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions, \
@@ -52,9 +52,9 @@ def main(argv):
                         choices=['none', 'breadth', 'depth'])
     parser.add_argument('-x', '--recursive-order', metavar='ORDER',
                         help='recursive download order (comma separated "sources", "targets", "workflowtargets")')
-    parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS', choices=['builtin'],
-                        help='a plus-separated list of comma-separated lists of "builtin","DIR"')
     parser.add_argument('-y', '--directory', help='additional directory with assets', metavar='NAME=DIR', action='append')
+    parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS',
+                        help='a plus-separated list of comma-separated lists of "builtin","DIR"')
 
 
     chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
@@ -108,9 +108,18 @@ def main(argv):
                         RecursiveRetrievalPriorityOrderElement.TARGETS,
                         RecursiveRetrievalPriorityOrderElement.SOURCES])
 
+    def infer_downloader(s):
+        return directory_asset_downloader(directories_map[s]) if s != 'builtin' else local_asset_downloader
+
     # Don't execute commands from remote scripts (without not yet properly working jail).
     # So downloading from URLs does not make sense yet.
-    options.recursive_options.downloaders = [[local_asset_downloader]]  # TODO
+    # TODO: Better error reporting
+    if args.downloaders:
+        downloaders = [d.split(',') for d in args.downloaders.split('+')]
+        options.recursive_options.downloaders = \
+            [[infer_downloader(s) for s in d] for d in downloaders]
+    else:
+        options.recursive_options.downloaders = [[local_asset_downloader]]
 
     source = sys.stdin if args.source is None or args.source == '-' else \
         (xmlboiler.core.urls.our_opener.open(args.source) if re.match(r'^[a-zA-Z]+:', args.source) else open(args.source))

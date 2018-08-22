@@ -23,13 +23,26 @@
 
 import urllib.parse
 
+import rdflib
+
 import xmlboiler.core.data
+
+
+def directory_asset_downloader(dir):
+    def downloader(url):
+        try:
+            with open(dir + '/' + urllib.parse.quote(url, safe=''), 'r') as file:
+                g = rdflib.Graph()
+                g.load(file)
+        except FileNotFoundError:
+            return None
+        return g
+    return downloader
 
 
 # No need to be dependency injected, because it is to be used only in initialization code.
 def local_asset_downloader(url):
-    filename = 'core/data/assets/' + urllib.parse.quote(url, safe='')
     try:
-        return xmlboiler.core.data.Global.load_rdf(filename)
+        return xmlboiler.core.data.Global.load_rdf('core/data/assets/' + urllib.parse.quote(url, safe=''))
     except FileNotFoundError:
         return None
