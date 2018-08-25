@@ -1,5 +1,3 @@
-* setup.py should distribute all our data files.
-
 * https://pypi.org/project/executor/ for spawning processes?
 
 * option to add a directory of URIs to "download" from.
