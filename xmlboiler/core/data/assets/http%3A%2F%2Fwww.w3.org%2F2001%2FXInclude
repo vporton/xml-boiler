@@ -1,11 +1,11 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
 
-# FIXME: Make it an outward script/transformation
 _:xinclude
    a :Transformer ;
    :sourceNamespace <http://www.w3.org/2001/XInclude> ;
    :universal true ;
+   :inward false ;
    #:targetNamespace <...> ;
    :precedence :precedence-include ;
    :script [
