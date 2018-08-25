@@ -31,6 +31,7 @@ _Version = ThePackageManaging.VersionClass
 
 # WARNING: Comparison like like y.n > x.* does not work
 # (we never compare it, because x.* can be only the upper bound not lower)
+# FIXME: Confused between VersionWrapper("2.0") and VersionWrapper(_Version("2.0"))
 @total_ordering
 class VersionWrapper(object):
     def __init__(self, version):
@@ -55,4 +56,10 @@ class VersionWrapper(object):
                 other.startswith(self.version[:-2] + '.'):
             return True
         version2 = self.version[:-2] if self.version[-2:] == '.*' else self.version
-        return _Version(version2) >= _Version(other)
+        return _Version(VersionWrapper(version2)) >= _Version(other)
+
+    def __str__(self):
+        return self.version
+
+    def __repr__(self):
+        return "VersionWrapper(%s)" % self.version
