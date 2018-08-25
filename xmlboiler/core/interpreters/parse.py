@@ -26,7 +26,8 @@ from xmlboiler.core.packages.config import ThePackageManaging
 from xmlboiler.core.packages.version_wrapper import VersionWrapper
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
-    PostProcessPredicateParser
+    PostProcessPredicateParser, PostProcessNodeParser
+from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral, IRILiteral
 from .parse_impl import MainParser, InterpreterParseContext
@@ -62,8 +63,8 @@ class Interpeters(object):
         max_version = VersionWrapper(max_version)
 
         parse_context = ParseContext(self.execution_context)
-        version_parser = Choice([PostProcessPredicateParser(StringLiteral(), VersionWrapper),
-                                 Enum({URIRef(PREFIX + 'fromPackageVersion'): _FromPackageVersion()})])
+        version_parser = Choice([PostProcessNodeParser(StringLiteral(ErrorHandler.IGNORE), VersionWrapper),
+                                 EnumParser({PREFIX + 'fromPackageVersion': _FromPackageVersion()})])
         lang_min_version = ZeroOnePredicate(URIRef(PREFIX + "langMinVersion"), version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         lang_max_version = ZeroOnePredicate(URIRef(PREFIX + "langMaxVersion"), version_parser, ErrorHandler.FATAL). \
@@ -77,9 +78,9 @@ class Interpeters(object):
         if not isinstance(lang_max_version, _FromPackageVersion) and min_version > lang_max_version:
             return False
 
-        pmin_version = ZeroOnePredicate(URIRef(PREFIX + "packageMinVersion"), StringLiteral(), ErrorHandler.FATAL). \
+        pmin_version = ZeroOnePredicate(URIRef(PREFIX + "packageMinVersion"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
-        pmax_version = ZeroOnePredicate(URIRef(PREFIX + "packageMaxVersion"), StringLiteral(), ErrorHandler.FATAL). \
+        pmax_version = ZeroOnePredicate(URIRef(PREFIX + "packageMaxVersion"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         if lang_min_version is _FromPackageVersion or lang_max_version is _FromPackageVersion or \
                 pmin_version is not None or pmax_version is not None:

@@ -30,8 +30,8 @@ class PostProcessNodeParser(NodeParser):
 
 
 class PostProcessPredicateParser(PredicateParser):
-    def __init__(self, child, f):
-        super().__init__()
+    def __init__(self, predicate, f):
+        super().__init__(predicate)
         self.child = child
         self.f = f
 
