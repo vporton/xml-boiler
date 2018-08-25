@@ -1,0 +1,2 @@
+recursive-include xmlboiler *.xml *.ttl *.xslt
+recursive-include xmlboiler/core/data/assets *
