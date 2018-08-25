@@ -1,7 +1,5 @@
 * https://pypi.org/project/executor/ for spawning processes?
 
-* option to add a directory of URIs to "download" from.
-
 * to make processing of RDF deterministic:
   https://github.com/koo5/univar/blob/master/pyin/ordered_rdflib_store.py
 
