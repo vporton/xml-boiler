@@ -62,7 +62,7 @@ class ArgumentListParser(NodeParser):
 class ConcatParser(NodeParser):
     def parse(self, parse_context, graph, node):
         sub_parser = OnePredicate(URIRef(PREFIX + 'concat'), MainParser(), ErrorHandler.IGNORE)
-        return ''.join(sub_parser.parse(parse_context, graph, node))
+        return [''.join(sub_parser.parse(parse_context, graph, node))]
 
 
 class ConstantParser(NodeParser):

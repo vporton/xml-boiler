@@ -36,7 +36,7 @@ int:Saxon
                     "-s:-"
                     [ :params [ :concat (:name "=" :value) ]]) ;
     :debianPackage "libsaxonb-java" ;
-    :packageMinVersion "9.5" .
+    :packageMinVersion "9.0" .
 
 int:Pygments
     :lang lang:Syntax ;
