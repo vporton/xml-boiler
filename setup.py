@@ -25,9 +25,10 @@ setup(
     #                    'xmlboiler/doc/*.html', 'xmlboiler/doc/*.css']},
     include_package_data=True,
     scripts=['bin/boiler'],
-    data_files = [
-        ('/etc/xmlboiler', ['etc/config-cli.ttl'])
-    ],
+    # Does not work for non-root install:
+    # data_files = [
+    #     ('/etc/xmlboiler', ['etc/config-cli.ttl'])
+    # ],
     test_suite="xmlboiler.tests",
 
     cmdclass={'build_py': MyBuild},
