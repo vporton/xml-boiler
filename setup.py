@@ -11,12 +11,25 @@ class MyBuild(DistutilsBuild):
 
 setup(
     name='xml-boiler',
-    version='0.2.0',
+    version='0.2.1',
     url='https://github.com/vporton/xml-boiler',
     license='AGPLv3',
     author='Victor Porton',
     author_email='porton@narod.ru',
     description='Automatically transform between XML namespaces',
+    keywords='XML,XML namespaces,file format conversion',
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Information Technology',
+        'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3.7',
+        'Topic :: Other/Nonlisted Topic',
+        'Topic :: Text Processing :: Filters',
+        'Topic :: Text Processing :: Markup :: XML',
+    ],
 
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
