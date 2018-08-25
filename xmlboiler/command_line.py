@@ -74,8 +74,9 @@ def main(argv):
         parser.print_usage()
         return 1
 
-    # FIXME: Dependency injection
-    options = args.options_object(execution_context=execution_context_builders.Contexts.execution_context())
+    execution_context = context_for_logger(Contexts.execution_context(), Contexts.default_logger('main'))
+
+    options = args.options_object(execution_context=execution_context)
 
     directories_map = {}
     if args.directory is not None:
@@ -143,12 +144,12 @@ def main(argv):
     options.next_script = map[args.next_script](state)
 
     # TODO: Refactor
-    execution_context = context_for_logger(Contexts.execution_context(), Contexts.default_logger('asset'))
+    download_execution_context = context_for_logger(execution_context, Contexts.default_logger('asset'))
     options.recursive_options.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
          'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](\
-            state, parse_context=default_parse_context(execution_context=execution_context)).download_iterator()
+            state, parse_context=default_parse_context(execution_context=download_execution_context)).download_iterator()
 
     # TODO: Use a factory of algorithms
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory()
