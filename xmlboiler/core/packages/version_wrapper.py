@@ -35,7 +35,7 @@ _Version = ThePackageManaging.VersionClass
 class VersionWrapper(object):
     def __init__(self, version):
         """
-        :param version: _Version() object  # FIXME
+        :param version: _Version() object
         """
         self.version = version  # a string or float("inf") or float("-inf")
 
