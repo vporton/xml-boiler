@@ -109,17 +109,11 @@ class NodeParserWithError(NodeParser):
         super().__init__()
         self.on_error = on_error
 
-    def throw(self, str):
-        self.execution_context.throw(self.on_error, str)  # FIXME
-
 
 class PredicateParserWithError(PredicateParser):
     def __init__(self, predicate, on_error):
         super().__init__(predicate)
         self.on_error = on_error
-
-    def throw(self, str):
-        self.execution_context.throw(self.on_error, str)  # FIXME
 
 
 default_parse_context = providers.Factory(ParseContext, execution_context=Contexts.execution_context)
