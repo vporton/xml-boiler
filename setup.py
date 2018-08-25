@@ -24,6 +24,7 @@ setup(
     # package_data={'': ['**/*.xml', '**/*.ttl', '**/*.net', 'data/assets/*', 'data/scripts/*.xslt',
     #                    'xmlboiler/doc/*.html', 'xmlboiler/doc/*.css']},
     include_package_data=True,
+    zip_safe=False,
     scripts=['bin/boiler'],
     # Does not work for non-root install:
     # data_files = [
