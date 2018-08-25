@@ -30,10 +30,10 @@ class _RunScriptCommand(object):
 
     def run(self, input: bytes, params) -> bytes:
         assert isinstance(self.script.more, CommandScriptInfo) and \
-               (self.script.more.script_URL is not None or self.script.more.command_string is not None)
+               (self.script.more.script_url is not None or self.script.more.command_string is not None)
 
         node = self.interpreters.find_interpreter(self.script.more.language, self.script.more.min_version, self.script.more.max_version)
-        args = self.interpreters.construct_command_line(node, self.script.more.script_URL, params, inline=False)
+        args = self.interpreters.construct_command_line(node, self.script.more.script_url, params, inline=False)
 
         # TODO: Use dependency injection
         return (regular_provider().run_pipe(args, input))[1]
@@ -48,7 +48,7 @@ class _RunInlineCommand(object):
 
     def run(self, input: bytes, params) -> bytes:
         assert isinstance(self.script.more, CommandScriptInfo) and \
-               (self.script.more.script_URL is None or self.script.more.command_string is not None)
+               (self.script.more.script_url is None or self.script.more.command_string is not None)
 
         node = self.interpreters.find_interpreter(self.script.more.language, self.script.more.min_version, self.script.more.max_version)
         args = self.interpreters.construct_command_line(node, self.script.more.command_string, params, inline=True)
@@ -61,7 +61,7 @@ class _RunInlineCommand(object):
 class RunCommand(object):
     def __init__(self, script, interpreters):
         assert isinstance(script.more, CommandScriptInfo)
-        if script.more.script_URL:
+        if script.more.script_url:
             self.impl = _RunScriptCommand(script, interpreters)
         else:
             self.impl = _RunInlineCommand(script, interpreters)

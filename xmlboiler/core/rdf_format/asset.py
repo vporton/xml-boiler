@@ -59,7 +59,7 @@ class CommandScriptInfo(object):
     max_version: Optional[str] = None
     # either one of the following must be None
     command_string: Optional[str] = None
-    script_URL    : Optional[str] = None
+    script_url    : Optional[str] = None
     params: list = field(default_factory=list)
 
 @dataclass

@@ -37,16 +37,18 @@ class RealNextScript(object):
             if node is None:
                 self.state.failed_scripts.add(script)
             else:
-                if script.more.script_URL:
+                if script.more.script_url:
                     self.state.opts.execution_context.logger.info(
-                        self.state.opts.execution_context.translations.gettext("Executed script {s}").format(s=script.more.script_URL))
+                        self.state.opts.execution_context.translations.gettext("Executed script {s}").format(s=script.more.script_url))
                 else:
                     self.state.opts.execution_context.logger.info(
                         self.state.opts.execution_context.translations.gettext("Executed script for {s}").format(s=script.more.language))
                 self.state.executed_scripts.add(script)
 
-                # FIXME: What about .command_line?
-                cmd = self.interpreters.construct_command_line(node, script.more.script_URL, script.more.params, not bool(script.more.script_URL))  # FIXME
+                cmd = self.interpreters.construct_command_line(node,
+                                                               script.more.script_url if script.more.script_url else script.more.command_string,
+                                                               script.more.params,
+                                                               not bool(script.more.script_url))
                 # TODO: Check subprocess's exit code
                 new_xml_text = XMLRunCommand(script, self.interpreters).run(self.state.xml_text)  # TODO: Use proper dependency injection
                 if new_xml_text == self.state.xml_text:

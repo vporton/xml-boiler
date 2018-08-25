@@ -28,9 +28,9 @@ PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
 
 class InterpreterParseContext(ParseContext):
-    def __init__(self, execution_context, script_url, params):
+    def __init__(self, execution_context, script_str, params):
         super().__init__(execution_context)
-        self.script_url = script_url
+        self.script_str = script_str
         self.params = params
         self.current_param = None
 
@@ -68,12 +68,11 @@ class ConcatParser(NodeParser):
 class ConstantParser(NodeParser):
     def parse(self, parse_context, graph, node):
         try:
-            filearg = OurOpeners.url_to_file(str(parse_context.script_url))
+            filearg = OurOpeners.url_to_file(str(parse_context.script_str))
         except CannotConvertURLToLocalFile:
-            filearg = str(parse_context.script_url)
-        # TODO: Be sure to differentiate .script_url and .command_string
+            filearg = str(parse_context.script_str)
         sub_parser = EnumParser({PREFIX + 'script': filearg,
-                                 PREFIX + 'command': str(parse_context.script_url),
+                                 PREFIX + 'command': str(parse_context.script_str),
                                  PREFIX + 'name': parse_context.current_param and parse_context.current_param.get(0),
                                  PREFIX + 'value': parse_context.current_param and parse_context.current_param.get(1)})
         return [sub_parser.parse(parse_context, graph, node)]
