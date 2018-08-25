@@ -84,7 +84,7 @@ class ScriptsIteratorBase(ABC):
         if getattr(node, 'attributes', None) is None:
             return result
         attr_nodes = [URIRef(attr.namespaceURI) for attr in node.attributes.values() \
-                      if attr.namespaceURI is not None and attr.namespaceURI != 'http://www.w3.org/2000/xmlns/']  # TODO: hack
+                      if attr.namespaceURI is not None and attr.namespaceURI != 'http://www.w3.org/2000/xmlns/']
         result.extend(sorted(set(attr_nodes)))  # set() to avoid repetitions
         return result
 

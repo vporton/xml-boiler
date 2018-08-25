@@ -46,7 +46,7 @@ def _enumerate_xml_namespaces(state):
                 yield URIRef(w.namespaceURI)
             if w.attributes:
                 for a in w.attributes.values():
-                    if a.namespaceURI is not None and a.namespaceURI != 'http://www.w3.org/2000/xmlns/':  # hack
+                    if a.namespaceURI is not None and a.namespaceURI != 'http://www.w3.org/2000/xmlns/':
                         yield URIRef(a.namespaceURI)
             stack.append(w)
 
