@@ -3,7 +3,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://www.w3.org/1999/xhtml"
                 xmlns:struct="http://portonvictor.org/ns/myxhtml/struct"
-                version='1.0'
+                version='2.0'
                 exclude-result-prefixes="struct">
 
   <xsl:import href="copy.xslt"/>
@@ -21,7 +21,7 @@
       <ul class="ToC">
         <xsl:for-each select="struct:section">
           <li>
-            <a href="#{generate-id()}"> <!-- TODO: xml:lang --> <!-- FIXME: What if it already has an ID? -->
+            <a href="#{if(@id) then @id else generate-id()}"> <!-- TODO: xml:lang -->
               <xsl:apply-templates select="struct:title/node()"/>
             </a>
             <xsl:call-template name="struct:toc"/>
@@ -38,7 +38,7 @@
     </xsl:if>
     <xsl:element name="h{$count+2}">
       <xsl:attribute name="id">
-        <xsl:value-of select="generate-id()"/>
+        <xsl:value-of select="if(@id) then @id else generate-id()"/>
       </xsl:attribute>
       <xsl:apply-templates select="struct:title[1]/node()" /><!-- TODO: simplfy -->
     </xsl:element>
