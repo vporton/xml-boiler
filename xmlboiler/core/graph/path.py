@@ -35,16 +35,14 @@ def shortest_path_to_edges(graph, path, weight):
     for i in range(len(path) - 1):
         last_weight = math.inf
         last_edges = []
-        # for e in graph[path[i]][path[i+1]]:
 
-        # FIXME: Wrong for script edge (right for subset edge)
         for _, e in graph[path[i]][path[i + 1]].items():
-            new_weight = weight(e['attr_dict'])  # TODO: hack
+            new_weight = weight(e['attr_dict'])
             if new_weight < last_weight:
                 last_edges = []
             if new_weight <= last_weight:
                 last_weight = new_weight
-                last_edges.append(e['attr_dict'])  # TODO: hack
+                last_edges.append(e['attr_dict'])
         result.append(last_edges)
     return result
 
