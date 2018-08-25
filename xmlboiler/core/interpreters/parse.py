@@ -85,7 +85,8 @@ class Interpeters(object):
         if lang_min_version is _FromPackageVersion or lang_max_version is _FromPackageVersion or \
                 pmin_version is not None or pmax_version is not None:
             try:
-                package = OnePredicate(StringLiteral(), ErrorHandler.IGNORE)
+                package = OnePredicate(URIRef(PREFIX + "debianPackage"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.IGNORE). \
+                    parse(parse_context, self.graph, main_node)
             except ParseException:
                 return False
             real_version = ThePackageManaging.determine_package_version(package)

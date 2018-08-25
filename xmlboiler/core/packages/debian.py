@@ -17,14 +17,18 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import deb_pkg_tools.utils
 import deb_pkg_tools.version
 
 from .base import BasePackageManaging
 
 
 class DebianPackageManaging(BasePackageManaging):
+    @classmethod
     def determine_package_version(cls, package_name):
         version = deb_pkg_tools.utils.find_installed_version(package_name)
+        if version is None:
+            return None
         # https://www.debian.org/doc/debian-policy/#s-f-version
         version = re.match(r'^([0-9]+:)?(.*)(-[a-zA-Z0-9+.~]+)?$', version)[2]
         return version

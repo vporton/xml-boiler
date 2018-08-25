@@ -35,7 +35,7 @@ int:Saxon
                     [ :concat ("-xsl:" :script) ]
                     "-s:-"
                     [ :params [ :concat (:name "=" :value) ]]) ;
-    :debianPackage "libsaxonhe-java" ;
+    :debianPackage "libsaxonb-java" ;
     :packageMinVersion "9.5" .
 
 int:Pygments
