@@ -24,6 +24,7 @@ int:xsltproc
                     [ :params ("--param" :name :value) ]
                     :script
                     "-") ;
+    :executable "xsltproc" ;
     :debianPackage "xsltproc" .
 
 # We don't support Saxon 6.5.5. Saxon PE and EE are also currently not supported.
@@ -35,6 +36,7 @@ int:Saxon
                     [ :concat ("-xsl:" :script) ]
                     "-s:-"
                     [ :params [ :concat (:name "=" :value) ]]) ;
+    :executable "saxonb-xslt" ;
     :debianPackage "libsaxonb-java" ;
     :packageMinVersion "9.0" .
 
@@ -43,4 +45,5 @@ int:Pygments
     :inlineCommand ("pygmentize"
                     "-l" [ :param "lexer" ]
                     "-f" [ :param "formatter" ]) ;
+    :executable "pygmentize" ;
     :debianPackage "python-pygments" .
