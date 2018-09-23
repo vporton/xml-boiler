@@ -6,3 +6,4 @@ ordered-set
 networkx
 deb-pkg-tools
 defusedxml
+distro

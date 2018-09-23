@@ -15,9 +15,17 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+import re
 
-from .debian import DebianPackageManaging
+import distro
 
 
-# Need to support other OSes (https://stackoverflow.com/q/52049383/856090)
-ThePackageManaging = DebianPackageManaging
+def determine_os():
+    if distro.id() == 'debian' or re.match(r'\bdebian\b', distro.like()):
+        from .debian import DebianPackageManaging
+        return DebianPackageManaging
+    return None
+
+
+# TODO: Make it optional depending on command line options
+ThePackageManaging = determine_os()
