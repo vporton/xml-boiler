@@ -19,5 +19,5 @@
 from .debian import DebianPackageManaging
 
 
-# Need to support other OSes
+# Need to support other OSes (https://stackoverflow.com/q/52049383/856090)
 ThePackageManaging = DebianPackageManaging
