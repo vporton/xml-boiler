@@ -24,9 +24,8 @@ from ordered_set import OrderedSet
 from rdflib import URIRef
 
 import xmlboiler.core.urls
-from xmlboiler.core import execution_context_builders
 from xmlboiler.core.alg.auto_transform import AutomaticTranformation, AssetsExhausted
-from xmlboiler.core.alg.download import NoDownloader, DepthFirstDownloader, BreadthFirstDownloader, download_providers
+from xmlboiler.core.alg.download import download_providers
 from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_asset_downloader
 import xmlboiler.core.interpreters.parse
