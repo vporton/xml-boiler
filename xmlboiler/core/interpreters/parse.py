@@ -57,12 +57,22 @@ class Interpeters(object):
             if result:
                 return result
         if self.soft_options.path:
-            return self.check_version_by_executable(main_node)
+            return self.check_version_by_executable(main_node, not self.soft_options.package_manager)
         return None
 
     def check_version_by_package(self, min_version, max_version, main_node):
+        parse_context = ParseContext(self.execution_context)
+
         if min_version is None and max_version is None:  # any version is OK
-            return True
+            try:
+                package = OnePredicate(URIRef(PREFIX + "debianPackage"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.IGNORE). \
+                    parse(parse_context, self.graph, main_node)
+                if self.soft_options.package_manager.determine_package_version(package) is None:
+                    self.warn_no_package(package, min_version, max_version)
+                    return False
+                return True
+            except ParseException:
+                return False
 
         if min_version is None:
             min_version = float('-inf')
@@ -74,7 +84,6 @@ class Interpeters(object):
         min_version = version_wrapper(min_version)
         max_version = version_wrapper(max_version)
 
-        parse_context = ParseContext(self.execution_context)
         version_parser = Choice([PostProcessNodeParser(StringLiteral(ErrorHandler.IGNORE), version_wrapper),
                                  EnumParser({PREFIX + 'fromPackageVersion': _FromPackageVersion()})])
         lang_min_version = ZeroOnePredicate(URIRef(PREFIX + "langMinVersion"), version_parser, ErrorHandler.FATAL). \
@@ -103,25 +112,35 @@ class Interpeters(object):
                 return False
             real_version = self.soft_options.package_manager.determine_package_version(package)
             if real_version is None:  # no such Debian package
+                self.warn_no_package(package, min_version, max_version)
                 return False
             if lang_min_version is _FromPackageVersion:
                 if VersionWrapper(real_version) > max_version:
+                    self.warn_no_package(package, min_version, max_version)
                     return False
             if lang_max_version is _FromPackageVersion:
                 if VersionWrapper(real_version) < min_version:
+                    self.warn_no_package(package, min_version, max_version)
                     return False
             if (pmin_version is not None and VersionWrapper(real_version) < VersionWrapper(pmin_version)) or \
                     (pmax_version is not None and VersionWrapper(real_version) > VersionWrapper(pmax_version)):
+                self.warn_no_package(package, min_version, max_version)
                 return False
         return True
 
-    def check_version_by_executable(self, main_node):
+    def check_version_by_executable(self, main_node, warn):
         parse_context = ParseContext(self.execution_context)
         executable = ZeroOnePredicate(URIRef(PREFIX + "executable"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         if executable is None:
             return False
-        return shutil.which(executable) is not None
+        if shutil.which(executable) is not None:
+            return True
+        if warn:
+            msg = self.execution_context.translations.gettext(
+                "Trying to use not installed executable {e}.").format(e=executable)
+            self.execution_context.logger.warn(msg)
+        return False
 
     # TODO: Cache the results
     # TODO: Allow to use the URI of the interpreter directly instead of the language name
@@ -152,6 +171,12 @@ class Interpeters(object):
         parser = ZeroOnePredicate(pred, MainParser(), ErrorHandler.FATAL)
         return parser.parse(parse_context, self.graph, node)
 
+    def warn_no_package(self, package, min_version, max_version):
+        min = min_version if min_version is not None else '*'
+        max = max_version if max_version is not None else '*'
+        msg = self.execution_context.translations.gettext(
+            "Trying to use not installed package {p} (versions {min} - {max}).").format(p=package, min=min, max=max)
+        self.execution_context.logger.warn(msg)
 
 # TODO: Use proper dependency injection instead of the singleton
 class Providers(containers.DeclarativeContainer):
