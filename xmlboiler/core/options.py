@@ -25,6 +25,7 @@ from rdflib import URIRef, Graph
 ### Base ###
 # from xmlboiler.core.alg.next_script_base import ScriptsIteratorBase
 from xmlboiler.core.execution_context import ExecutionContext
+from xmlboiler.core.packages.base import BasePackageManaging
 
 
 class WorklowKind(Enum):
@@ -57,6 +58,13 @@ class RecursiveDownloadOptions(object):
     recursive_download: RecursiveDownload = None
     retrieval_priority: RecursiveRetrievalPriority = None
 
+
+@dataclass
+class InstalledSoftwareOptions(object):
+    package_manager: BasePackageManaging = None  # None means not to use package_manager
+    path: bool = True
+
+
 # In this version the same options are applied to all elements of the
 # workflow, but in future we may increase "granularity" to have different
 # options for different elements.
@@ -65,6 +73,7 @@ class BaseAutomaticWorkflowElementOptions(object):
     execution_context: ExecutionContext = None
     kind: WorklowKind = None
     recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
+    installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
 
 ### Validation ###
 

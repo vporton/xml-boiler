@@ -28,4 +28,4 @@ def determine_os():
 
 
 # TODO: Make it optional depending on command line options
-ThePackageManaging = determine_os()
+ThePackageManaging = determine_os()  # FIXME: remove

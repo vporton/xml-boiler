@@ -35,6 +35,7 @@ from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
     RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace
 import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
+from xmlboiler.core.packages.config import determine_os
 from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
 
 
@@ -55,7 +56,11 @@ def main(argv):
     parser.add_argument('-y', '--directory', help='additional directory with assets', metavar='NAME=DIR', action='append')
     parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS',
                         help='a plus-separated list of comma-separated lists of "builtin","DIR"')
-
+    parser.add_argument('--software',
+                        help='determine installed software by package manager and/or executables in PATH. ' + \
+                             '\'package\' are now supported only on Debian-based systems. ' + \
+                             'Defaults to \'both\' on Debian-based and \'executable\' on others.',
+                        choices=['package', 'executable', 'both'])
 
     chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
     chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
@@ -83,7 +88,7 @@ def main(argv):
         for eq in args.directory:
             m = re.match(r'([^=]+)=(.*)', eq, re.S)
             if not m:
-                sys.stderr.write("Wrong --directory flag format")
+                sys.stderr.write("Wrong --directory flag format\n")
                 return 1
             directories_map[m[1]] = m[2]
 
@@ -133,6 +138,11 @@ def main(argv):
                              'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
 
     options.universal_precedence = args.universal_precedence
+
+    options.installed_soft_options.package_manager = determine_os() if args.software in ('package', 'both') else None
+    options.installed_soft_options.path = args.software in ('executable', 'both')
+    if options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
+        sys.stderr.write("Package manager is not supported on this OS.\n")
 
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
     state.xml_text = source.buffer.read(); source.close()
