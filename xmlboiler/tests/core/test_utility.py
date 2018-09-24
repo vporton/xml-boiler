@@ -145,3 +145,15 @@ class TestUtility(unittest.TestCase):
                                'http://portonvictor.org/ns/trans/precedence-comment',
                                '-s', 'doc'])
             self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+
+    def test_installed_packages(self):
+        for installed in ['package', 'executable', 'both']:
+            with self.subTest(installed=installed):
+                with capture_stdin_and_stdout():
+                    command_line.main(['--software',
+                                       installed,
+                                       'chain',
+                                       Global.get_filename("tests/core/data/xml/comment.xml"),
+                                       '-u',
+                                       'http://portonvictor.org/ns/trans/precedence-comment'])
+                    self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
