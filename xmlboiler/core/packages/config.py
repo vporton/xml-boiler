@@ -25,7 +25,3 @@ def determine_os():
         from .debian import DebianPackageManaging
         return DebianPackageManaging
     return None
-
-
-# TODO: Make it optional depending on command line options
-ThePackageManaging = determine_os()  # FIXME: remove

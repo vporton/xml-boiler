@@ -162,7 +162,7 @@ def main(argv):
             state, parse_context=default_parse_context(execution_context=download_execution_context)).download_iterator()
 
     # TODO: Use a factory of algorithms
-    _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory()
+    _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options)
     algorithm = AutomaticTranformation(state, _interpreters)
     try:
         algorithm.run()

@@ -21,10 +21,6 @@
 
 from functools import total_ordering
 
-from xmlboiler.core.packages.config import ThePackageManaging
-
-_Version = ThePackageManaging.VersionClass
-
 
 # For "X.*" at the end of version see
 # https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces/RDF_resource_format

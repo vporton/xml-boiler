@@ -22,7 +22,6 @@ from rdflib import URIRef
 from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
-from xmlboiler.core.packages.config import ThePackageManaging
 from xmlboiler.core.packages.version_wrapper import VersionWrapper, version_wrapper_create
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
@@ -34,15 +33,14 @@ from .parse_impl import MainParser, InterpreterParseContext
 
 PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
-_Version = ThePackageManaging.VersionClass
-
 
 class _FromPackageVersion:
     pass
 
 
 class Interpeters(object):
-    def __init__(self, execution_context, graph):
+    def __init__(self, soft_options, execution_context, graph):
+        self.soft_options = soft_options
         self.graph = graph
         self.execution_context = context_for_logger(execution_context, Contexts.default_logger('interpreters-file'))
 
@@ -59,7 +57,7 @@ class Interpeters(object):
         if max_version is None:
             max_version = float('inf')
 
-        version_wrapper = version_wrapper_create(_Version)
+        version_wrapper = version_wrapper_create(self.soft_options.package_manager)
 
         min_version = version_wrapper(min_version)
         max_version = version_wrapper(max_version)
