@@ -16,6 +16,8 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import shutil
+
 from dependency_injector import providers, containers
 from rdflib import URIRef
 
@@ -25,7 +27,7 @@ from xmlboiler.core.execution_context_builders import context_for_logger, Contex
 from xmlboiler.core.packages.version_wrapper import VersionWrapper, version_wrapper_create
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
-    PostProcessPredicateParser, PostProcessNodeParser
+    PostProcessNodeParser
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import StringLiteral, IRILiteral
@@ -49,6 +51,16 @@ class Interpeters(object):
         self.order = {k: v for v, k in enumerate(the_list)}
 
     def check_version(self, min_version, max_version, main_node):
+        result = None
+        if self.soft_options.package_manager:
+            result = self.check_version_by_package(min_version, max_version, main_node)
+            if result:
+                return result
+        if self.soft_options.path:
+            return self.check_version_by_executable(main_node)
+        return None
+
+    def check_version_by_package(self, min_version, max_version, main_node):
         if min_version is None and max_version is None:  # any version is OK
             return True
 
@@ -102,6 +114,14 @@ class Interpeters(object):
                     (pmax_version is not None and VersionWrapper(real_version) > VersionWrapper(pmax_version)):
                 return False
         return True
+
+    def check_version_by_executable(self, main_node):
+        parse_context = ParseContext(self.execution_context)
+        executable = ZeroOnePredicate(URIRef(PREFIX + "executable"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.FATAL). \
+            parse(parse_context, self.graph, main_node)
+        if executable is None:
+            return False
+        return shutil.which(executable) is not None
 
     # TODO: Cache the results
     # TODO: Allow to use the URI of the interpreter directly instead of the language name

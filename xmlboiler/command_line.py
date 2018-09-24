@@ -139,7 +139,7 @@ def main(argv):
 
     options.universal_precedence = args.universal_precedence
 
-    options.installed_soft_options.package_manager = determine_os() if args.software in ('package', 'both') else None
+    options.installed_soft_options.package_manager = determine_os() if args.software != 'executable' else None
     options.installed_soft_options.path = args.software in ('executable', 'both')
     if options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
         sys.stderr.write("Package manager is not supported on this OS.\n")
