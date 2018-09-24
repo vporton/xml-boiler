@@ -101,7 +101,7 @@ class Interpeters(object):
                     parse(parse_context, self.graph, main_node)
             except ParseException:
                 return False
-            real_version = ThePackageManaging.determine_package_version(package)
+            real_version = self.soft_options.package_manager.determine_package_version(package)
             if real_version is None:  # no such Debian package
                 return False
             if lang_min_version is _FromPackageVersion:
