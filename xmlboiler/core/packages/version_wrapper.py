@@ -33,10 +33,11 @@ _Version = ThePackageManaging.VersionClass
 # (we never compare it, because x.* can be only the upper bound not lower)
 @total_ordering
 class VersionWrapper(object):
-    def __init__(self, version):
+    def __init__(self, version_class, version):
         """
         :param version: _Version() object
         """
+        self.version_class = version_class
         self.version = version  # a string or float("inf") or float("-inf")
 
     def __eq__(self, other):
@@ -58,10 +59,16 @@ class VersionWrapper(object):
                 other.startswith(self.version[:-2] + '.'):
             return True
         version2 = self.version[:-2] if self.version[-2:] == '.*' else self.version
-        return _Version(version2) >= _Version(other.version)
+        return self.version_class(version2) >= self.version_class(other.version)
 
     def __str__(self):
         return self.version
 
     def __repr__(self):
         return "VersionWrapper(%s)" % self.version
+
+
+def version_wrapper_create(version_class):
+    def inner(version):
+        return VersionWrapper(version_class, version)
+    return inner

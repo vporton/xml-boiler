@@ -23,7 +23,7 @@ from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.packages.config import ThePackageManaging
-from xmlboiler.core.packages.version_wrapper import VersionWrapper
+from xmlboiler.core.packages.version_wrapper import VersionWrapper, version_wrapper_create
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
     PostProcessPredicateParser, PostProcessNodeParser
@@ -59,18 +59,20 @@ class Interpeters(object):
         if max_version is None:
             max_version = float('inf')
 
-        min_version = VersionWrapper(min_version)
-        max_version = VersionWrapper(max_version)
+        version_wrapper = version_wrapper_create(_Version)
+
+        min_version = version_wrapper(min_version)
+        max_version = version_wrapper(max_version)
 
         parse_context = ParseContext(self.execution_context)
-        version_parser = Choice([PostProcessNodeParser(StringLiteral(ErrorHandler.IGNORE), VersionWrapper),
+        version_parser = Choice([PostProcessNodeParser(StringLiteral(ErrorHandler.IGNORE), version_wrapper),
                                  EnumParser({PREFIX + 'fromPackageVersion': _FromPackageVersion()})])
         lang_min_version = ZeroOnePredicate(URIRef(PREFIX + "langMinVersion"), version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
         lang_max_version = ZeroOnePredicate(URIRef(PREFIX + "langMaxVersion"), version_parser, ErrorHandler.FATAL). \
             parse(parse_context, self.graph, main_node)
-        lang_min_version = lang_min_version or VersionWrapper(float('-inf'))
-        lang_max_version = lang_max_version or VersionWrapper(float('inf'))
+        lang_min_version = lang_min_version or version_wrapper(float('-inf'))
+        lang_max_version = lang_max_version or version_wrapper(float('inf'))
 
         # First try to check without retrieving package version (for efficiency)
         if not isinstance(lang_min_version, _FromPackageVersion) and max_version < lang_min_version:
