@@ -44,7 +44,7 @@ class RegularCommandRunner(object):
         return res
 
     async def run_pipe_impl(self, args, input):
-        my_logger().info("Executing:" + ' '.join(args))  # TODO: Dependency injection
+        my_logger().info("Executing:" + ' '.join(args))  # FIXME: Dependency injection
         t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE)
         try:
             stdout, stderr = await asyncio.wait_for(t.communicate(input), self.timeout)
