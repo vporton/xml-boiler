@@ -86,6 +86,7 @@ def main(argv):
                                            Contexts.default_logger('main', args.log_level))
 
     options = args.options_object(execution_context=execution_context,
+                                  log_level=args.log_level,
                                   command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context))
 
     directories_map = {}
@@ -168,7 +169,8 @@ def main(argv):
             state, parse_context=default_parse_context(execution_context=download_execution_context)).download_iterator()
 
     # TODO: Use a factory of algorithms
-    _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options)
+    _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options,
+                                                                                     log_level=args.log_level)
     algorithm = AutomaticTranformation(state, _interpreters)
     try:
         algorithm.run()

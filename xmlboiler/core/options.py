@@ -71,6 +71,7 @@ class InstalledSoftwareOptions(object):
 # options for different elements.
 @dataclass
 class BaseAutomaticWorkflowElementOptions(object):
+    log_level: Any = None
     execution_context: ExecutionContext = None
     command_runner: BaseCommandRunner = None
     kind: WorklowKind = None
