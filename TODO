@@ -8,8 +8,6 @@
 * How to "import" in Python through the network:
   https://docs.python.org/3/reference/import.html#replacing-the-standard-import-system
 
-* https://deb-pkg-tools.readthedocs.io/en/latest/
-
 * --before cmdline option to set order of precedences
 
 * ScriptsIterator should remember the message with the reason it stopped for.

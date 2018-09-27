@@ -23,6 +23,7 @@ from rdflib import URIRef
 
 from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
+from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.packages.version_wrapper import VersionWrapper, version_wrapper_create
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
@@ -40,11 +41,10 @@ class _FromPackageVersion:
 
 
 class Interpeters(object):
-    def __init__(self, soft_options, execution_context, graph):
+    def __init__(self, soft_options, execution_context, log_level, graph):
         self.soft_options = soft_options
         self.graph = graph
-        # self.execution_context = context_for_logger(execution_context, Contexts.default_logger('interpreters-file'))  # FIXME
-        self.execution_context = execution_context  # FIXME
+        self.execution_context = context_for_logger(execution_context, Contexts.default_logger('interpreters', log_level))
 
         list_node = next(graph[URIRef(PREFIX + "boiler"):URIRef(PREFIX + "interpretersList")])
         the_list = ListParser(IRILiteral(ErrorHandler.FATAL), ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)
@@ -139,7 +139,7 @@ class Interpeters(object):
         if warn:
             msg = self.execution_context.translations.gettext(
                 "Trying to use not installed executable {e}.").format(e=executable)
-            self.execution_context.logger.warn(msg)
+            self.execution_context.logger.warning(msg)
         return False
 
     # TODO: Cache the results
@@ -176,7 +176,7 @@ class Interpeters(object):
         max = max_version if max_version is not None else '*'
         msg = self.execution_context.translations.gettext(
             "Trying to use not installed package {p} (versions {min} - {max}).").format(p=package, min=min, max=max)
-        self.execution_context.logger.warn(msg)
+        self.execution_context.logger.warning(msg)
 
 # TODO: Use proper dependency injection instead of the singleton
 class Providers(containers.DeclarativeContainer):
