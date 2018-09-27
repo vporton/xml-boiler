@@ -168,9 +168,9 @@ def main(argv):
          'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](\
             state, parse_context=default_parse_context(execution_context=download_execution_context)).download_iterator()
 
-    # TODO: Use a factory of algorithms
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options,
                                                                                      log_level=args.log_level)
+    # TODO: Use a factory of algorithms
     algorithm = AutomaticTranformation(state, _interpreters)
     try:
         algorithm.run()
