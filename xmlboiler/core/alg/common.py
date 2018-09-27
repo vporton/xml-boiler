@@ -50,7 +50,7 @@ class RealNextScript(object):
                                                                script.more.params,
                                                                not bool(script.more.script_url))
                 # TODO: Check subprocess's exit code
-                new_xml_text = XMLRunCommand(script, self.interpreters).run(self.state.xml_text)  # TODO: Use proper dependency injection
+                new_xml_text = XMLRunCommand(script, self.interpreters, self.state.opts.command_runner).run(self.state.xml_text)  # TODO: Use proper dependency injection
                 if new_xml_text == self.state.xml_text:
                     # TODO: Don't write to stderr, use a generic interfact
                     sys.stderr.write("Iteration stopped to avoid infinite loop.\n")  # TODO: Localization

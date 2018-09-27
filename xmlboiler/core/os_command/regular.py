@@ -17,19 +17,19 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-import sys
 
 from dependency_injector import providers
-from subprocess import PIPE, DEVNULL
+from subprocess import PIPE
 
-from xmlboiler.core.execution_context_builders import my_logger
+from xmlboiler.core.execution_context_builders import Contexts
 from .base import Timeout
 
 
 class RegularCommandRunner(object):
-    def __init__(self, timeout=None, timeout2=None):
+    def __init__(self, timeout=None, timeout2=None, context=Contexts.execution_context):
         self.timeout = timeout
         self.timeout2 = timeout2
+        self.execution_context = context
 
     # TODO: Terminate the subprocesses on terminating our program.
     def run_pipe(self, args, input):
@@ -44,7 +44,7 @@ class RegularCommandRunner(object):
         return res
 
     async def run_pipe_impl(self, args, input):
-        my_logger().info("Executing:" + ' '.join(args))  # FIXME: Dependency injection
+        self.execution_context.logger.info("Executing:" + ' '.join(args))  # TODO: Localization
         t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE)
         try:
             stdout, stderr = await asyncio.wait_for(t.communicate(input), self.timeout)
@@ -61,4 +61,5 @@ class RegularCommandRunner(object):
 # TODO: Use proper dependency injection
 regular_provider = providers.Factory(RegularCommandRunner,
                                      timeout=None,
-                                     timeout2=None)
+                                     timeout2=None,
+                                     context=Contexts.execution_context)

@@ -29,10 +29,11 @@ class XMLRunCommandWrapper(object):
     """
     Don't use it directly, use XMLRunCommand
     """
-    def __init__(self, script, kind, interpreters):
+    def __init__(self, script, kind, interpreters, command_runner):
         self.script = script
         self.kind = kind
         self.interpreters = interpreters
+        self.command_runner = command_runner
         self.params = self.script.more.params
 
     def run(self, input: bytes) -> bytes:
@@ -46,7 +47,7 @@ class XMLRunCommandWrapper(object):
         return map[self.kind](input)
 
     def _run_entire(self, input: bytes) -> bytes:
-        return RunCommand(self.script, self.interpreters).run(input, self.params)
+        return RunCommand(self.script, self.interpreters, self.command_runner).run(input, self.params)
 
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
@@ -166,5 +167,5 @@ class XMLRunCommandWrapper(object):
 
 
 class XMLRunCommand(XMLRunCommandWrapper):
-    def __init__(self, script, interpreters):
-        super().__init__(script, script.base.transformer_kind, interpreters)
+    def __init__(self, script, interpreters, command_runner):
+        super().__init__(script, script.base.transformer_kind, interpreters, command_runner)

@@ -41,9 +41,9 @@ def init_locale(lang=None):
     return trans
 
 
-def my_logger(name='main'):
-    logger = providers.ThreadSafeSingleton(logging.getLogger)(name=name)
-    logger.setLevel(logging.INFO)
+def my_logger(name='main', level=logging.INFO):
+    logger = providers.ThreadSafeSingleton(logging.getLogger)(name=name, level=level)
+    logger.setLevel(level)
     return logger
 
 class Contexts(containers.DeclarativeContainer):

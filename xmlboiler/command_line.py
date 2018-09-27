@@ -24,6 +24,7 @@ from ordered_set import OrderedSet
 from rdflib import URIRef
 
 import xmlboiler.core.urls
+import xmlboiler.core.os_command.regular
 from xmlboiler.core.alg.auto_transform import AutomaticTranformation, AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
 from xmlboiler.core.alg.state import PipelineState
@@ -47,6 +48,9 @@ def main(argv):
     - Buy tokens at https://crypto4ngo.org/project/view/4""")
     subparsers = parser.add_subparsers(title='subcommands')
 
+    parser.add_argument('-l', '--log-level',
+                        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO',
+                        type=str.upper)
     parser.add_argument('-p', '--preload', help='preload asset', action='append', metavar='NAMESPACE')
     parser.add_argument('-r', '--recursive', help='recursive download mode (none, breadth-first, depth-first)',
                         choices=['none', 'breadth', 'depth'])
@@ -78,9 +82,11 @@ def main(argv):
         parser.print_usage()
         return 1
 
-    execution_context = context_for_logger(Contexts.execution_context(), Contexts.default_logger('main'))
+    execution_context = context_for_logger(Contexts.execution_context(),
+                                           Contexts.default_logger('main', args.log_level))
 
-    options = args.options_object(execution_context=execution_context)
+    options = args.options_object(execution_context=execution_context,
+                                  command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context))
 
     directories_map = {}
     if args.directory is not None:
@@ -153,7 +159,8 @@ def main(argv):
     options.next_script = map[args.next_script](state)
 
     # TODO: Refactor
-    download_execution_context = context_for_logger(execution_context, Contexts.default_logger('asset'))
+    download_execution_context = context_for_logger(execution_context,
+                                                    Contexts.default_logger('asset', args.log_level))
     options.recursive_options.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
