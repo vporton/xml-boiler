@@ -25,9 +25,10 @@ from xmlboiler.core.os_command.regular import *
 class TestRunCommand(unittest.TestCase):
     def setUp(self):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
+        self.context = Contexts.execution_context()
 
     def do_test_ok(self, command, input):
-        runner = regular_provider(timeout=None, timeout2=None)
+        runner = regular_provider(timeout=None, timeout2=None, context=self.context)
         code, output = runner.run_pipe(command, input)
         self.assertEqual(code, 0)
         self.assertEqual(input, output)
@@ -53,9 +54,10 @@ class TestRunCommand(unittest.TestCase):
 class TestRunFirejailCommand(unittest.TestCase):
     def setUp(self):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
+        self.context = Contexts.execution_context()
 
     def do_test_ok(self, command, input):
-        runner = firejail_provider(timeout=None, timeout2=None, context=Contexts.default_logger)
+        runner = firejail_provider(timeout=None, timeout2=None, context=self.context)
         code, output = runner.run_pipe(command, input)
         self.assertEqual(code, 0)
         self.assertEqual(input, output)
