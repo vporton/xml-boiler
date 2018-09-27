@@ -18,6 +18,7 @@
 from dependency_injector import providers
 
 from xmlboiler.core.data import Global
+from xmlboiler.core.execution_context_builders import Contexts
 from .regular import RegularCommandRunner
 
 
@@ -26,8 +27,8 @@ class FirejailCommandRunner(object):
     This does not isolate from X11 on Linux because of abstract sockets!
     """
 
-    def __init__(self, netfilter, timeout=None, timeout2=None):
-        self.base = RegularCommandRunner(timeout=timeout, timeout2=timeout2)  # TODO: Use provider
+    def __init__(self, netfilter, timeout=None, timeout2=None, context=Contexts.execution_context):
+        self.base = RegularCommandRunner(timeout=timeout, timeout2=timeout2, context=context)
         self.netfilter = netfilter
 
     def run_pipe(self, args, input):
@@ -48,4 +49,5 @@ class FirejailCommandRunner(object):
 firejail_provider = providers.Factory(FirejailCommandRunner,
                                       netfilter=Global.get_filename('core/data/mynolocal.net'),
                                       timeout=None,
-                                      timeout2=None)
+                                      timeout2=None,
+                                      context=Contexts.execution_context)

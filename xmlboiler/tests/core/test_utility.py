@@ -24,6 +24,7 @@ from io import StringIO, BytesIO, TextIOWrapper
 
 from xmlboiler import command_line
 from xmlboiler.core.data import Global
+from xmlboiler.tests.core.xml_test import XmlTest
 
 
 @contextlib.contextmanager
@@ -59,7 +60,7 @@ def setup_with_context_manager(testcase, cm):
     return val
 
 
-class TestUtility(unittest.TestCase):
+class TestUtility(XmlTest):
     XInclude_output = b'<?xml version="1.0"?>' + b"\n" + \
                       b'<y xmlns:xi="http://www.w3.org/2001/XInclude">' + b"\n" + \
                       b'    <x/>' + b"\n" + \
@@ -81,7 +82,7 @@ class TestUtility(unittest.TestCase):
                            'http://portonvictor.org/ns/trans/precedence-include',
                            '-s',
                            next_script_mode])
-        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
+        self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
 
     def do_run_comment(self, order, next_script_mode):
         command_line.main(['-r',
@@ -92,7 +93,7 @@ class TestUtility(unittest.TestCase):
                            'http://portonvictor.org/ns/trans/precedence-comment',
                            '-s',
                            next_script_mode])
-        self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+        self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
 
     def test_run(self):
         # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
@@ -133,7 +134,7 @@ class TestUtility(unittest.TestCase):
                                '-t', 'http://www.w3.org/1999/xhtml',
                                '-n', 'error'])
             depth = sys.stdout.buffer.getvalue()
-        self.assertEqual(breadth, depth)
+        self.assertXmlEqual(breadth, depth)
 
     def test_nodownload(self):
         with capture_stdin_and_stdout():
@@ -144,7 +145,7 @@ class TestUtility(unittest.TestCase):
                                '-u',
                                'http://portonvictor.org/ns/trans/precedence-comment',
                                '-s', 'doc'])
-            self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+            self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
 
     def test_installed_packages(self):
         for installed in ['package', 'executable', 'both']:
@@ -156,4 +157,4 @@ class TestUtility(unittest.TestCase):
                                        Global.get_filename("tests/core/data/xml/comment.xml"),
                                        '-u',
                                        'http://portonvictor.org/ns/trans/precedence-comment'])
-                    self.assertEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+                    self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)

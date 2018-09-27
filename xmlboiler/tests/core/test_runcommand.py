@@ -55,7 +55,7 @@ class TestRunFirejailCommand(unittest.TestCase):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
 
     def do_test_ok(self, command, input):
-        runner = firejail_provider(timeout=None, timeout2=None)
+        runner = firejail_provider(timeout=None, timeout2=None, context=Contexts.default_logger)
         code, output = runner.run_pipe(command, input)
         self.assertEqual(code, 0)
         self.assertEqual(input, output)

@@ -139,7 +139,7 @@ class Interpeters(object):
         if warn:
             msg = self.execution_context.translations.gettext(
                 "Trying to use not installed executable {e}.").format(e=executable)
-            self.execution_context.logger.warn(msg)
+            self.execution_context.logger.warning(msg)
         return False
 
     # TODO: Cache the results
@@ -176,7 +176,7 @@ class Interpeters(object):
         max = max_version if max_version is not None else '*'
         msg = self.execution_context.translations.gettext(
             "Trying to use not installed package {p} (versions {min} - {max}).").format(p=package, min=min, max=max)
-        self.execution_context.logger.warn(msg)
+        self.execution_context.logger.warning(msg)
 
 # TODO: Use proper dependency injection instead of the singleton
 class Providers(containers.DeclarativeContainer):
