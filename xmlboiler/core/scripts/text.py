@@ -40,9 +40,10 @@ class _RunScriptCommand(object):
 
 
 class _RunInlineCommand(object):
-    def __init__(self, script, interpreters, params=None):
+    def __init__(self, script, interpreters, command_runner, params=None):
         self.script = script
         self.interpreters = interpreters
+        self.command_runner = command_runner
         if not params:
             self.params = script.more.params
 

@@ -128,7 +128,7 @@ class XMLRunCommandWrapper(object):
 
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))
-            input = RunCommand(self.script, self.interpreters).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
+            input = RunCommand(self.script, self.interpreters, self.command_runner).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
             doc2 = parseString(input)
             if node.namespaceURI and URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces:
                 node.parentNode.replaceChild(doc2.documentElement, node)

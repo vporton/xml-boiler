@@ -23,7 +23,6 @@ from rdflib import URIRef
 
 from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
-from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.packages.version_wrapper import VersionWrapper, version_wrapper_create
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
