@@ -29,10 +29,11 @@ class XMLRunCommandWrapper(object):
     """
     Don't use it directly, use XMLRunCommand
     """
-    def __init__(self, script, kind, interpreters, command_runner):
+    def __init__(self, script, kind, interpreters, interpreter, command_runner):
         self.script = script
         self.kind = kind
         self.interpreters = interpreters
+        self.interpreter = interpreter
         self.command_runner = command_runner
         self.params = self.script.more.params
 
@@ -47,7 +48,7 @@ class XMLRunCommandWrapper(object):
         return map[self.kind](input)
 
     def _run_entire(self, input: bytes) -> bytes:
-        return RunCommand(self.script, self.interpreters, self.command_runner).run(input, self.params)
+        return RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(input, self.params)
 
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
@@ -128,7 +129,7 @@ class XMLRunCommandWrapper(object):
 
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))
-            input = RunCommand(self.script, self.interpreters, self.command_runner).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
+            input = RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
             doc2 = parseString(input)
             if node.namespaceURI and URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces:
                 node.parentNode.replaceChild(doc2.documentElement, node)
@@ -167,5 +168,5 @@ class XMLRunCommandWrapper(object):
 
 
 class XMLRunCommand(XMLRunCommandWrapper):
-    def __init__(self, script, interpreters, command_runner):
-        super().__init__(script, script.base.transformer_kind, interpreters, command_runner)
+    def __init__(self, script, interpreters, interpreter, command_runner):
+        super().__init__(script, script.base.transformer_kind, interpreters, interpreter, command_runner)

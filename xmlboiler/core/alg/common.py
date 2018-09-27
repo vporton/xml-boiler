@@ -33,7 +33,8 @@ class RealNextScript(object):
         while True:
             script = next(self.state.opts.next_script)['script']  # TODO: ['script'] here is a hack
             # TODO: Support Web requests, etc.
-            node = self.interpreters.find_interpreter(script.more.language, script.more.min_version, script.more.max_version)
+            node = self.interpreters.find_interpreter(script.more.language, script.more.min_version,
+                                                      script.more.max_version)
             if node is None:
                 self.state.failed_scripts.add(script)
             else:
@@ -45,12 +46,8 @@ class RealNextScript(object):
                         self.state.opts.execution_context.translations.gettext("Executed script for {s}").format(s=script.more.language))
                 self.state.executed_scripts.add(script)
 
-                cmd = self.interpreters.construct_command_line(node,
-                                                               script.more.script_url if script.more.script_url else script.more.command_string,
-                                                               script.more.params,
-                                                               not bool(script.more.script_url))
                 # TODO: Check subprocess's exit code
-                new_xml_text = XMLRunCommand(script, self.interpreters, self.state.opts.command_runner).run(self.state.xml_text)  # TODO: Use proper dependency injection
+                new_xml_text = XMLRunCommand(script, self.interpreters, node, self.state.opts.command_runner).run(self.state.xml_text)  # TODO: Use proper dependency injection
                 if new_xml_text == self.state.xml_text:
                     # TODO: Don't write to stderr, use a generic interfact
                     sys.stderr.write("Iteration stopped to avoid infinite loop.\n")  # TODO: Localization
