@@ -23,7 +23,6 @@ from rdflib import URIRef
 
 from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
-from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.packages.version_wrapper import VersionWrapper, version_wrapper_create
 from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
@@ -44,7 +43,8 @@ class Interpeters(object):
     def __init__(self, soft_options, execution_context, graph):
         self.soft_options = soft_options
         self.graph = graph
-        self.execution_context = context_for_logger(execution_context, Contexts.default_logger('interpreters-file'))
+        # self.execution_context = context_for_logger(execution_context, Contexts.default_logger('interpreters-file'))  # FIXME
+        self.execution_context = execution_context  # FIXME
 
         list_node = next(graph[URIRef(PREFIX + "boiler"):URIRef(PREFIX + "interpretersList")])
         the_list = ListParser(IRILiteral(ErrorHandler.FATAL), ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)

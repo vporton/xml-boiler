@@ -27,10 +27,10 @@ class AssetsExhausted(StopIteration):
 
 
 class AutomaticTranformation(object):
-    def __init__(self, state, interpreters):
+    def __init__(self, state, interpreter):
         state.dom = parseString(state.xml_text)
         self.state = state
-        self.interpreters = interpreters
+        self.interpreter = interpreter
         self.state.next_asset = self.state.opts.recursive_options.download_algorithm
 
     def _step(self):
@@ -58,7 +58,7 @@ class AutomaticTranformation(object):
             return False  # The transformation finished!
 
         try:
-            RealNextScript(self.state, self.interpreters).step()
+            RealNextScript(self.state, self.interpreter).step()
         except StopIteration:
             try:
                 next(self.state.next_asset)

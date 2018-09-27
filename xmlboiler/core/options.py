@@ -25,6 +25,7 @@ from rdflib import URIRef, Graph
 ### Base ###
 # from xmlboiler.core.alg.next_script_base import ScriptsIteratorBase
 from xmlboiler.core.execution_context import ExecutionContext
+from xmlboiler.core.os_command.base import BaseCommandRunner
 from xmlboiler.core.packages.base import BasePackageManaging
 
 
@@ -71,6 +72,7 @@ class InstalledSoftwareOptions(object):
 @dataclass
 class BaseAutomaticWorkflowElementOptions(object):
     execution_context: ExecutionContext = None
+    command_runner: BaseCommandRunner = None
     kind: WorklowKind = None
     recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()

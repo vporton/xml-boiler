@@ -41,15 +41,18 @@ def init_locale(lang=None):
     return trans
 
 
-def my_logger(name='main'):
-    logger = providers.ThreadSafeSingleton(logging.getLogger)(name=name)
-    logger.setLevel(logging.INFO)
+def my_logger(name='main', level=logging.INFO):
+    # logger = providers.ThreadSafeSingleton(logging.getLogger)(name=name)
+    # logger = providers.Callable(logging.getLogger, name=name)()
+    logger = logging.getLogger(name=name)
+    logger.setLevel(level)
     return logger
 
 class Contexts(containers.DeclarativeContainer):
     default_logger = providers.Callable(my_logger)
     default_translations = providers.ThreadSafeSingleton(init_locale)
-    execution_context = providers.Factory(ExecutionContext, logger=default_logger, translations=default_translations)
+    # TODO: 'unknown' is a hack not to modify an existing logger
+    execution_context = providers.Factory(ExecutionContext, logger=default_logger('unknown'), translations=default_translations)
 
 
 def context_for_logger(context, logger):
