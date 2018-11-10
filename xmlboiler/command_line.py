@@ -47,6 +47,7 @@ def main(argv):
     - Send Ether to 0x36A0356d43EE4168ED24EFA1CAe3198708667ac0
     - Buy tokens at https://crypto4ngo.org/project/view/4""")
     subparsers = parser.add_subparsers(title='subcommands')
+    subparsers.required = True
 
     parser.add_argument('-l', '--log-level',
                         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO',
