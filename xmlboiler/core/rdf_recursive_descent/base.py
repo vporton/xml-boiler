@@ -76,8 +76,6 @@ class NodeParser(ABC):
 
     WARNING: Don't use this parser to parse recursive data structures,
     because it may lead to infinite recursion on circular RDF.
-
-    TODO: Make parse_context a constructor argument instead (here and in PredicateParser)
     """
 
     @abstractmethod
