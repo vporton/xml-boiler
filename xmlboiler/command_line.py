@@ -122,15 +122,20 @@ def main(argv):
                         RecursiveRetrievalPriorityOrderElement.SOURCES])
 
     def infer_downloader(s):
+        if s not in directories_map:
+            sys.stderr.write("No such downloader '{d}' (use --directory option)\n".format(d=s))
+            raise ValueError()
         return directory_asset_downloader(directories_map[s]) if s != 'builtin' else local_asset_downloader
 
     # Don't execute commands from remote scripts (without not yet properly working jail).
     # So downloading from URLs does not make sense yet.
-    # TODO: Better error reporting
     if args.downloaders:
         downloaders = [d.split(',') for d in args.downloaders.split('+')]
-        options.recursive_options.downloaders = \
-            [[infer_downloader(s) for s in d] for d in downloaders]
+        try:
+            options.recursive_options.downloaders = \
+                [[infer_downloader(s) for s in d] for d in downloaders]
+        except ValueError:
+            return 1
     else:
         options.recursive_options.downloaders = [[local_asset_downloader]]
 
