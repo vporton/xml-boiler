@@ -24,7 +24,7 @@ from xmlboiler.core.rdf_format.asset_parser.namespace import NSParser
 from xmlboiler.core.rdf_format.base import MAIN_NAMESPACE
 from xmlboiler.core.rdf_format.asset import AssetInfo
 from xmlboiler.core.rdf_format.asset_parser.transformer import TransformerParser
-from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, default_parse_context
+from xmlboiler.core.rdf_recursive_descent.base import ErrorMode, default_parse_context
 from xmlboiler.core.rdf_recursive_descent.list import ListParser
 from xmlboiler.core.rdf_recursive_descent.literal import IRILiteral
 from xmlboiler.core.rdf_recursive_descent.types import ClassForestParser
@@ -67,8 +67,8 @@ class AssetParser(object):
         if len(nodes) > 1:
             s = ', '.join([n[0] for n in nodes])
             msg = self.parse_context.translate("Multiple rdfs:seeAlso in asset: {s}").format(s)
-            self.parse_context.throw(ErrorHandler.FATAL, msg)
-        return ListParser(IRILiteral(ErrorHandler.WARNING)).parse(self.parse_context, graph, nodes[0][1])
+            self.parse_context.throw(ErrorMode.FATAL, msg)
+        return ListParser(IRILiteral(ErrorMode.WARNING)).parse(self.parse_context, graph, nodes[0][1])
 
 
 asset_parser_provider = providers.Factory(AssetParser,

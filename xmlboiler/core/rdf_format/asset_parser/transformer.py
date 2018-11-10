@@ -21,7 +21,7 @@ from rdflib import URIRef
 from xmlboiler.core.rdf_format.asset import Transformer, ScriptKindEnum
 from xmlboiler.core.rdf_format.asset_parser.script import ScriptInfoParser
 from xmlboiler.core.rdf_format.base import MAIN_NAMESPACE
-from xmlboiler.core.rdf_recursive_descent.base import NodeParser, ErrorHandler
+from xmlboiler.core.rdf_recursive_descent.base import NodeParser, ErrorMode
 from xmlboiler.core.rdf_recursive_descent.compound import OneOrMorePredicate, OnePredicate, ZeroOnePredicate, \
     ZeroOrMorePredicate
 from xmlboiler.core.rdf_recursive_descent.literal import IRILiteral, BooleanLiteral
@@ -34,38 +34,38 @@ class TransformerParser(NodeParser):
 
     def parse(self, parse_context, graph, node):
         klass = URIRef(MAIN_NAMESPACE + "Transformer")
-        check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorHandler.IGNORE)
+        check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorMode.IGNORE)
 
         result = Transformer()
 
         source_namespaces_parser = OneOrMorePredicate(URIRef(MAIN_NAMESPACE + "sourceNamespace"),
-                                                      IRILiteral(ErrorHandler.WARNING),
-                                                      ErrorHandler.WARNING)
+                                                      IRILiteral(ErrorMode.WARNING),
+                                                      ErrorMode.WARNING)
         result.source_namespaces = source_namespaces_parser.parse(parse_context, graph, node)
         target_namespaces_parser = ZeroOrMorePredicate(URIRef(MAIN_NAMESPACE + "targetNamespace"),
-                                                       IRILiteral(ErrorHandler.WARNING))
+                                                       IRILiteral(ErrorMode.WARNING))
         result.target_namespaces = target_namespaces_parser.parse(parse_context, graph, node)
 
         precedence_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "precedence"),
-                                             IRILiteral(ErrorHandler.WARNING),
-                                             ErrorHandler.WARNING)
+                                             IRILiteral(ErrorMode.WARNING),
+                                             ErrorMode.WARNING)
         result.precedence = precedence_parser.parse(parse_context, graph, node)
         inwardness_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "inward"),
-                                             BooleanLiteral(ErrorHandler.WARNING),
-                                             ErrorHandler.WARNING,
+                                             BooleanLiteral(ErrorMode.WARNING),
+                                             ErrorMode.WARNING,
                                              True)
         result.inwardness = inwardness_parser.parse(parse_context, graph, node)
         ignore_target_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "ignoreTarget"),
-                                                BooleanLiteral(ErrorHandler.WARNING),
-                                                ErrorHandler.WARNING)
+                                                BooleanLiteral(ErrorMode.WARNING),
+                                                ErrorMode.WARNING)
         result.ignore_target = ignore_target_parser.parse(parse_context, graph, node)
         universal_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "universal"),
-                                            BooleanLiteral(ErrorHandler.WARNING),
-                                            ErrorHandler.WARNING)
+                                            BooleanLiteral(ErrorMode.WARNING),
+                                            ErrorMode.WARNING)
         result.universal = universal_parser.parse(parse_context, graph, node)
 
         script_node_parser = ScriptInfoParser(result, self.subclasses, ScriptKindEnum.TRANSFORMER)
-        script_parser = OneOrMorePredicate(URIRef((MAIN_NAMESPACE + "script")), script_node_parser, ErrorHandler.WARNING)
+        script_parser = OneOrMorePredicate(URIRef((MAIN_NAMESPACE + "script")), script_node_parser, ErrorMode.WARNING)
         result.scripts = script_parser.parse(parse_context, graph, node)
 
         return result
