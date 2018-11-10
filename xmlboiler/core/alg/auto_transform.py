@@ -52,7 +52,7 @@ class AutomaticTranformation(object):
                 parents.append(w)
 
         # hack
-        self.state.all_namespaces = frozenset(filter(lambda x: x != URIRef('http://www.w3.org/2000/xmlns/'), all_namespaces))  # TODO: Is it worth to freeze?
+        self.state.all_namespaces = frozenset(filter(lambda x: x != URIRef('http://www.w3.org/2000/xmlns/'), all_namespaces))
 
         if self.state.all_namespaces <= self.state.opts.target_namespaces:
             return False  # The transformation finished!
