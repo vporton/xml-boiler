@@ -65,10 +65,10 @@ class AssetParser(object):
         if len(nodes) == 0:
             return []
         if len(nodes) > 1:
-            # TODO: Show URL of the asset
-            msg = self.parse_context.translate("Multiple rdfs:seeAlso in asset") #.format()
+            s = ', '.join([n[0] for n in nodes])
+            msg = self.parse_context.translate("Multiple rdfs:seeAlso in asset: {s}").format(s)
             self.parse_context.throw(ErrorHandler.FATAL, msg)
-        return ListParser(IRILiteral(ErrorHandler.WARNING)).parse(self.parse_context, graph, nodes[0])
+        return ListParser(IRILiteral(ErrorHandler.WARNING)).parse(self.parse_context, graph, nodes[0][1])
 
 
 asset_parser_provider = providers.Factory(AssetParser,
