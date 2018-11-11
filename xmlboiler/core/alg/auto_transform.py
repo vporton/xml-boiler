@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from dependency_injector import containers, providers
 from rdflib import URIRef
 
 from xmlboiler.core.alg.common import RealNextScript
@@ -71,3 +72,7 @@ class AutomaticTranformation(object):
         self.state.dom = myXMLParseString(self.state.xml_text)
         while self._step():  # may raise AssetsExhausted
             pass
+
+
+class Algorithms(containers.DeclarativeContainer):
+    automatic_transformation = providers.Factory(AutomaticTranformation)

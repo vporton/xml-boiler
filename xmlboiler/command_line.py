@@ -25,7 +25,8 @@ from rdflib import URIRef
 
 import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
-from xmlboiler.core.alg.auto_transform import AutomaticTranformation, AssetsExhausted
+from xmlboiler.core.alg import auto_transform
+from xmlboiler.core.alg.auto_transform import AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
 from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_asset_downloader
@@ -177,9 +178,8 @@ def main(argv):
 
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options,
                                                                                      log_level=args.log_level)
-    # TODO: Use a factory of algorithms
     try:
-        algorithm = AutomaticTranformation(state, _interpreters)
+        algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
         algorithm.run()
     except AssetsExhausted:
         if options.not_in_target != NotInTargetNamespace.IGNORE:
