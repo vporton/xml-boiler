@@ -16,10 +16,10 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from defusedxml.minidom import parseString
 from rdflib import URIRef
 
 from xmlboiler.core.alg.common import RealNextScript
+from xmlboiler.core.util.xml import myXMLParseString
 
 
 class AssetsExhausted(StopIteration):
@@ -28,7 +28,7 @@ class AssetsExhausted(StopIteration):
 
 class AutomaticTranformation(object):
     def __init__(self, state, interpreter):
-        state.dom = parseString(state.xml_text)
+        state.dom = myXMLParseString(state.xml_text)
         self.state = state
         self.interpreter = interpreter
         self.state.next_asset = self.state.opts.recursive_options.download_algorithm
@@ -36,7 +36,7 @@ class AutomaticTranformation(object):
     def _step(self):
         all_namespaces = set()
 
-        self.state.dom = parseString(self.state.xml_text)
+        self.state.dom = myXMLParseString(self.state.xml_text)
 
         # depth-first search
         parents = [self.state.dom.documentElement]
@@ -68,6 +68,6 @@ class AutomaticTranformation(object):
         return True
 
     def run(self):
-        self.state.dom = parseString(self.state.xml_text)
+        self.state.dom = myXMLParseString(self.state.xml_text)
         while self._step():  # may raise AssetsExhausted
             pass

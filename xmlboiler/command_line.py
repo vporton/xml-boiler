@@ -37,6 +37,7 @@ import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
 from xmlboiler.core.packages.config import determine_os
 from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
+from xmlboiler.core.util.xml import MyXMLError
 
 
 def main(argv):
@@ -177,14 +178,16 @@ def main(argv):
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options,
                                                                                      log_level=args.log_level)
     # TODO: Use a factory of algorithms
-    algorithm = AutomaticTranformation(state, _interpreters)
     try:
+        algorithm = AutomaticTranformation(state, _interpreters)
         algorithm.run()
     except AssetsExhausted:
         if options.not_in_target != NotInTargetNamespace.IGNORE:
             sys.stderr.write("The transformation failed, no more assets to load.\n")
             if options.not_in_target == NotInTargetNamespace.ERROR:
                 return 1
+    except MyXMLError as e:  # TODO: Differntiate error in initial document and in intermediary results
+        sys.stderr.write("XML parsing error: " + str(e) + "\n")
 
     if output is None:
         sys.stdout.buffer.write(state.xml_text)

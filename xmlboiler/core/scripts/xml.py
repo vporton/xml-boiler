@@ -15,7 +15,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-from defusedxml.minidom import parseString
+
 from rdflib import URIRef
 
 from xmlboiler.core.rdf_format.asset import TransformerKindEnum
@@ -23,6 +23,7 @@ from xmlboiler.core.rdf_format.asset import TransformerKindEnum
 # TODO: Don't parse directly after serializing (for efficiency)
 from xmlboiler.core.rdf_format.asset_parser.script import AttributeParam
 from xmlboiler.core.scripts.text import RunCommand
+from xmlboiler.core.util.xml import myXMLParseString
 
 
 class XMLRunCommandWrapper(object):
@@ -52,7 +53,7 @@ class XMLRunCommandWrapper(object):
 
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
-            doc = parseString(input)
+            doc = myXMLParseString(input)
             # depth-first search (TODO: check the alg)
             parents = [doc.documentElement]
             found = False
@@ -73,7 +74,7 @@ class XMLRunCommandWrapper(object):
             input = RunCommand(self.script, self.interpreters).run(input, self.params)
 
     def _run_subdoc_seq(self, input: bytes) -> bytes:
-        doc = parseString(input)
+        doc = myXMLParseString(input)
         # depth-first search (TODO: check the alg)
         parents = [doc.documentElement]
         while parents:
@@ -82,7 +83,7 @@ class XMLRunCommandWrapper(object):
                 if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces:
                     str = w.toxml('utf-8')
                     str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(w))
-                    frag = parseString(str2)
+                    frag = myXMLParseString(str2)
                     v.replaceChild(w, frag.documentElement)
                 parents.append(w)
         return doc.toxml('utf-8')
@@ -94,7 +95,7 @@ class XMLRunCommandWrapper(object):
                 return input
 
     def _run_down_up_step(self, input: bytes) -> bytes:
-        doc = parseString(input)
+        doc = myXMLParseString(input)
         # depth-first search
         parents = [doc.documentElement]
         while parents:
@@ -104,7 +105,7 @@ class XMLRunCommandWrapper(object):
                     if self._is_primary_node(node):
                         str = node.toxml('utf-8')
                         str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(node))  # TODO: Don't run adjust_params() in  a loop
-                        frag = parseString(str2)
+                        frag = myXMLParseString(str2)
                         node.parentNode.replaceChild(node, frag.documentElement)
                         return doc.toxml('utf-8')
             for w in v.childNodes:
@@ -112,7 +113,7 @@ class XMLRunCommandWrapper(object):
         return None
 
     def _run_plain_text(self, input: bytes) -> bytes:
-        doc = parseString(input)
+        doc = myXMLParseString(input)
         our_elements = []
         # depth-first search
         parents = [doc.documentElement]
@@ -130,7 +131,7 @@ class XMLRunCommandWrapper(object):
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))
             input = RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
-            doc2 = parseString(input)
+            doc2 = myXMLParseString(input)
             if node.namespaceURI and URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces:
                 node.parentNode.replaceChild(doc2.documentElement, node)
             else:
