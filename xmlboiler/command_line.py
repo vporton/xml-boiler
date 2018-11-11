@@ -186,7 +186,7 @@ def main(argv):
             sys.stderr.write("The transformation failed, no more assets to load.\n")
             if options.not_in_target == NotInTargetNamespace.ERROR:
                 return 1
-    except MyXMLError as e:  # TODO: Differntiate error in initial document and in intermediary results
+    except MyXMLError as e:  # TODO: Differentiate error in initial document and in intermediary results
         sys.stderr.write("XML parsing error: " + str(e) + "\n")
 
     if output is None:
