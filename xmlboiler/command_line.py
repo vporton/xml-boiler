@@ -166,14 +166,14 @@ def main(argv):
     }
     options.next_script = map[args.next_script](state)
 
-    # TODO: Refactor
     download_execution_context = context_for_logger(execution_context,
                                                     Contexts.default_logger('asset', args.log_level))
+    downloader_parse_context = default_parse_context(execution_context=download_execution_context)
     options.recursive_options.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
          'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](\
-            state, parse_context=default_parse_context(execution_context=download_execution_context)).download_iterator()
+            state, parse_context=downloader_parse_context).download_iterator()
 
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options,
                                                                                      log_level=args.log_level)
