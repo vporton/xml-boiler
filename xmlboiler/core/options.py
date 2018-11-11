@@ -66,17 +66,22 @@ class InstalledSoftwareOptions(object):
     path: bool = True
 
 
-# In this version the same options are applied to all elements of the
-# workflow, but in future we may increase "granularity" to have different
-# options for different elements.
 @dataclass
-class BaseAutomaticWorkflowElementOptions(object):
+class BaseAlgorithmOptions(object):
     log_level: Any = None
     execution_context: ExecutionContext = None
     command_runner: BaseCommandRunner = None
     kind: WorklowKind = None
     recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
+
+
+# In this version the same options are applied to all elements of the
+# workflow, but in future we may increase "granularity" to have different
+# options for different elements.
+@dataclass
+class BaseAutomaticWorkflowElementOptions(BaseAlgorithmOptions):
+    pass
 
 ### Validation ###
 
