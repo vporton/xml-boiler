@@ -66,6 +66,9 @@ class InstalledSoftwareOptions(object):
     path: bool = True
 
 
+# In this version the same options are applied to all elements of the
+# workflow, but in future we may increase "granularity" to have different
+# options for different elements.
 @dataclass
 class BaseAlgorithmOptions(object):
     log_level: Any = None
@@ -76,9 +79,6 @@ class BaseAlgorithmOptions(object):
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
 
 
-# In this version the same options are applied to all elements of the
-# workflow, but in future we may increase "granularity" to have different
-# options for different elements.
 @dataclass
 class BaseAutomaticWorkflowElementOptions(BaseAlgorithmOptions):
     pass
