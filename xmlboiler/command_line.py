@@ -188,6 +188,7 @@ def main(argv):
                 return 1
     except MyXMLError as e:  # TODO: Differentiate error in initial document and in intermediary results
         sys.stderr.write("XML parsing error: " + str(e) + "\n")
+        return 1
 
     if output is None:
         sys.stdout.buffer.write(state.xml_text)
