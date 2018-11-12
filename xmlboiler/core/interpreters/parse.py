@@ -44,7 +44,7 @@ class Interpeters(object):
     def __init__(self, soft_options, execution_context, log_level, graph):
         self.soft_options = soft_options
         self.graph = graph
-        self.execution_context = context_for_logger(execution_context, Contexts.default_logger('interpreters', log_level))
+        self.execution_context = context_for_logger(execution_context, Contexts.logger('interpreters', log_level))
 
         list_node = next(graph[URIRef(PREFIX + "boiler"):URIRef(PREFIX + "interpretersList")])
         the_list = ListParser(IRILiteral(ErrorMode.FATAL), ErrorMode.FATAL).parse(ParseContext(execution_context), graph, list_node)

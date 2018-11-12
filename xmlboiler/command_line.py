@@ -86,7 +86,7 @@ def main(argv):
         return 1
 
     execution_context = context_for_logger(Contexts.execution_context(),
-                                           Contexts.default_logger('main', args.log_level))
+                                           Contexts.logger('main', args.log_level))
 
     options = args.options_object(execution_context=execution_context,
                                   log_level=args.log_level,
@@ -168,7 +168,7 @@ def main(argv):
     options.next_script = map[args.next_script](state)
 
     download_execution_context = context_for_logger(execution_context,
-                                                    Contexts.default_logger('asset', args.log_level))
+                                                    Contexts.logger('asset', args.log_level))
     downloader_parse_context = default_parse_context(execution_context=download_execution_context)
     options.recursive_options.download_algorithm = \
         {'none': download_providers.no_download,
