@@ -24,10 +24,14 @@ import urllib
 from dependency_injector import providers, containers
 import xmlboiler.core.data
 
+
+def _local_url_to_file(url):
+    return re.sub(r'(?i)^local:', '', url)
+
+
 class _local_handler(urllib.request.BaseHandler):
     def local_open(req):
-        # TODO: Some code duplication with the below
-        filename = re.sub(r'(?i)^local:', '', req.get_full_url())
+        filename = _local_url_to_file(req.get_full_url())
         return xmlboiler.Global.get_resource_stream(filename)
 
 
@@ -42,8 +46,7 @@ class CannotConvertURLToLocalFile(RuntimeError):
 
 
 def _url_to_file(url):
-    # TODO: Some code duplication with the above
-    filename = re.sub(r'(?i)^local:', '', url)
+    filename = _local_url_to_file(url)
     if filename != url:  # substitution happened
         return xmlboiler.core.data.Global.get_filename('core/data/'+filename)
     filename = re.sub(r'(?i)^file:///?', '', url)
