@@ -58,6 +58,7 @@ class RegularCommandRunner(object):
             raise Timeout()
         except:  # any error
             t.terminate()
+            raise
 
 
 regular_provider = providers.Factory(RegularCommandRunner,
