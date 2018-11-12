@@ -39,6 +39,33 @@ class PostProcessPredicateParser(PredicateParser):
         return self.f(self.child.parse(parse_context, graph, node))
 
 
+class CheckedNodeParser(NodeParserWithError):
+    def __init__(self, child, f, on_error, error_msg):
+        super().__init__(on_error)
+        self.child = child
+        self.f = f
+        self.error_msg = error_msg
+
+    def parse(self, parse_context, graph, node):
+        v = self.child.parse(parse_context, graph, node)
+        if not self.f(v):
+            parse_context.throw(self.on_error, self.error_msg)
+        return v
+
+
+class CheckedPredicateParser(PredicateParserWithError):
+    def __init__(self, predicate, f, on_error, error_msg):
+        super().__init__(predicate, on_error)
+        self.f = f
+        self.error_msg = error_msg
+
+    def parse(self, parse_context, graph, node):
+        v = self.child.parse(parse_context, graph, node)
+        if not self.f(v):
+            parse_context.throw(self.on_error, self.error_msg)
+        return v
+
+
 class Choice(NodeParserWithError):
     def __init__(self, choices, on_error=ErrorMode.IGNORE):
         super().__init__(on_error)

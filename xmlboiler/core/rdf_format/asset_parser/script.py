@@ -23,7 +23,7 @@ from rdflib import URIRef
 
 from xmlboiler.core.rdf_format.base import MAIN_NAMESPACE
 from xmlboiler.core.rdf_recursive_descent.base import NodeParser, ErrorMode
-from xmlboiler.core.rdf_recursive_descent.compound import Choice, ZeroOnePredicate, OnePredicate
+from xmlboiler.core.rdf_recursive_descent.compound import Choice, ZeroOnePredicate, OnePredicate, CheckedNodeParser
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_format.asset import AssetInfo, TransformerKindEnum, ValidatorKindEnum, BaseScriptInfo, \
     ScriptKindEnum, ScriptInfo, CommandScriptInfo
@@ -72,6 +72,10 @@ class _ParamAttributeParser(NodeParser):
         return AttributeParam(ns, name)
 
 
+def _check_numrange(v):
+    return v >= 0 and v <= 1
+
+
 class BaseScriptInfoParser(NodeParser):
     def __init__(self, transformer, script_kind):
         self.transformer = transformer
@@ -94,8 +98,10 @@ class BaseScriptInfoParser(NodeParser):
 
     def parse(self, parse_context, graph, node):
         result = BaseScriptInfo(transformer=self.transformer, script_kind=self.script_kind)
-        # TODO: Check 0..1 range
         float_parser = FloatLiteral(ErrorMode.WARNING)
+        def float_msg():
+            return parse_context.translate("Value of the node should be 0..1")  # TODO: show the node with the error
+        float_parser = CheckedNodeParser(float_parser, _check_numrange, ErrorMode.WARNING, float_msg)
         preservance_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "preservance"),
                                               float_parser,
                                               1.0,
