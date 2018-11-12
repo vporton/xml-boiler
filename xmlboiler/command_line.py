@@ -87,6 +87,8 @@ def main(argv):
     chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not in target NS',
                               choices=['ignore', 'remove', 'error'])
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
+    chain_parser.add_argument('-W', '--weight-formula', help='formula for weighting scripts',
+                              choices=['inverseofsum', 'sumofinverses'], default='inverseofsum')
 
     try:
         args = parser.parse_args(argv)
@@ -161,6 +163,7 @@ def main(argv):
                              'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
 
     options.universal_precedence = args.universal_precedence
+    options.weight_formula = args.weight_formula
 
     options.installed_soft_options.package_manager = determine_os() if args.software != 'executable' else None
     options.installed_soft_options.path = args.software in ('executable', 'both')
