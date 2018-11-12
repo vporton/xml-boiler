@@ -31,7 +31,6 @@ class RegularCommandRunner(object):
         self.timeout2 = timeout2
         self.execution_context = context
 
-    # TODO: Terminate the subprocesses on terminating our program.
     def run_pipe(self, args, input):
         loop = asyncio.get_event_loop()
         try:
@@ -57,6 +56,8 @@ class RegularCommandRunner(object):
             except asyncio.TimeoutError:
                 t.kill()
             raise Timeout()
+        except:  # any error
+            t.terminate()
 
 
 regular_provider = providers.Factory(RegularCommandRunner,
