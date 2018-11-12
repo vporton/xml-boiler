@@ -44,7 +44,7 @@ class GraphWithProxy(object):
 
     def adjust(self):
         for u in self.graph1.nodes():
-            # TODO: Need both 0 and 1?
+            # Need to add nodes? Isn't it done automatically when adding edges?
             self.composite_graph.add_node((0, u))
             self.composite_graph.add_node((1, u))
         for u, v, d in self.graph1.edges(data=True):
