@@ -45,7 +45,7 @@ class PipelineState(BaseState):
     dom: Optional[xml.dom.minidom.Document] = None
     all_namespaces: Optional[FrozenSet[URIRef]] = None
     scripts: List[EnrichedScript] = field(default_factory=list)
-    executed_scripts: Set[EnrichedScript] = field(default_factory=set)  # TODO: Should be a set/frozenset?
+    executed_scripts: Set[EnrichedScript] = field(default_factory=set)
     failed_scripts: Set[EnrichedScript] = field(default_factory=set)
     singletons: Set[URIRef] = field(default_factory=set)
     precedences_higher: Connectivity = field(default_factory=Connectivity)
