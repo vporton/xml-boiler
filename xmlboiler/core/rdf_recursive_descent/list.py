@@ -32,6 +32,6 @@ class ListParser(NodeParserWithError):
         """
         if not graph.value(node, RDF.nil) and (not isinstance(node, BNode) or not graph.value(node, RDF.first)):
             parse_context.throw(self.on_error,
-                                lambda: parse_context.translate("Node {node} should be a list.").format(node=list))
-        items = list(graph.items(node))  # TODO: Is list() necessary?
+                                lambda: parse_context.translate("Node {node} should be a list.").format(node=node))
+        items = graph.items(node)
         return [self.subparser.parse(parse_context, graph, elt) for elt in items]
