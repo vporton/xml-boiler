@@ -55,7 +55,7 @@ class ScriptsIteratorBase(ABC):
             return scripts
         return self.state.executed_scripts.intersection(scripts)
 
-    def _available_chains(self, sources):  # TODO: `destinations` not used
+    def _available_chains(self, sources):
         # TODO: inefficient? should hold the graph, not re-create it
         available_chains = GraphOfScripts(None, self.state.opts.universal_precedence, self.state.opts.weight_formula, self.state.precedences_higher)
         # available_chains.add_scripts(frozenset(frozenset(self._checked_scripts(self.state.scripts)) - self.state.failed_scripts))  # slow
