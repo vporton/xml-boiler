@@ -152,8 +152,6 @@ def main(argv):
     else:
         options.recursive_options.downloaders = [[local_asset_downloader]]
 
-    source = sys.stdin if args.source is None or args.source == '-' else \
-        (xmlboiler.core.urls.our_opener.open(args.source) if re.match(r'^[a-zA-Z]+:', args.source) else open(args.source))
     output = None if not args.output or args.output[0] == '-' else args.output[0]
 
     options.target_namespaces = frozenset([] if args.target is None else [URIRef(t) for t in args.target])
@@ -171,7 +169,13 @@ def main(argv):
         sys.stderr.write("Package manager is not supported on this OS.\n")
 
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
-    state.xml_text = source.buffer.read(); source.close()
+
+    if args.source and re.match(r'^[a-zA-Z]+:', args.source):
+        state.xml_text = xmlboiler.core.urls.OurOpeners.our_opener().open(args.source).read()
+    else:
+        source = sys.stdin if args.source is None or args.source == '-' else open(args.source)
+        state.xml_text = source.buffer.read()
+        source.close()
 
     map = {
         'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,

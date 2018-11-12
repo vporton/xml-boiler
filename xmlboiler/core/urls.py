@@ -54,7 +54,6 @@ def _url_to_file(url):
     raise CannotConvertURLToLocalFile()
 
 
-# TODO: Use dependency injectors instead of this global object
 class OurOpeners(containers.DeclarativeContainer):
-    opener = providers.ThreadSafeSingleton(_build_opener)
+    our_opener = providers.ThreadSafeSingleton(_build_opener)
     url_to_file = _url_to_file
