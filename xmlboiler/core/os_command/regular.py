@@ -44,7 +44,8 @@ class RegularCommandRunner(object):
         return res
 
     async def run_pipe_impl(self, args, input):
-        self.execution_context.logger.info("Executing:" + ' '.join(args))  # TODO: Localization
+        self.execution_context.logger.info(
+            self.execution_context.translations.gettext("Executing: {cmd}").format(cmd=' '.join(args)))
         t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE)
         try:
             stdout, stderr = await asyncio.wait_for(t.communicate(input), self.timeout)
