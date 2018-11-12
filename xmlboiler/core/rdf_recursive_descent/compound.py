@@ -40,11 +40,6 @@ class PostProcessPredicateParser(PredicateParser):
 
 
 class Choice(NodeParserWithError):
-    """
-    TODO: If the node conforms to more than one choice, this class does
-    not conform to the specification.
-    """
-
     def __init__(self, choices, on_error=ErrorMode.IGNORE):
         super().__init__(on_error)
         self.choices = choices
