@@ -55,7 +55,7 @@ class AutomaticTranformation(object):
         # hack
         self.state.all_namespaces = frozenset(
             filter(lambda x: x not in(URIRef('http://www.w3.org/2000/xmlns/'),
-                                      URIRef('http://www.w3.org/XML/1998/namespace')),
+                                      URIRef('http://www.w3.org/XML/1998/namespace')),  # TODO: Really exclude this?
                    all_namespaces))
 
         if self.state.all_namespaces <= self.state.opts.target_namespaces:
