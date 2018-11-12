@@ -17,6 +17,7 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
+import locale
 import re
 import sys
 
@@ -42,6 +43,8 @@ from xmlboiler.core.util.xml import MyXMLError
 
 
 def main(argv):
+    locale.setlocale(locale.LC_ALL, '')
+
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description="""Automatically process XML.\n
     To support this project:

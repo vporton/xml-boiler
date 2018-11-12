@@ -28,7 +28,7 @@ from .execution_context import ExecutionContext
 
 
 def init_locale(lang=None):
-    #locale.setlocale(locale.LC_ALL, '')  # TODO: call from your app
+    #locale.setlocale(locale.LC_ALL, '')  # call from your app
     try:
         if lang is None:
             lang = locale.getlocale()[0][0:2]
