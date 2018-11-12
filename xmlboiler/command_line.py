@@ -18,6 +18,7 @@
 
 import argparse
 import locale
+import os
 import re
 import sys
 
@@ -44,6 +45,11 @@ from xmlboiler.core.util.xml import MyXMLError
 
 def main(argv):
     locale.setlocale(locale.LC_ALL, '')
+
+    # https://docs.python.org/3/library/asyncio-platforms.html#asyncio-windows-subprocess
+    if os.name == 'nt':
+        import asyncio
+        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description="""Automatically process XML.\n
