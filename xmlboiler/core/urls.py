@@ -18,9 +18,8 @@
 
 # TODO: Support configuring proxies, timeouts, etc.
 
-# TODO: correct module is urllib or urllib2?
 import re
-import urllib
+import urllib  # very poor functionality, should probably be replaced with another module
 from dependency_injector import providers, containers
 import xmlboiler.core.data
 
