@@ -171,6 +171,7 @@ def main(argv):
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
 
     if args.source and re.match(r'^[a-zA-Z]+:', args.source):
+        # TODO: Refactor our_opener() into a separate field
         state.xml_text = xmlboiler.core.urls.OurOpeners.our_opener().open(args.source).read()
     else:
         source = sys.stdin if args.source is None or args.source == '-' else open(args.source)
