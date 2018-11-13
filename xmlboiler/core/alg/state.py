@@ -53,6 +53,5 @@ class PipelineState(BaseState):
 
     def add_asset(self, asset):
         self.scripts += [script for transformer in asset.transformers for script in transformer.scripts]
-        # TODO: Don't use private field .connectivity
         self.precedences_higher.add_relation(asset.precedences_higher.connectivity)
         self.precedences_subclasses.add_relation(asset.precedences_subclasses.connectivity)
