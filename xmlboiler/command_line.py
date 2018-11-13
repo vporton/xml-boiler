@@ -56,7 +56,9 @@ def main(argv):
     To support this project:
     - Send money to PayPal porton@narod.ru or https://paypal.me/victorporton
     - Send Ether to 0x36A0356d43EE4168ED24EFA1CAe3198708667ac0
-    - Buy tokens at https://crypto4ngo.org/project/view/4""")
+    - Buy tokens at https://crypto4ngo.org/project/view/4
+    
+    Use http_proxy or ftp_proxy variables to specify proxy servers.""")
     subparsers = parser.add_subparsers(title='subcommands')
     subparsers.required = True
 
@@ -76,6 +78,7 @@ def main(argv):
                              '\'package\' are now supported only on Debian-based systems. ' + \
                              'Defaults to \'both\' on Debian-based and \'executable\' on others.',
                         choices=['package', 'executable', 'both'])
+    parser.add_argument('-T', '--timeout', help='HTTP and FTP timeout in seconds (default 10.0)', type=float, default=10)
 
     chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
     chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
@@ -101,7 +104,8 @@ def main(argv):
 
     options = args.options_object(execution_context=execution_context,
                                   log_level=args.log_level,
-                                  command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context))
+                                  command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
+                                  url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
 
     directories_map = {}
     if args.directory is not None:
@@ -171,8 +175,7 @@ def main(argv):
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
 
     if args.source and re.match(r'^[a-zA-Z]+:', args.source):
-        # TODO: Refactor our_opener() into a separate field
-        state.xml_text = xmlboiler.core.urls.OurOpeners.our_opener().open(args.source).read()
+        state.xml_text = options.url_opener.open(args.source).read()
     else:
         source = sys.stdin if args.source is None or args.source == '-' else open(args.source)
         state.xml_text = source.buffer.read()

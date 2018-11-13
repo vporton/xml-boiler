@@ -27,6 +27,7 @@ from rdflib import URIRef, Graph
 from xmlboiler.core.execution_context import ExecutionContext
 from xmlboiler.core.os_command.base import BaseCommandRunner
 from xmlboiler.core.packages.base import BasePackageManaging
+from xmlboiler.core.urls import MyOpener
 
 
 class WorklowKind(Enum):
@@ -74,6 +75,7 @@ class BaseAlgorithmOptions(object):
     log_level: Any = None
     execution_context: ExecutionContext = None
     command_runner: BaseCommandRunner = None
+    url_opener: MyOpener = None
     kind: WorklowKind = None
     recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
