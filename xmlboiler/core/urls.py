@@ -20,6 +20,7 @@
 
 import re
 import urllib  # very poor functionality, should probably be replaced with another module
+import urllib.request
 from dependency_injector import providers, containers
 import xmlboiler.core.data
 
@@ -48,9 +49,8 @@ def _url_to_file(url):
     filename = _local_url_to_file(url)
     if filename != url:  # substitution happened
         return xmlboiler.core.data.Global.get_filename('core/data/'+filename)
-    filename = re.sub(r'(?i)^file:///?', '', url)
-    if filename != url:
-        return '/' + filename  # TODO: Windows support
+    if re.match(r'(?i)^file:', url):
+        return urllib.request.url2pathname(urllib.parse.urlparse(url).path)
     raise CannotConvertURLToLocalFile()
 
 
