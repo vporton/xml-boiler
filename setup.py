@@ -11,7 +11,7 @@ class MyBuild(DistutilsBuild):
 
 setup(
     name='xml-boiler',
-    version='0.2.7',
+    version='0.2.8',
     url='https://github.com/vporton/xml-boiler',
     license='AGPLv3',
     author='Victor Porton',
@@ -31,7 +31,7 @@ setup(
         'Topic :: Text Processing :: Markup :: XML',
     ],
 
-    use_scm_version=True,
+    #use_scm_version=True,
     setup_requires=['setuptools_scm'],
     packages=find_packages(),
     # package_data={'': ['**/*.xml', '**/*.ttl', '**/*.net', 'data/assets/*', 'data/scripts/*.xslt',
