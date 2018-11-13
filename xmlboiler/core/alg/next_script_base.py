@@ -89,7 +89,7 @@ class ScriptsIteratorBase(ABC):
         return result
 
     def _outer_node_script(self, node):
-        NSs = [frozenset([URIRef(ns)]) for ns in self._get_ns(node)]
+        NSs = [frozenset([ns]) for ns in self._get_ns(node)]
         if not NSs:
             return None
         available_chains = self._available_chains(NSs)

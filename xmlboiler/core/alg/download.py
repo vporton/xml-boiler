@@ -89,8 +89,6 @@ class BaseDownloadAlgorithm(object):
         self.subclasses = subclasses
 
     def add_ns(self, ns):
-        if isinstance(ns, str):  # TODO: This is a hack
-            ns = URIRef(ns)
         if ns not in self.state.assets:
             msg = self.parse_context.execution_context.translations.gettext("Loaded asset for namespace {ns}.").format(ns=ns)
             self.parse_context.execution_context.logger.info(msg)

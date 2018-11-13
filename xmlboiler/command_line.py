@@ -112,7 +112,7 @@ def main(argv):
                 return 1
             directories_map[m[1]] = m[2]
 
-    options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else args.preload)
+    options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else map(URIRef, args.preload))
 
     if args.recursive_order is not None:
         elts = args.recursive_order.split(',')
@@ -123,10 +123,10 @@ def main(argv):
         if len(elts2) != len(elts):
             print("Error: values are repeated more than once in --recursive-order option.")
             return 1
-        map = {"sources": RecursiveRetrievalPriorityOrderElement.SOURCES,
+        m = {"sources": RecursiveRetrievalPriorityOrderElement.SOURCES,
                "targets": RecursiveRetrievalPriorityOrderElement.TARGETS,
                "workflowtargets": RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS}
-        options.recursive_options.retrieval_priority = OrderedSet([map[s] for s in elts])
+        options.recursive_options.retrieval_priority = OrderedSet([m[s] for s in elts])
     else:
         # TODO: Subject to change
         options.recursive_options.retrieval_priority = \
@@ -178,11 +178,11 @@ def main(argv):
         state.xml_text = source.buffer.read()
         source.close()
 
-    map = {
+    m = {
         'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
         'doc': xmlboiler.core.alg.next_script2.ScriptsIterator,
     }
-    options.next_script = map[args.next_script](state)
+    options.next_script = m[args.next_script](state)
 
     download_execution_context = context_for_logger(execution_context,
                                                     Contexts.logger('asset', args.log_level))
