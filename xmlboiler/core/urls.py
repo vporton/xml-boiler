@@ -39,6 +39,14 @@ def _build_opener():
     # Note that it adds HTTP and other handlers automatically
     return urllib.request.build_opener(_local_handler)
 
+class MyOpener(object):
+    def __init__(self, opener, timeout):
+        self.opener = opener
+        self.timeout = timeout
+
+    def open(self, *args, **kwargs):
+        return self.opener.open(*args, timeout=self.timeout, **kwargs)
+
 
 class CannotConvertURLToLocalFile(RuntimeError):
     def __repr__(self):
@@ -55,5 +63,6 @@ def _url_to_file(url):
 
 
 class OurOpeners(containers.DeclarativeContainer):
-    our_opener = providers.ThreadSafeSingleton(_build_opener)
+    _our_opener = providers.ThreadSafeSingleton(_build_opener)
+    our_opener = providers.ThreadSafeSingleton(MyOpener, opener=_our_opener, timeout=10.0)
     url_to_file = _url_to_file
