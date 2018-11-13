@@ -100,7 +100,8 @@ class BaseScriptInfoParser(NodeParser):
         result = BaseScriptInfo(transformer=self.transformer, script_kind=self.script_kind)
         float_parser = FloatLiteral(ErrorMode.WARNING)
         def float_msg():
-            return parse_context.translate("Value of the node should be 0..1")  # TODO: show the node with the error
+            return parse_context.translate(
+                "Preservance, stability, and preference for the node {node} should be 0..1".format(node))
         float_parser = CheckedNodeParser(float_parser, _check_numrange, ErrorMode.WARNING, float_msg)
         preservance_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "preservance"),
                                               float_parser,
