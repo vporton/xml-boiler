@@ -199,16 +199,21 @@ def main(argv):
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options,
                                                                                      log_level=args.log_level)
     try:
-        algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
-        algorithm.run()
+        try:
+            algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
+        except MyXMLError as e:
+            sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+            return 1
+        try:
+            algorithm.run()
+        except MyXMLError as e:
+            sys.stderr.write("Error in an intermediary XML document during the transformation: " + str(e) + "\n")
+            return 1
     except AssetsExhausted:
         if options.not_in_target != NotInTargetNamespace.IGNORE:
             sys.stderr.write("The transformation failed, no more assets to load.\n")
             if options.not_in_target == NotInTargetNamespace.ERROR:
                 return 1
-    except MyXMLError as e:  # TODO: Differentiate error in initial document and in intermediary results
-        sys.stderr.write("XML parsing error: " + str(e) + "\n")
-        return 1
 
     if output is None:
         sys.stdout.buffer.write(state.xml_text)
