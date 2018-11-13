@@ -22,8 +22,8 @@ from dependency_injector.containers import DeclarativeContainer
 from rdflib import URIRef
 
 from xmlboiler.core.rdf_format.base import MAIN_NAMESPACE
-from xmlboiler.core.rdf_recursive_descent.base import NodeParser, ErrorHandler
-from xmlboiler.core.rdf_recursive_descent.compound import Choice, ZeroOnePredicate, OnePredicate
+from xmlboiler.core.rdf_recursive_descent.base import NodeParser, ErrorMode
+from xmlboiler.core.rdf_recursive_descent.compound import Choice, ZeroOnePredicate, OnePredicate, CheckedNodeParser
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
 from xmlboiler.core.rdf_format.asset import AssetInfo, TransformerKindEnum, ValidatorKindEnum, BaseScriptInfo, \
     ScriptKindEnum, ScriptInfo, CommandScriptInfo
@@ -45,16 +45,16 @@ class ScriptInfoParser(Choice):
 
 class _AttributeParamParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        return OnePredicate(URIRef(MAIN_NAMESPACE + "attribute"), _ParamAttributeParser(), ErrorHandler.WARNING).parse(parse_context, graph, node)
+        return OnePredicate(URIRef(MAIN_NAMESPACE + "attribute"), _ParamAttributeParser(), ErrorMode.WARNING).parse(parse_context, graph, node)
 
 
 class _ParamParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorHandler.IGNORE), ErrorHandler.WARNING).\
+        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorMode.IGNORE), ErrorMode.WARNING).\
             parse(parse_context, graph, node)
         value = OnePredicate(URIRef(MAIN_NAMESPACE + "value"),
-                             Choice([StringLiteral(ErrorHandler.IGNORE), _AttributeParamParser()]),
-                             ErrorHandler.WARNING).\
+                             Choice([StringLiteral(ErrorMode.IGNORE), _AttributeParamParser()]),
+                             ErrorMode.WARNING).\
             parse(parse_context, graph, node)
         return (name, value)
 
@@ -65,11 +65,15 @@ class AttributeParam(NamedTuple):
 
 class _ParamAttributeParser(NodeParser):
     def parse(self, parse_context, graph, node):
-        ns = OnePredicate(URIRef(MAIN_NAMESPACE + "NS"), IRILiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
+        ns = OnePredicate(URIRef(MAIN_NAMESPACE + "NS"), IRILiteral(ErrorMode.WARNING), ErrorMode.WARNING).\
             parse(parse_context, graph, node)
-        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING).\
+        name = OnePredicate(URIRef(MAIN_NAMESPACE + "name"), StringLiteral(ErrorMode.WARNING), ErrorMode.WARNING).\
             parse(parse_context, graph, node)
         return AttributeParam(ns, name)
+
+
+def _check_numrange(v):
+    return v >= 0 and v <= 1
 
 
 class BaseScriptInfoParser(NodeParser):
@@ -94,34 +98,36 @@ class BaseScriptInfoParser(NodeParser):
 
     def parse(self, parse_context, graph, node):
         result = BaseScriptInfo(transformer=self.transformer, script_kind=self.script_kind)
-        # TODO: Check 0..1 range
-        float_parser = FloatLiteral(ErrorHandler.WARNING)
+        float_parser = FloatLiteral(ErrorMode.WARNING)
+        def float_msg():
+            return parse_context.translate("Value of the node should be 0..1")  # TODO: show the node with the error
+        float_parser = CheckedNodeParser(float_parser, _check_numrange, ErrorMode.WARNING, float_msg)
         preservance_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "preservance"),
                                               float_parser,
                                               1.0,
-                                              ErrorHandler.WARNING)
+                                              ErrorMode.WARNING)
         stability_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "stability"),
                                             float_parser,
                                             1.0,
-                                            ErrorHandler.WARNING)
+                                            ErrorMode.WARNING)
         preference_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "preference"),
                                              float_parser,
                                              1.0,
-                                             ErrorHandler.WARNING)
+                                             ErrorMode.WARNING)
         result.preservance = preservance_parser.parse(parse_context, graph, node)
         result.stability   = stability_parser.parse  (parse_context, graph, node)
         result.preference  = preference_parser.parse (parse_context, graph, node)
         if self.script_kind == ScriptKindEnum.TRANSFORMER:
             transformer_kind_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "transformerKind"),
                                                    Providers.transformer_kind_parser(),
-                                                   ErrorHandler.WARNING)
+                                                   ErrorMode.WARNING)
             result.transformer_kind = transformer_kind_parser.parse(parse_context, graph, node)
         elif self.script_kind == ScriptKindEnum.VALIDATOR:
             result.validator_kind = Providers.validator_kind_parser().parse(parse_context, graph, node)
-        ok_result_node_parser = StringLiteral(ErrorHandler.WARNING)
+        ok_result_node_parser = StringLiteral(ErrorMode.WARNING)
         ok_result_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "okResult"),
                                             ok_result_node_parser,
-                                            ErrorHandler.WARNING)
+                                            ErrorMode.WARNING)
         result.ok_result = ok_result_parser.parse(parse_context, graph, node)
         return result
 
@@ -134,21 +140,21 @@ class CommandScriptInfoParser(NodeParser):
 
     def parse(self, parse_context, graph, node):
         klass = URIRef(MAIN_NAMESPACE + "Command")
-        check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorHandler.IGNORE)
+        check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorMode.IGNORE)
 
         base = BaseScriptInfoParser(self.transformer, self.script_kind).parse(parse_context, graph, node)
         more = CommandScriptInfo()
 
-        str1_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "scriptURL"), IRILiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
+        str1_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "scriptURL"), IRILiteral(ErrorMode.WARNING), ErrorMode.WARNING)
         str1 = str1_parser.parse(parse_context, graph, node)
-        str2_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "commandString"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
+        str2_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "commandString"), StringLiteral(ErrorMode.WARNING), ErrorMode.WARNING)
         str2 = str2_parser.parse(parse_context, graph, node)
         # if str1 is None and str2 is None:
         #     msg = parse_context.translate("Both :scriptURL and :commandString can't be missing in node {node}.").format(node=node)
-        #     parse_context.throw(ErrorHandler.WARNING, msg)
+        #     parse_context.throw(ErrorMode.WARNING, msg)
         if str1 is not None and str2 is not None:
             msg = parse_context.translate("Both :scriptURL and :commandString can't be present in node {node}.").format(node=node)
-            parse_context.throw(ErrorHandler.WARNING, msg)
+            parse_context.throw(ErrorMode.WARNING, msg)
         more.script_url     = str1
         more.command_string = str2
 
@@ -156,19 +162,19 @@ class CommandScriptInfoParser(NodeParser):
             def s():
                 return parse_context.translate("Cannot provide params for commandString script {node}.").\
                     format(node=node)
-            parse_context.throw(ErrorHandler.FATAL, s)
+            parse_context.throw(ErrorMode.FATAL, s)
 
-        min_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "minVersion"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
+        min_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "minVersion"), StringLiteral(ErrorMode.WARNING), ErrorMode.WARNING)
         more.min_version = min_parser.parse(parse_context, graph, node)
-        max_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "maxVersion"), StringLiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
+        max_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "maxVersion"), StringLiteral(ErrorMode.WARNING), ErrorMode.WARNING)
         more.max_version = max_parser.parse(parse_context, graph, node)
 
-        language_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "language"), IRILiteral(ErrorHandler.WARNING), ErrorHandler.WARNING)
+        language_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "language"), IRILiteral(ErrorMode.WARNING), ErrorMode.WARNING)
         more.language = language_parser.parse(parse_context, graph, node)
 
         params_parser = ZeroOnePredicate(URIRef(MAIN_NAMESPACE + "params"),
-                                         ListParser(_ParamParser(), ErrorHandler.FATAL),
-                                         ErrorHandler.WARNING,
+                                         ListParser(_ParamParser(), ErrorMode.FATAL),
+                                         ErrorMode.WARNING,
                                          default_value=[])
         more.params = params_parser.parse(parse_context, graph, node)
 
@@ -183,16 +189,16 @@ class WebServiceScriptInfoParser(NodeParser):
 
     def parse(self, parse_context, graph, node):
         klass = URIRef(MAIN_NAMESPACE + "WebService")
-        check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorHandler.IGNORE)
+        check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorMode.IGNORE)
 
         base = BaseScriptInfoParser(self.transformer, self.script_kind).parse(parse_context, graph, node)
         more = CommandScriptInfo()
 
-        action_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "action"), IRILiteral(ErrorHandler.WARNING))
+        action_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "action"), IRILiteral(ErrorMode.WARNING))
         more.action = action_parser.parse(parse_context, graph, node)
-        method_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "method"), IRILiteral(ErrorHandler.WARNING))
+        method_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "method"), IRILiteral(ErrorMode.WARNING))
         more.method = method_parser.parse(parse_context, graph, node)
-        xml_field_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "xmlField"), IRILiteral(ErrorHandler.WARNING))
+        xml_field_parser = OnePredicate(URIRef(MAIN_NAMESPACE + "xmlField"), IRILiteral(ErrorMode.WARNING))
         more.xml_field = xml_field_parser.parse(parse_context, graph, node)
 
         return ScriptInfo(base=base, more=more)

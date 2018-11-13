@@ -70,13 +70,18 @@ class InstalledSoftwareOptions(object):
 # workflow, but in future we may increase "granularity" to have different
 # options for different elements.
 @dataclass
-class BaseAutomaticWorkflowElementOptions(object):
+class BaseAlgorithmOptions(object):
     log_level: Any = None
     execution_context: ExecutionContext = None
     command_runner: BaseCommandRunner = None
     kind: WorklowKind = None
     recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
+
+
+@dataclass
+class BaseAutomaticWorkflowElementOptions(BaseAlgorithmOptions):
+    pass
 
 ### Validation ###
 
@@ -102,3 +107,4 @@ class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElement
     not_in_target_namespace: NotInTargetNamespace = None
     universal_precedence: Optional[URIRef] = None  # TODO: Find a better name for this option
     target_namespaces: frozenset = None  # frozenset[URIRef]
+    weight_formula: str = None

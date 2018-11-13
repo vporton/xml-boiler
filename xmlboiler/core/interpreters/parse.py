@@ -25,7 +25,7 @@ from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.packages.version_wrapper import VersionWrapper, version_wrapper_create
-from xmlboiler.core.rdf_recursive_descent.base import ErrorHandler, ParseException, ParseContext
+from xmlboiler.core.rdf_recursive_descent.base import ErrorMode, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
     PostProcessNodeParser
 from xmlboiler.core.rdf_recursive_descent.enum import EnumParser
@@ -44,10 +44,10 @@ class Interpeters(object):
     def __init__(self, soft_options, execution_context, log_level, graph):
         self.soft_options = soft_options
         self.graph = graph
-        self.execution_context = context_for_logger(execution_context, Contexts.default_logger('interpreters', log_level))
+        self.execution_context = context_for_logger(execution_context, Contexts.logger('interpreters', log_level))
 
         list_node = next(graph[URIRef(PREFIX + "boiler"):URIRef(PREFIX + "interpretersList")])
-        the_list = ListParser(IRILiteral(ErrorHandler.FATAL), ErrorHandler.FATAL).parse(ParseContext(execution_context), graph, list_node)
+        the_list = ListParser(IRILiteral(ErrorMode.FATAL), ErrorMode.FATAL).parse(ParseContext(execution_context), graph, list_node)
         self.order = {k: v for v, k in enumerate(the_list)}
 
     def check_version(self, min_version, max_version, main_node):
@@ -65,7 +65,7 @@ class Interpeters(object):
 
         if min_version is None and max_version is None:  # any version is OK
             try:
-                package = OnePredicate(URIRef(PREFIX + "debianPackage"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.IGNORE). \
+                package = OnePredicate(URIRef(PREFIX + "debianPackage"), StringLiteral(ErrorMode.FATAL), ErrorMode.IGNORE). \
                     parse(parse_context, self.graph, main_node)
                 if self.soft_options.package_manager.determine_package_version(package) is None:
                     self.warn_no_package(package, min_version, max_version)
@@ -84,11 +84,11 @@ class Interpeters(object):
         min_version = version_wrapper(min_version)
         max_version = version_wrapper(max_version)
 
-        version_parser = Choice([PostProcessNodeParser(StringLiteral(ErrorHandler.IGNORE), version_wrapper),
+        version_parser = Choice([PostProcessNodeParser(StringLiteral(ErrorMode.IGNORE), version_wrapper),
                                  EnumParser({PREFIX + 'fromPackageVersion': _FromPackageVersion()})])
-        lang_min_version = ZeroOnePredicate(URIRef(PREFIX + "langMinVersion"), version_parser, ErrorHandler.FATAL). \
+        lang_min_version = ZeroOnePredicate(URIRef(PREFIX + "langMinVersion"), version_parser, ErrorMode.FATAL). \
             parse(parse_context, self.graph, main_node)
-        lang_max_version = ZeroOnePredicate(URIRef(PREFIX + "langMaxVersion"), version_parser, ErrorHandler.FATAL). \
+        lang_max_version = ZeroOnePredicate(URIRef(PREFIX + "langMaxVersion"), version_parser, ErrorMode.FATAL). \
             parse(parse_context, self.graph, main_node)
         lang_min_version = lang_min_version or version_wrapper(float('-inf'))
         lang_max_version = lang_max_version or version_wrapper(float('inf'))
@@ -99,14 +99,14 @@ class Interpeters(object):
         if not isinstance(lang_max_version, _FromPackageVersion) and min_version > lang_max_version:
             return False
 
-        pmin_version = ZeroOnePredicate(URIRef(PREFIX + "packageMinVersion"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.FATAL). \
+        pmin_version = ZeroOnePredicate(URIRef(PREFIX + "packageMinVersion"), StringLiteral(ErrorMode.FATAL), ErrorMode.FATAL). \
             parse(parse_context, self.graph, main_node)
-        pmax_version = ZeroOnePredicate(URIRef(PREFIX + "packageMaxVersion"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.FATAL). \
+        pmax_version = ZeroOnePredicate(URIRef(PREFIX + "packageMaxVersion"), StringLiteral(ErrorMode.FATAL), ErrorMode.FATAL). \
             parse(parse_context, self.graph, main_node)
         if lang_min_version is _FromPackageVersion or lang_max_version is _FromPackageVersion or \
                 pmin_version is not None or pmax_version is not None:
             try:
-                package = OnePredicate(URIRef(PREFIX + "debianPackage"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.IGNORE). \
+                package = OnePredicate(URIRef(PREFIX + "debianPackage"), StringLiteral(ErrorMode.FATAL), ErrorMode.IGNORE). \
                     parse(parse_context, self.graph, main_node)
             except ParseException:
                 return False
@@ -130,7 +130,7 @@ class Interpeters(object):
 
     def check_version_by_executable(self, main_node, warn):
         parse_context = ParseContext(self.execution_context)
-        executable = ZeroOnePredicate(URIRef(PREFIX + "executable"), StringLiteral(ErrorHandler.FATAL), ErrorHandler.FATAL). \
+        executable = ZeroOnePredicate(URIRef(PREFIX + "executable"), StringLiteral(ErrorMode.FATAL), ErrorMode.FATAL). \
             parse(parse_context, self.graph, main_node)
         if executable is None:
             return False
@@ -168,7 +168,7 @@ class Interpeters(object):
         """
         parse_context = InterpreterParseContext(self.execution_context, script_str, params)
         pred = URIRef(PREFIX + ('inlineCommand' if inline else 'scriptCommand'))
-        parser = ZeroOnePredicate(pred, MainParser(), ErrorHandler.FATAL)
+        parser = ZeroOnePredicate(pred, MainParser(), ErrorMode.FATAL)
         return parser.parse(parse_context, self.graph, node)
 
     def warn_no_package(self, package, min_version, max_version):

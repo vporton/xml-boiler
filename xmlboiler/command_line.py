@@ -17,6 +17,8 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
+import locale
+import os
 import re
 import sys
 
@@ -25,7 +27,8 @@ from rdflib import URIRef
 
 import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
-from xmlboiler.core.alg.auto_transform import AutomaticTranformation, AssetsExhausted
+from xmlboiler.core.alg import auto_transform
+from xmlboiler.core.alg.auto_transform import AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
 from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_asset_downloader
@@ -37,9 +40,17 @@ import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
 from xmlboiler.core.packages.config import determine_os
 from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
+from xmlboiler.core.util.xml import MyXMLError
 
 
 def main(argv):
+    locale.setlocale(locale.LC_ALL, '')
+
+    # https://docs.python.org/3/library/asyncio-platforms.html#asyncio-windows-subprocess
+    if os.name == 'nt':
+        import asyncio
+        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description="""Automatically process XML.\n
     To support this project:
@@ -47,6 +58,7 @@ def main(argv):
     - Send Ether to 0x36A0356d43EE4168ED24EFA1CAe3198708667ac0
     - Buy tokens at https://crypto4ngo.org/project/view/4""")
     subparsers = parser.add_subparsers(title='subcommands')
+    subparsers.required = True
 
     parser.add_argument('-l', '--log-level',
                         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO',
@@ -71,10 +83,12 @@ def main(argv):
     chain_parser.add_argument('-o', '--output', nargs=1, help='output file (defaults to stdout)')
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-s', '--next-script', help='"next script" algorithm ("precedence" is not supported)',
-                              choices=['precedence', 'doc'], default='doc')  # TODO: subject to change notation
+                              choices=['precedence', 'doc'], default='doc')
     chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not in target NS',
                               choices=['ignore', 'remove', 'error'])
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
+    chain_parser.add_argument('-W', '--weight-formula', help='formula for weighting scripts',
+                              choices=['inverseofsum', 'sumofinverses'], default='inverseofsum')
 
     try:
         args = parser.parse_args(argv)
@@ -83,7 +97,7 @@ def main(argv):
         return 1
 
     execution_context = context_for_logger(Contexts.execution_context(),
-                                           Contexts.default_logger('main', args.log_level))
+                                           Contexts.logger('main', args.log_level))
 
     options = args.options_object(execution_context=execution_context,
                                   log_level=args.log_level,
@@ -98,7 +112,7 @@ def main(argv):
                 return 1
             directories_map[m[1]] = m[2]
 
-    options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else args.preload)
+    options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else map(URIRef, args.preload))
 
     if args.recursive_order is not None:
         elts = args.recursive_order.split(',')
@@ -109,10 +123,10 @@ def main(argv):
         if len(elts2) != len(elts):
             print("Error: values are repeated more than once in --recursive-order option.")
             return 1
-        map = {"sources": RecursiveRetrievalPriorityOrderElement.SOURCES,
+        m = {"sources": RecursiveRetrievalPriorityOrderElement.SOURCES,
                "targets": RecursiveRetrievalPriorityOrderElement.TARGETS,
                "workflowtargets": RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS}
-        options.recursive_options.retrieval_priority = OrderedSet([map[s] for s in elts])
+        options.recursive_options.retrieval_priority = OrderedSet([m[s] for s in elts])
     else:
         # TODO: Subject to change
         options.recursive_options.retrieval_priority = \
@@ -121,20 +135,23 @@ def main(argv):
                         RecursiveRetrievalPriorityOrderElement.SOURCES])
 
     def infer_downloader(s):
+        if s not in directories_map:
+            sys.stderr.write("No such downloader '{d}' (use --directory option)\n".format(d=s))
+            raise ValueError()
         return directory_asset_downloader(directories_map[s]) if s != 'builtin' else local_asset_downloader
 
     # Don't execute commands from remote scripts (without not yet properly working jail).
     # So downloading from URLs does not make sense yet.
-    # TODO: Better error reporting
     if args.downloaders:
         downloaders = [d.split(',') for d in args.downloaders.split('+')]
-        options.recursive_options.downloaders = \
-            [[infer_downloader(s) for s in d] for d in downloaders]
+        try:
+            options.recursive_options.downloaders = \
+                [[infer_downloader(s) for s in d] for d in downloaders]
+        except ValueError:
+            return 1
     else:
         options.recursive_options.downloaders = [[local_asset_downloader]]
 
-    source = sys.stdin if args.source is None or args.source == '-' else \
-        (xmlboiler.core.urls.our_opener.open(args.source) if re.match(r'^[a-zA-Z]+:', args.source) else open(args.source))
     output = None if not args.output or args.output[0] == '-' else args.output[0]
 
     options.target_namespaces = frozenset([] if args.target is None else [URIRef(t) for t in args.target])
@@ -144,6 +161,7 @@ def main(argv):
                              'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
 
     options.universal_precedence = args.universal_precedence
+    options.weight_formula = args.weight_formula
 
     options.installed_soft_options.package_manager = determine_os() if args.software != 'executable' else None
     options.installed_soft_options.path = args.software in ('executable', 'both')
@@ -151,34 +169,43 @@ def main(argv):
         sys.stderr.write("Package manager is not supported on this OS.\n")
 
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
-    state.xml_text = source.buffer.read(); source.close()
 
-    map = {
+    if args.source and re.match(r'^[a-zA-Z]+:', args.source):
+        # TODO: Refactor our_opener() into a separate field
+        state.xml_text = xmlboiler.core.urls.OurOpeners.our_opener().open(args.source).read()
+    else:
+        source = sys.stdin if args.source is None or args.source == '-' else open(args.source)
+        state.xml_text = source.buffer.read()
+        source.close()
+
+    m = {
         'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
         'doc': xmlboiler.core.alg.next_script2.ScriptsIterator,
     }
-    options.next_script = map[args.next_script](state)
+    options.next_script = m[args.next_script](state)
 
-    # TODO: Refactor
     download_execution_context = context_for_logger(execution_context,
-                                                    Contexts.default_logger('asset', args.log_level))
+                                                    Contexts.logger('asset', args.log_level))
+    downloader_parse_context = default_parse_context(execution_context=download_execution_context)
     options.recursive_options.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
          'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](\
-            state, parse_context=default_parse_context(execution_context=download_execution_context)).download_iterator()
+            state, parse_context=downloader_parse_context).download_iterator()
 
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options,
                                                                                      log_level=args.log_level)
-    # TODO: Use a factory of algorithms
-    algorithm = AutomaticTranformation(state, _interpreters)
     try:
+        algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
         algorithm.run()
     except AssetsExhausted:
         if options.not_in_target != NotInTargetNamespace.IGNORE:
             sys.stderr.write("The transformation failed, no more assets to load.\n")
             if options.not_in_target == NotInTargetNamespace.ERROR:
                 return 1
+    except MyXMLError as e:  # TODO: Differentiate error in initial document and in intermediary results
+        sys.stderr.write("XML parsing error: " + str(e) + "\n")
+        return 1
 
     if output is None:
         sys.stdout.buffer.write(state.xml_text)

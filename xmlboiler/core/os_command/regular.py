@@ -31,7 +31,6 @@ class RegularCommandRunner(object):
         self.timeout2 = timeout2
         self.execution_context = context
 
-    # TODO: Terminate the subprocesses on terminating our program.
     def run_pipe(self, args, input):
         loop = asyncio.get_event_loop()
         try:
@@ -44,7 +43,8 @@ class RegularCommandRunner(object):
         return res
 
     async def run_pipe_impl(self, args, input):
-        self.execution_context.logger.info("Executing:" + ' '.join(args))  # TODO: Localization
+        self.execution_context.logger.info(
+            self.execution_context.translations.gettext("Executing: {cmd}").format(cmd=' '.join(args)))
         t = await asyncio.create_subprocess_exec(*args, stdin=PIPE, stdout=PIPE)
         try:
             stdout, stderr = await asyncio.wait_for(t.communicate(input), self.timeout)
@@ -56,9 +56,11 @@ class RegularCommandRunner(object):
             except asyncio.TimeoutError:
                 t.kill()
             raise Timeout()
+        except:  # any error
+            t.terminate()
+            raise
 
 
-# TODO: Use proper dependency injection
 regular_provider = providers.Factory(RegularCommandRunner,
                                      timeout=None,
                                      timeout2=None,

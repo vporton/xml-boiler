@@ -44,7 +44,7 @@ class GraphWithProxy(object):
 
     def adjust(self):
         for u in self.graph1.nodes():
-            # TODO: Need both 0 and 1?
+            # Need to add nodes? Isn't it done automatically when adding edges?
             self.composite_graph.add_node((0, u))
             self.composite_graph.add_node((1, u))
         for u, v, d in self.graph1.edges(data=True):
@@ -60,8 +60,9 @@ class GraphWithProxy(object):
 
 # TODO: Silly logic
 class GraphOfScripts(object):
-    def __init__(self, graph, universal_precedence, precedences_graph):
+    def __init__(self, graph, universal_precedence, weight_formula, precedences_graph):
         self.universal_precedence = universal_precedence
+        self.weight_formula = weight_formula
         self.precedences_graph = precedences_graph
         self.graph1 = graph or nx.MultiDiGraph()
 
@@ -69,8 +70,12 @@ class GraphOfScripts(object):
         for scr in enriched_scripts:
             source = frozenset(scr.base.transformer.source_namespaces)
             target = frozenset(scr.base.transformer.target_namespaces)
-            # TODO: There are two proposed formulas for weight in the specification
-            weight = 1 / (scr.base.preservance + scr.base.stability + scr.base.preference)
+            if self.weight_formula == 'inverseofsum':
+                weight = 1 / (scr.base.preservance + scr.base.stability + scr.base.preference)
+            elif self.weight_formula == 'sumofinverses':
+                weight = 1 / scr.base.preservance + 1 / scr.base.stability + 1 / scr.base.preference
+            else:
+                assert False
             if scr.base.transformer.universal and \
                     self.precedences_graph.is_connected(self.universal_precedence, scr.base.transformer.precedence):
                 target = frozenset()

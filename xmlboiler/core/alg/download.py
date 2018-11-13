@@ -42,7 +42,7 @@ def _enumerate_xml_namespaces(state):
     while stack:
         v = stack.pop()
         for w in v.childNodes:
-            if w.namespaceURI is not None:
+            if w.namespaceURI is not None and w.namespaceURI != 'http://www.w3.org/2000/xmlns/':
                 yield URIRef(w.namespaceURI)
             if w.attributes:
                 for a in w.attributes.values():
@@ -89,8 +89,6 @@ class BaseDownloadAlgorithm(object):
         self.subclasses = subclasses
 
     def add_ns(self, ns):
-        if isinstance(ns, str):  # TODO: This is a hack
-            ns = URIRef(ns)
         if ns not in self.state.assets:
             msg = self.parse_context.execution_context.translations.gettext("Loaded asset for namespace {ns}.").format(ns=ns)
             self.parse_context.execution_context.logger.info(msg)

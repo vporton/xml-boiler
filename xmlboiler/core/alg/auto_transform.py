@@ -16,10 +16,11 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from defusedxml.minidom import parseString
+from dependency_injector import containers, providers
 from rdflib import URIRef
 
 from xmlboiler.core.alg.common import RealNextScript
+from xmlboiler.core.util.xml import myXMLParseString
 
 
 class AssetsExhausted(StopIteration):
@@ -28,7 +29,7 @@ class AssetsExhausted(StopIteration):
 
 class AutomaticTranformation(object):
     def __init__(self, state, interpreter):
-        state.dom = parseString(state.xml_text)
+        state.dom = myXMLParseString(state.xml_text)
         self.state = state
         self.interpreter = interpreter
         self.state.next_asset = self.state.opts.recursive_options.download_algorithm
@@ -36,7 +37,7 @@ class AutomaticTranformation(object):
     def _step(self):
         all_namespaces = set()
 
-        self.state.dom = parseString(self.state.xml_text)
+        self.state.dom = myXMLParseString(self.state.xml_text)
 
         # depth-first search
         parents = [self.state.dom.documentElement]
@@ -52,7 +53,10 @@ class AutomaticTranformation(object):
                 parents.append(w)
 
         # hack
-        self.state.all_namespaces = frozenset(filter(lambda x: x != URIRef('http://www.w3.org/2000/xmlns/'), all_namespaces))  # TODO: Is it worth to freeze?
+        self.state.all_namespaces = frozenset(
+            filter(lambda x: x not in(URIRef('http://www.w3.org/2000/xmlns/'),
+                                      URIRef('http://www.w3.org/XML/1998/namespace')),  # TODO: Really exclude this?
+                   all_namespaces))
 
         if self.state.all_namespaces <= self.state.opts.target_namespaces:
             return False  # The transformation finished!
@@ -68,6 +72,10 @@ class AutomaticTranformation(object):
         return True
 
     def run(self):
-        self.state.dom = parseString(self.state.xml_text)
+        self.state.dom = myXMLParseString(self.state.xml_text)
         while self._step():  # may raise AssetsExhausted
             pass
+
+
+class Algorithms(containers.DeclarativeContainer):
+    automatic_transformation = providers.Factory(AutomaticTranformation)

@@ -15,10 +15,8 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+
 import sys
-
-from xmlboiler.core.os_command.regular import regular_provider
-
 
 # it skips scripts for which there is no interpreter
 from xmlboiler.core.scripts.xml import XMLRunCommand

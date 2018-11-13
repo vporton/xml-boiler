@@ -28,7 +28,7 @@ from .execution_context import ExecutionContext
 
 
 def init_locale(lang=None):
-    #locale.setlocale(locale.LC_ALL, '')  # TODO: call from your app
+    #locale.setlocale(locale.LC_ALL, '')  # call from your app
     try:
         if lang is None:
             lang = locale.getlocale()[0][0:2]
@@ -49,10 +49,10 @@ def my_logger(name='main', level=logging.INFO):
     return logger
 
 class Contexts(containers.DeclarativeContainer):
-    default_logger = providers.Callable(my_logger)
+    logger = providers.Callable(my_logger)
     default_translations = providers.ThreadSafeSingleton(init_locale)
-    # TODO: 'unknown' is a hack not to modify an existing logger
-    execution_context = providers.Factory(ExecutionContext, logger=default_logger('unknown'), translations=default_translations)
+    # 'unknown' is a hack not to modify an existing logger
+    execution_context = providers.Factory(ExecutionContext, logger=logger('unknown'), translations=default_translations)
 
 
 def context_for_logger(context, logger):

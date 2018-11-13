@@ -66,33 +66,32 @@ class BinaryRelation(object):
         return s
 
 
-# TODO: Do we need UniversalSet and BinaryRelationWithUniversalDestination?
-class UniversalSet(object):
-    def __contains__(self, item):
-        return True
-
-    def __eq__(self, other):
-        return other is UniversalSet
-
-    def __hash__(self):
-        return 0xadd93fbf4230655a  # was randomly generated
-
-    def append(self, value):
-        pass
-
-    # Enumeration deliberately not implemented
-    # (It is not used in our algorithm when the set of targets is universal,
-    # because in this case we have already reached the destination namespace.)
-
-
-class BinaryRelationWithUniversalDestination(BinaryRelation):
-    """
-    Like binary relation but with possibility to map a source element into
-    universal set of destinations.
-    """
-
-    def add_universal_destination(self, src):
-        self.adj[src] = UniversalSet()
+# class UniversalSet(object):
+#     def __contains__(self, item):
+#         return True
+#
+#     def __eq__(self, other):
+#         return other is UniversalSet
+#
+#     def __hash__(self):
+#         return 0xadd93fbf4230655a  # was randomly generated
+#
+#     def append(self, value):
+#         pass
+#
+#     # Enumeration deliberately not implemented
+#     # (It is not used in our algorithm when the set of targets is universal,
+#     # because in this case we have already reached the destination namespace.)
+#
+#
+# class BinaryRelationWithUniversalDestination(BinaryRelation):
+#     """
+#     Like binary relation but with possibility to map a source element into
+#     universal set of destinations.
+#     """
+#
+#     def add_universal_destination(self, src):
+#         self.adj[src] = UniversalSet()
 
 
 def compose(b, a):

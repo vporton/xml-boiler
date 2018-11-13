@@ -40,10 +40,7 @@ class FatalParseException(BaseParseException):
     pass
 
 
-class ErrorHandler(Enum):
-    """
-    TODO: rename?
-    """
+class ErrorMode(Enum):
     IGNORE  = auto()
     WARNING = auto()
     FATAL   = auto()
@@ -53,15 +50,15 @@ class ParseContext(object):
     def __init__(self, execution_context):
         self.execution_context = execution_context
 
-    def throw(self, handler: ErrorHandler, str):
-        if handler == ErrorHandler.IGNORE:
+    def throw(self, handler: ErrorMode, str):
+        if handler == ErrorMode.IGNORE:
             raise ParseException()
-        elif handler == ErrorHandler.WARNING:
+        elif handler == ErrorMode.WARNING:
             if callable(str):
                 str = str()
             self.execution_context.logger.warning(str)
             raise ParseException(str)
-        elif handler == ErrorHandler.FATAL:
+        elif handler == ErrorMode.FATAL:
             if callable(str):
                 str = str()
             self.execution_context.logger.error(str)
@@ -79,8 +76,6 @@ class NodeParser(ABC):
 
     WARNING: Don't use this parser to parse recursive data structures,
     because it may lead to infinite recursion on circular RDF.
-
-    TODO: Make parse_context a constructor argument instead (here and in PredicateParser)
     """
 
     @abstractmethod
