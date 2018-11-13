@@ -57,7 +57,7 @@ class _RunInlineCommand(object):
         return self.command_runner.run_pipe(args, input)[1]
 
 
-# TODO: WebSrvice
+# TODO: WebService
 class RunCommand(object):
     def __init__(self, script, interpreters, interpreter, command_runner):
         assert isinstance(script.more, CommandScriptInfo)
