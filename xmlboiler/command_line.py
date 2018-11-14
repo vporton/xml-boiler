@@ -18,6 +18,7 @@
 
 import argparse
 import locale
+import logging
 import os
 import re
 import sys
@@ -101,9 +102,14 @@ def main(argv):
 
     execution_context = context_for_logger(Contexts.execution_context(),
                                            Contexts.logger('main', args.log_level))
+    error_handler = logging.StreamHandler()
+    error_handler.setFormatter(logging.Formatter('%(message)s'))
+    error_logger = Contexts.logger('error', logging.WARNING)
+    error_logger.addHandler(error_handler)
 
     options = args.options_object(execution_context=execution_context,
                                   log_level=args.log_level,
+                                  error_logger=error_logger,
                                   command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
                                   url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
 

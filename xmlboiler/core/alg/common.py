@@ -47,8 +47,7 @@ class RealNextScript(object):
                 # TODO: Check subprocess's exit code (what to do with _run_plain_text() as it spawns multiple commands?)
                 new_xml_text = XMLRunCommand(script, self.interpreters, node, self.state.opts.command_runner).run(self.state.xml_text)  # TODO: Use proper dependency injection
                 if new_xml_text == self.state.xml_text:
-                    # TODO: Don't write to stderr, use a generic interface: https://stackoverflow.com/q/53307928/856090
-                    msg = self.state.opts.execution_context.translate("Iteration stopped to avoid infinite loop.\n")
-                    sys.stderr.write(msg)
+                    msg = self.state.opts.execution_context.translate("Iteration stopped to avoid infinite loop.")
+                    self.state.opts.error_logger.error(msg)
                 self.state.xml_text = new_xml_text
                 return

@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 from dataclasses import dataclass
+from logging import Logger
 from typing import Optional, Callable, List, Any
 from enum import Enum, auto
 from ordered_set import OrderedSet
@@ -74,6 +75,7 @@ class InstalledSoftwareOptions(object):
 class BaseAlgorithmOptions(object):
     log_level: Any = None
     execution_context: ExecutionContext = None
+    error_logger: Logger = None  # may be stderr
     command_runner: BaseCommandRunner = None
     url_opener: MyOpener = None
     kind: WorklowKind = None
