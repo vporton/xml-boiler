@@ -39,13 +39,14 @@ def change_dir(new_dir):
     finally:
         os.chdir(old_dir)
 
+
 # TODO: probably use `from contextlib import redirect_stdout`
 @contextlib.contextmanager
 def capture_stdin_and_stdout():
     stdin = sys.stdin
     stdout = sys.stdout
     try:
-        sys.stdin  = TextIOWrapper(BytesIO(), sys.stdin.encoding)
+        sys.stdin = TextIOWrapper(BytesIO(), sys.stdin.encoding)
         sys.stdout = TextIOWrapper(BytesIO(), sys.stdout.encoding)
         yield
     finally:
@@ -73,26 +74,30 @@ class TestUtility(XmlTest):
     def setUp(self):
         self.v = setup_with_context_manager(self, change_dir(Global.get_filename("tests/core/data/xml")))
 
+    def command(self, args):
+        ret = command_line.main(args)
+        self.assertTrue(ret == 0)
+
     def do_run_xinlude(self, order, next_script_mode):
-        command_line.main(['-r',
-                           order,
-                           'chain',
-                           Global.get_filename("tests/core/data/xml/xinclude.xml"),
-                           '-u',
-                           'http://portonvictor.org/ns/trans/precedence-include',
-                           '-s',
-                           next_script_mode])
+        self.command(['-r',
+                      order,
+                      'chain',
+                      Global.get_filename("tests/core/data/xml/xinclude.xml"),
+                      '-u',
+                      'http://portonvictor.org/ns/trans/precedence-include',
+                      '-s',
+                      next_script_mode])
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
 
     def do_run_comment(self, order, next_script_mode):
-        command_line.main(['-r',
-                           order,
-                           'chain',
-                           Global.get_filename("tests/core/data/xml/comment.xml"),
-                           '-u',
-                           'http://portonvictor.org/ns/trans/precedence-comment',
-                           '-s',
-                           next_script_mode])
+        self.command(['-r',
+                      order,
+                      'chain',
+                      Global.get_filename("tests/core/data/xml/comment.xml"),
+                      '-u',
+                      'http://portonvictor.org/ns/trans/precedence-comment',
+                      '-s',
+                      next_script_mode])
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
 
     def test_run(self):
@@ -109,52 +114,52 @@ class TestUtility(XmlTest):
             for order in ['breadth', 'depth']:
                 with self.subTest(next_script=next_script_mode, order=order):
                     with capture_stdin_and_stdout():
-                        command_line.main(['-r',
-                                           order,
-                                           'chain',
-                                           Global.get_filename("tests/core/data/xml/syntax.xml"),
-                                           '-t', 'http://www.w3.org/1999/xhtml',
-                                           '-n', 'error',
-                                           '-s', next_script_mode])
+                        self.command(['-r',
+                                      order,
+                                      'chain',
+                                      Global.get_filename("tests/core/data/xml/syntax.xml"),
+                                      '-t', 'http://www.w3.org/1999/xhtml',
+                                      '-n', 'error',
+                                      '-s', next_script_mode])
                         # sys.stdout.buffer.write(b'<pre>...')
                         self.assertRegex(sys.stdout.buffer.getvalue().decode('utf-8'), r'<pre>')
 
     def test_doc(self):
         with capture_stdin_and_stdout():
-            command_line.main(['-r', 'breadth',
-                               'chain',
-                               Global.get_filename("doc/index.html"),
-                               '-t', 'http://www.w3.org/1999/xhtml',
-                               '-n', 'error'])
+            self.command(['-r', 'breadth',
+                          'chain',
+                          Global.get_filename("doc/index.html"),
+                          '-t', 'http://www.w3.org/1999/xhtml',
+                          '-n', 'error'])
             breadth = sys.stdout.buffer.getvalue()
         with capture_stdin_and_stdout():
-            command_line.main(['-r', 'depth',
-                               'chain',
-                               Global.get_filename("doc/index.html"),
-                               '-t', 'http://www.w3.org/1999/xhtml',
-                               '-n', 'error'])
+            self.command(['-r', 'depth',
+                          'chain',
+                          Global.get_filename("doc/index.html"),
+                          '-t', 'http://www.w3.org/1999/xhtml',
+                          '-n', 'error'])
             depth = sys.stdout.buffer.getvalue()
         self.assertXmlEqual(breadth, depth)
 
     def test_nodownload(self):
         with capture_stdin_and_stdout():
-            command_line.main(['-r', 'none',
-                               '-p', 'http://portonvictor.org/ns/comment',
-                               'chain',
-                               Global.get_filename("tests/core/data/xml/comment.xml"),
-                               '-u',
-                               'http://portonvictor.org/ns/trans/precedence-comment',
-                               '-s', 'doc'])
+            self.command(['-r', 'none',
+                          '-p', 'http://portonvictor.org/ns/comment',
+                          'chain',
+                          Global.get_filename("tests/core/data/xml/comment.xml"),
+                          '-u',
+                          'http://portonvictor.org/ns/trans/precedence-comment',
+                          '-s', 'doc'])
             self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
 
     def test_installed_packages(self):
         for installed in ['package', 'executable', 'both']:
             with self.subTest(installed=installed):
                 with capture_stdin_and_stdout():
-                    command_line.main(['--software',
-                                       installed,
-                                       'chain',
-                                       Global.get_filename("tests/core/data/xml/comment.xml"),
-                                       '-u',
-                                       'http://portonvictor.org/ns/trans/precedence-comment'])
+                    self.command(['--software',
+                                  installed,
+                                  'chain',
+                                  Global.get_filename("tests/core/data/xml/comment.xml"),
+                                  '-u',
+                                  'http://portonvictor.org/ns/trans/precedence-comment'])
                     self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)

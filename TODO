@@ -1,5 +1,4 @@
-* If I change :packageMinVersion of Saxon to "20.0", it gives wrong exception.
-  Also if the OS package is installed but has an unsupported version number,
+* If the OS package is installed but has an unsupported version number,
   don't try to check it by consulting the executable in the PATH variable.
   Hm, it may be a newer version installed locally, so this may be wrong.
 
