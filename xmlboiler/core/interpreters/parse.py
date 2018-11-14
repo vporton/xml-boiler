@@ -56,11 +56,14 @@ class Interpeters(object):
             result = self.check_version_by_package(min_version, max_version, main_node)
             if result:
                 return result
-        if self.soft_options.use_path:
+        if result != False and self.soft_options.use_path:
             return self.check_version_by_executable(main_node, not self.soft_options.package_manager)
         return None
 
     def check_version_by_package(self, min_version, max_version, main_node):
+        """
+        :return: False - wrong package version, None - package not installed, True - package matches
+        """
         parse_context = ParseContext(self.execution_context)
 
         if min_version is None and max_version is None:  # any version is OK
@@ -69,10 +72,10 @@ class Interpeters(object):
                     parse(parse_context, self.graph, main_node)
                 if self.soft_options.package_manager.determine_package_version(package) is None:
                     self.warn_no_package(package, min_version, max_version)
-                    return False
+                    return None
                 return True
             except ParseException:
-                return False
+                return None
 
         if min_version is None:
             min_version = float('-inf')
@@ -109,7 +112,7 @@ class Interpeters(object):
                 package = OnePredicate(URIRef(PREFIX + "debianPackage"), StringLiteral(ErrorMode.FATAL), ErrorMode.IGNORE). \
                     parse(parse_context, self.graph, main_node)
             except ParseException:
-                return False
+                return None
             real_version = self.soft_options.package_manager.determine_package_version(package)
             if real_version is None:  # no such Debian package
                 self.warn_no_package(package, min_version, max_version)
