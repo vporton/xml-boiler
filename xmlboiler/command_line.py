@@ -168,7 +168,7 @@ def main(argv):
     options.weight_formula = args.weight_formula
 
     options.installed_soft_options.package_manager = determine_os() if args.software != 'executable' else None
-    options.installed_soft_options.path = args.software in ('executable', 'both')
+    options.installed_soft_options.use_path = args.software in ('executable', 'both')
     if options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
         sys.stderr.write("Package manager is not supported on this OS.\n")
 

@@ -64,7 +64,7 @@ class RecursiveDownloadOptions(object):
 @dataclass
 class InstalledSoftwareOptions(object):
     package_manager: BasePackageManaging = None  # None means not to use package_manager
-    path: bool = True
+    use_path: bool = True
 
 
 # In this version the same options are applied to all elements of the

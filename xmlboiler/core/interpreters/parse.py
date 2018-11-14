@@ -56,7 +56,7 @@ class Interpeters(object):
             result = self.check_version_by_package(min_version, max_version, main_node)
             if result:
                 return result
-        if self.soft_options.path:
+        if self.soft_options.use_path:
             return self.check_version_by_executable(main_node, not self.soft_options.package_manager)
         return None
 
