@@ -1,4 +1,6 @@
 * If I change :packageMinVersion of Saxon to "20.0", it gives wrong exception.
+  Also if the OS package is installed but has an unsupported version number,
+  don't try to check it by consulting the executable in the PATH variable.
 
 * https://pypi.org/project/executor/ for spawning processes?
 
