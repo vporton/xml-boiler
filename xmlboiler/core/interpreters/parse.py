@@ -24,7 +24,7 @@ from rdflib import URIRef
 from xmlboiler.core import execution_context_builders
 from xmlboiler.core.data import Global
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
-from xmlboiler.core.packages.version_wrapper import VersionWrapper, version_wrapper_create
+from xmlboiler.core.packages.version_wrapper import version_wrapper_create
 from xmlboiler.core.rdf_recursive_descent.base import ErrorMode, ParseException, ParseContext
 from xmlboiler.core.rdf_recursive_descent.compound import ZeroOnePredicate, Choice, Enum, OnePredicate, \
     PostProcessNodeParser
@@ -79,7 +79,7 @@ class Interpeters(object):
         if max_version is None:
             max_version = float('inf')
 
-        version_wrapper = version_wrapper_create(self.soft_options.package_manager)
+        version_wrapper = version_wrapper_create(self.soft_options.package_manager.VersionClass)
 
         min_version = version_wrapper(min_version)
         max_version = version_wrapper(max_version)
@@ -115,15 +115,15 @@ class Interpeters(object):
                 self.warn_no_package(package, min_version, max_version)
                 return False
             if lang_min_version is _FromPackageVersion:
-                if VersionWrapper(real_version) > max_version:
+                if version_wrapper(real_version) > max_version:
                     self.warn_no_package(package, min_version, max_version)
                     return False
             if lang_max_version is _FromPackageVersion:
-                if VersionWrapper(real_version) < min_version:
+                if version_wrapper(real_version) < min_version:
                     self.warn_no_package(package, min_version, max_version)
                     return False
-            if (pmin_version is not None and VersionWrapper(real_version) < VersionWrapper(pmin_version)) or \
-                    (pmax_version is not None and VersionWrapper(real_version) > VersionWrapper(pmax_version)):
+            if (pmin_version is not None and version_wrapper(real_version) < version_wrapper(pmin_version)) or \
+                    (pmax_version is not None and version_wrapper(real_version) > version_wrapper(pmax_version)):
                 self.warn_no_package(package, min_version, max_version)
                 return False
         return True

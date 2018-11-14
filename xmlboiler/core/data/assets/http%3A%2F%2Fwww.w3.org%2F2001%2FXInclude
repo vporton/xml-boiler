@@ -11,6 +11,7 @@ _:xinclude
    :script [
      a :Command ;
      :language lang:XSLT ;
+     :minVersion "2.0" ;
      :scriptURL <local:scripts/xinclude.xslt> ;
      :transformerKind :entire ;
      :preservance 1.0 ;
