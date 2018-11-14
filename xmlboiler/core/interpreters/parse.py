@@ -175,7 +175,7 @@ class Interpeters(object):
         min = min_version if min_version is not None else '*'
         max = max_version if max_version is not None else '*'
         msg = self.execution_context.translations.gettext(
-            "Trying to use not installed package {p} (versions {min} - {max}).").format(p=package, min=min, max=max)
+            "Trying to use not installed package {p} (versions {min} - {max}).").format(p=package, min=str(min), max=str(max))
         self.execution_context.logger.warning(msg)
 
 # TODO: Use proper dependency injection instead of the singleton

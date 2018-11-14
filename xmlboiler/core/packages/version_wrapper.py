@@ -58,7 +58,7 @@ class VersionWrapper(object):
         return self.version_class(version2) >= self.version_class(other.version)
 
     def __str__(self):
-        return self.version
+        return str(self.version)  # version may be float() if it is "inf" or "-inf"
 
     def __repr__(self):
         return "VersionWrapper(%s)" % self.version
