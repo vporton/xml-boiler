@@ -18,7 +18,6 @@
 
 import os
 import sys
-import unittest
 import contextlib
 from io import StringIO, BytesIO, TextIOWrapper
 
