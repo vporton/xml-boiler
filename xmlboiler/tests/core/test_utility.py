@@ -40,18 +40,20 @@ def change_dir(new_dir):
         os.chdir(old_dir)
 
 
-# TODO: probably use `from contextlib import redirect_stdout`
 @contextlib.contextmanager
 def capture_stdin_and_stdout():
-    stdin = sys.stdin
-    stdout = sys.stdout
-    try:
-        sys.stdin = TextIOWrapper(BytesIO(), sys.stdin.encoding)
-        sys.stdout = TextIOWrapper(BytesIO(), sys.stdout.encoding)
+    # stdin = sys.stdin
+    # stdout = sys.stdout
+    # try:
+    #     sys.stdin = TextIOWrapper(BytesIO(), sys.stdin.encoding)
+    #     sys.stdout = TextIOWrapper(BytesIO(), sys.stdout.encoding)
+    #     yield
+    # finally:
+    #     sys.stdin = stdin
+    #     sys.stdout = stdout
+    with contextlib.redirect_stdout(TextIOWrapper(BytesIO(), sys.stdin.encoding)), \
+         contextlib.redirect_stderr(TextIOWrapper(BytesIO(), sys.stderr.encoding)):
         yield
-    finally:
-        sys.stdin = stdin
-        sys.stdout = stdout
 
 
 def setup_with_context_manager(testcase, cm):
