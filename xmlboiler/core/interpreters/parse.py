@@ -181,8 +181,7 @@ class Interpeters(object):
             "Trying to use not installed package {p} (versions {min} - {max}).").format(p=package, min=str(min), max=str(max))
         self.execution_context.logger.warning(msg)
 
-# TODO: Use proper dependency injection instead of the singleton
 class Providers(containers.DeclarativeContainer):
-    interpreters_factory = providers.ThreadLocalSingleton(Interpeters,
-                                                          execution_context=execution_context_builders.Contexts.execution_context,
-                                                          graph=Global.load_rdf('core/data/interpreters.ttl'))
+    interpreters_factory = providers.Factory(Interpeters,
+                                             execution_context=execution_context_builders.Contexts.execution_context,
+                                             graph=Global.load_rdf('core/data/interpreters.ttl'))
