@@ -8,6 +8,8 @@
 (
     int:xsltproc
     int:Saxon
+    int:Python2
+    int:Python3
     int:Pygments
 ) .
 
@@ -39,6 +41,24 @@ int:Saxon
     :executable "saxonb-xslt" ;
     :debianPackage "libsaxonb-java" ;
     :packageMinVersion "9.0" .
+
+int:Python2
+    :lang lang:Python ;
+    :langMinVersion :fromPackageVersion ;
+    :langMaxVersion :fromPackageVersion ;
+    :scriptCommand ("python"
+                    :script) ;
+    :executable "python" ;
+    :debianPackage "python" .
+
+int:Python3
+    :lang lang:Python ;
+    :langMinVersion :fromPackageVersion ;
+    :langMaxVersion :fromPackageVersion ;
+    :scriptCommand ("python3"
+                    :script) ;
+    :executable "python3" ;
+    :debianPackage "python3" .
 
 int:Pygments
     :lang lang:Syntax ;
