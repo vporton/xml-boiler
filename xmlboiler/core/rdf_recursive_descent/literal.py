@@ -31,7 +31,7 @@ class IRILiteral(NodeParserWithError):
 
 class StringLiteral(NodeParserWithError):
     def parse(self, parse_context, graph, node):
-        # TODO: xsd:normalizedString support
+        # xsd:normalizedString is not supported. Reported a bug https://github.com/RDFLib/rdflib/issues/876
         # if not isinstance(node, Literal) or node.datatype != XSD.string:
         if not isinstance(node, Literal) or node.datatype is not None:
             parse_context.throw(self.on_error, lambda: parse_context.translate("Node {node} is not a string literal.").format(node=node))
