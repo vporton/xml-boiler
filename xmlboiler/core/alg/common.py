@@ -19,13 +19,14 @@
 import sys
 
 # it skips scripts for which there is no interpreter
-from xmlboiler.core.scripts.xml import XMLRunCommand
+from xmlboiler.core.scripts.xml import Providers
 
 
 class RealNextScript(object):
-    def __init__(self, state, interpreters):
+    def __init__(self, state, interpreters, xml_run_command=Providers.xml_run_command):
         self.state = state
         self.interpreters = interpreters
+        self.xml_run_command = xml_run_command
 
     def step(self):
         while True:
@@ -45,7 +46,9 @@ class RealNextScript(object):
                 self.state.executed_scripts.add(script)
 
                 # TODO: Check subprocess's exit code (what to do with _run_plain_text() as it spawns multiple commands?)
-                new_xml_text = XMLRunCommand(script, self.interpreters, node, self.state.opts.command_runner).run(self.state.xml_text)  # TODO: Use proper dependency injection
+                # Does not quite conform dependency injection pattern:
+                new_xml_text = self.xml_run_command(script, self.interpreters, node, self.state.opts.command_runner).\
+                    run(self.state.xml_text)
                 if new_xml_text == self.state.xml_text:
                     msg = self.state.opts.execution_context.translate("Iteration stopped to avoid infinite loop.")
                     self.state.opts.error_logger.error(msg)

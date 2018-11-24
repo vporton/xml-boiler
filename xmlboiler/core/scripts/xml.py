@@ -15,7 +15,8 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+from dependency_injector.containers import DeclarativeContainer
+from dependency_injector.providers import Factory
 from rdflib import URIRef
 
 from xmlboiler.core.rdf_format.asset import TransformerKindEnum
@@ -172,3 +173,7 @@ class XMLRunCommandWrapper(object):
 class XMLRunCommand(XMLRunCommandWrapper):
     def __init__(self, script, interpreters, interpreter, command_runner):
         super().__init__(script, script.base.transformer_kind, interpreters, interpreter, command_runner)
+
+
+class Providers(DeclarativeContainer):
+    xml_run_command = Factory(XMLRunCommand)
