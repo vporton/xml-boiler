@@ -45,7 +45,8 @@ class RealNextScript(object):
                         self.state.opts.execution_context.translations.gettext("Executed script for {s}").format(s=script.more.language))
                 self.state.executed_scripts.add(script)
 
-                # TODO: Check subprocess's exit code (what to do with _run_plain_text() as it spawns multiple commands?)
+                # Check subprocess's exit code (what to do with _run_plain_text() as it spawns multiple commands?)
+                # (It is not really necessary because we have an invalid XML then.)
                 # Does not quite conform dependency injection pattern:
                 new_xml_text = self.xml_run_command(script, self.interpreters, node, self.state.opts.command_runner).\
                     run(self.state.xml_text)
