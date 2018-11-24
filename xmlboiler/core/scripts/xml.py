@@ -65,7 +65,6 @@ class XMLRunCommandWrapper(object):
                         found = True
                         break
                     else:
-                        # TODO: https://bugs.python.org/issue34306
                         if any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in w.attributes.values()):
                             found = True
                             break
