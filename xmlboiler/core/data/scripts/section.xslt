@@ -27,7 +27,8 @@
                 <xsl:otherwise><xsl:value-of select="generate-id()"/></xsl:otherwise>
               </xsl:choose>
             </xsl:variable>
-            <a href="#{$id}"> <!-- TODO: xml:lang -->
+            <a href="#{$id}">
+              <xsl:copy-of select="struct:title/@xml:lang"/>
               <xsl:apply-templates select="struct:title/node()"/>
             </a>
             <xsl:call-template name="struct:toc"/>
