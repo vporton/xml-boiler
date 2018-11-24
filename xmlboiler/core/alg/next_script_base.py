@@ -45,7 +45,7 @@ class ScriptsIteratorBase(ABC):
             scripts = self._outer_node_script(v)
             if scripts:
                 scripts = self._choose_by_preservance_priority(scripts)
-                return scripts[0][0]  # TODO: What if there is several of the same rating?
+                return scripts[0][0]  # TODO: Warn if there is several of the same rating
             for w in v.childNodes:
                 parents.append(w)
         return None
