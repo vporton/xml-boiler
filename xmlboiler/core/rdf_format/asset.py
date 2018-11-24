@@ -40,7 +40,8 @@ class ValidatorKindEnum(Enum):
     ENTIRE = auto()
     PARTS  = auto()
 
-# TODO: Distinguishing transformer and validator scripts does not conform to the specification
+# Distinguishing transformer and validator scripts does not conform to the specification.
+# Ignore this small issue.
 @dataclass
 class BaseScriptInfo(object):
     transformer: Any #Transformer
