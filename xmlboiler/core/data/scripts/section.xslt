@@ -50,7 +50,7 @@
           <xsl:otherwise><xsl:value-of select="generate-id()"/></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <xsl:apply-templates select="struct:title[1]/node()" /><!-- TODO: simplfy -->
+      <xsl:apply-templates select="struct:title[1]/node()" />
     </xsl:element>
     <xsl:apply-templates/>
   </xsl:template>
