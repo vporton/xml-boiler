@@ -27,11 +27,16 @@ from xmlboiler.core.scripts.text import RunCommand
 from xmlboiler.core.util.xml import myXMLParseString
 
 
+class XMLCommandException(Exception):
+    pass
+
+
 class XMLRunCommandWrapper(object):
     """
     Don't use it directly, use XMLRunCommand
     """
-    def __init__(self, script, kind, interpreters, interpreter, command_runner):
+    def __init__(self, context, script, kind, interpreters, interpreter, command_runner):
+        self.context = context
         self.script = script
         self.kind = kind
         self.interpreters = interpreters
@@ -123,7 +128,8 @@ class XMLRunCommandWrapper(object):
                     (v.attributes and \
                      any(URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces for a in v.attributes.values() if a.namespaceURI)):
                 if len(v.childNodes) > 1 or (len(v.childNodes) == 1 and v.childNodes[0].nodeType != v.childNodes[0].TEXT_NODE):
-                    raise Exception("Non-text tag content in plain text transformer.")  # TODO: More specific exception
+                    err = self.context.translate("Non-text tag content in plain text transformer.")
+                    raise XMLCommandException(err)
                 our_elements.append((v, v.childNodes[0]))
             for w in v.childNodes:
                 parents.append(w)
@@ -170,8 +176,8 @@ class XMLRunCommandWrapper(object):
 
 
 class XMLRunCommand(XMLRunCommandWrapper):
-    def __init__(self, script, interpreters, interpreter, command_runner):
-        super().__init__(script, script.base.transformer_kind, interpreters, interpreter, command_runner)
+    def __init__(self, context, script, interpreters, interpreter, command_runner):
+        super().__init__(context, script, script.base.transformer_kind, interpreters, interpreter, command_runner)
 
 
 class Providers(DeclarativeContainer):
