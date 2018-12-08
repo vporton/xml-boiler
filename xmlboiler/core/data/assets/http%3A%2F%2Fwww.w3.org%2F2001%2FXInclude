@@ -10,9 +10,7 @@ _:xinclude
    :precedence :precedence-include ;
    :script [
      a :Command ;
-     :language lang:XSLT ;
-     :minVersion "2.0" ;
-     :scriptURL <local:scripts/xinclude.xslt> ;
+     :language lang:XInclude ;
      :transformerKind :entire ;
      :preservance 1.0 ;
      :stability 1.0 ;

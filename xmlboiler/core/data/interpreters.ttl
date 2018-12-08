@@ -10,6 +10,7 @@
     int:Saxon
     int:Python2
     int:Python3
+    int:XInclude
     int:Pygments
 ) .
 
@@ -59,6 +60,12 @@ int:Python3
                     :script) ;
     :executable "python3" ;
     :debianPackage "python3" .
+
+int:XInclude
+    :lang lang:XInclude ;
+    :inlineCommand ("xmllint" "--xinclude" "--nonet") ;
+    :executable "xmllint" ;
+    :debianPackage "libxml2-utils" .
 
 int:Pygments
     :lang lang:Syntax ;
