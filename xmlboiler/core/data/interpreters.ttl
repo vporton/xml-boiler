@@ -63,7 +63,7 @@ int:Python3
 
 int:XInclude
     :lang lang:XInclude ;
-    :inlineCommand ("xmllint" "--xinclude" "--nonet") ;
+    :inlineCommand ("xmllint" "--xinclude" "--nonet" "-") ;
     :executable "xmllint" ;
     :debianPackage "libxml2-utils" .
 
