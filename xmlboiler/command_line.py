@@ -56,6 +56,7 @@ def main(argv):
                                      description="""Automatically process XML.\n
     To support this project:
     - Send money to PayPal porton@narod.ru or https://paypal.me/victorporton
+    - Send BitCoin to 1BdUaP3uRuUC1TXcLgxKXdWWfQKXL2tmqa
     - Send Ether to 0x36A0356d43EE4168ED24EFA1CAe3198708667ac0
     - Buy tokens at https://crypto4ngo.org/project/view/4
     
