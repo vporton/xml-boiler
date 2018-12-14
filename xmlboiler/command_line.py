@@ -64,6 +64,7 @@ def main(argv):
     subparsers = parser.add_subparsers(title='subcommands')
     subparsers.required = True
 
+    parser.add_argument('-o', '--output', nargs=1, help='output file (defaults to stdout)')
     parser.add_argument('-l', '--log-level',
                         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO',
                         type=str.upper)
@@ -85,7 +86,6 @@ def main(argv):
     chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
     chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
     chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
-    chain_parser.add_argument('-o', '--output', nargs=1, help='output file (defaults to stdout)')
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-s', '--next-script', help='"next script" algorithm ("precedence" is not supported)',
                               choices=['precedence', 'doc'], default='doc')
