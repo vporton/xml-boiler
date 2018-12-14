@@ -25,9 +25,9 @@ def split_pipeline(s):
     for m in re.finditer(r, s, re.M|re.S):
         if m[0][0] == '\\':
             res[-1][-1] += m[0][1:]
-        elif re.match(r'\s+\+\s+', m[0], re.M|re.S):
+        elif re.match(r'^\s+\+\s+$', m[0], re.M|re.S):
             res.append([''])
-        elif re.match(r'\s+', m[0], re.M | re.S):
+        elif re.match(r'^\s+$', m[0], re.M | re.S):
             res[-1].append('')
         else:
             res[-1][-1] += m[0]
