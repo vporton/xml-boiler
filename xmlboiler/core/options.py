@@ -106,7 +106,8 @@ class NotInTargetNamespace(Enum):
     ERROR  = auto()
 
 @dataclass
-class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
+class ChainOptions(BaseAutomaticWorkflowElementOptions):
+    """For `chain` command."""
     next_script: Any = None  # ScriptsIteratorBase = None  # avoid circular dependency
     not_in_target_namespace: NotInTargetNamespace = None
     universal_precedence: Optional[URIRef] = None  # TODO: Find a better name for this option

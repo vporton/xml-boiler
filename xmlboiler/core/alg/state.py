@@ -23,7 +23,7 @@ from rdflib import URIRef
 from rdflib.resource import Resource
 
 from xmlboiler.core.graph.connect import Connectivity
-from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions
+from xmlboiler.core.options import ChainOptions
 from xmlboiler.core.rdf_format.asset import ScriptInfo, Transformer
 
 
@@ -35,7 +35,7 @@ class EnrichedScript(object):
 
 @dataclass
 class BaseState(object):
-    opts: TransformationAutomaticWorkflowElementOptions
+    opts: ChainOptions
     xml_text: bytes = None
     assets: Set[Resource] = field(default_factory=set)
 

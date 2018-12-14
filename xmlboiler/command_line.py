@@ -35,7 +35,7 @@ from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_asset_downloader
 import xmlboiler.core.interpreters.parse
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
-from xmlboiler.core.options import TransformationAutomaticWorkflowElementOptions, \
+from xmlboiler.core.options import ChainOptions, \
     RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace
 import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
@@ -99,7 +99,7 @@ def main(argv):
                                          parents=[base_chain_parser],
                                          help='Automatically run a chain of transformations',
                                          add_help=False)
-    chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
+    chain_parser.set_defaults(options_object=ChainOptions)
     chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
