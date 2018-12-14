@@ -20,6 +20,6 @@
 
 import sys
 
-import xmlboiler.command_line
+import xmlboiler.command_line.command
 
-exit(xmlboiler.command_line.main(sys.argv[1:]))
+exit(xmlboiler.command_line.command.main(sys.argv[1:]))

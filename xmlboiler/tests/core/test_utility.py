@@ -21,7 +21,7 @@ import sys
 import contextlib
 from io import StringIO, BytesIO, TextIOWrapper
 
-from xmlboiler import command_line
+import xmlboiler.command_line.command
 from xmlboiler.core.data import Global
 from xmlboiler.tests.core.xml_test import XmlTest
 
@@ -76,7 +76,7 @@ class TestUtility(XmlTest):
         self.v = setup_with_context_manager(self, change_dir(Global.get_filename("tests/core/data/xml")))
 
     def command(self, args):
-        ret = command_line.main(args)
+        ret = xmlboiler.command_line.command.main(args)
         self.assertTrue(ret == 0)
 
     def do_run_xinlude(self, order, next_script_mode):
