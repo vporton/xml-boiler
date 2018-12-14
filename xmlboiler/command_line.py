@@ -99,7 +99,7 @@ def main(argv):
                                          parents=[base_chain_parser],
                                          help='Automatically run a chain of transformations',
                                          add_help=False)
-    chain_parser.set_defaults(options_object=ChainOptions)
+    # chain_parser.set_defaults(options_object=ChainOptions)
     chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')  # FIXME: It is a global option
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
@@ -123,7 +123,7 @@ def main(argv):
         error_logger=error_logger,
         command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
         url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
-    options = args.options_object(element_options=element_options)  # FIXME: bad code
+    options = ChainOptions(element_options=element_options)  # FIXME: bad code
 
     directories_map = {}
     if args.directory is not None:
