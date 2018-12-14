@@ -107,7 +107,7 @@ class NotInTargetNamespace(Enum):
 
 @dataclass
 class TransformationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOptions):
-    next_script: Any = None #ScriptsIteratorBase = None  # avoid circular dependency
+    next_script: Any = None  # ScriptsIteratorBase = None  # avoid circular dependency
     not_in_target_namespace: NotInTargetNamespace = None
     universal_precedence: Optional[URIRef] = None  # TODO: Find a better name for this option
     target_namespaces: frozenset = None  # frozenset[URIRef]
