@@ -52,7 +52,19 @@ def main(argv):
         import asyncio
         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+    base_chain_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                                description="Common chain argument")
+    base_chain_parser.add_argument('-W', '--weight-formula', help='formula for weighting scripts',
+                                   choices=['inverseofsum', 'sumofinverses'], default='inverseofsum')
+    base_chain_parser.add_argument('-s', '--next-script',
+                                   help='"next script" algorithm ("precedence" is not supported)',
+                                   choices=['precedence', 'doc'], default='doc')
+    base_chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not in target NS',
+                                   choices=['ignore', 'remove', 'error'])
+
+    parser = argparse.ArgumentParser(parents=[base_chain_parser],
+                                     add_help=False,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description="""Automatically process XML.\n
     To support this project:
     - Send money to PayPal porton@narod.ru or https://paypal.me/victorporton
@@ -83,17 +95,14 @@ def main(argv):
                         choices=['package', 'executable', 'both'])
     parser.add_argument('-T', '--timeout', help='HTTP and FTP timeout in seconds (default 10.0)', type=float, default=10)
 
-    chain_parser = subparsers.add_parser('chain', aliases=['c'], help='Automatically run a chain of transformations')
+    chain_parser = subparsers.add_parser('chain', aliases=['c'],
+                                         parents=[base_chain_parser],
+                                         help='Automatically run a chain of transformations',
+                                         add_help=False)
     chain_parser.set_defaults(options_object=TransformationAutomaticWorkflowElementOptions)
     chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
-    chain_parser.add_argument('-s', '--next-script', help='"next script" algorithm ("precedence" is not supported)',
-                              choices=['precedence', 'doc'], default='doc')
-    chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not in target NS',
-                              choices=['ignore', 'remove', 'error'])
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
-    chain_parser.add_argument('-W', '--weight-formula', help='formula for weighting scripts',
-                              choices=['inverseofsum', 'sumofinverses'], default='inverseofsum')
 
     try:
         args = parser.parse_args(argv)
