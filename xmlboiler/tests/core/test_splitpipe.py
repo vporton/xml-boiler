@@ -16,21 +16,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import re
+import unittest
+
+from xmlboiler.command_line.pipe import split_pipeline
 
 
-def split_pipeline(s):
-    res = [['']]
-    r = r'\\\\|\\\+|\\\s|\s+\+\s+|\s+|[^\s\\]+'
-    for m in re.finditer(r, s, re.M|re.S):
-        if m[0][0] == '\\':
-            res[-1][-1] += m[0][1:]
-        elif re.match(r'\s+\+\s+', m[0], re.M|re.S):
-            res.append([''])
-        elif re.match(r'\s+', m[0], re.M | re.S):
-            res[-1].append('')
-        else:
-            res[-1][-1] += m[0]
-    return res
-
-# print(split_pipeline(r'a\\ \+  b + c\ d +'))
+class TestSplitPipe(unittest.TestCase):
+    def test_split(self):
+        s = r'a\\ \+  b + c\ d +'
+        self.assertEqual(str(split_pipeline(s)), r"[['a\\', '+', 'b'], ['c d', '+']]")
+        s = r''
+        self.assertEqual(str(split_pipeline(s)), r"[['']]")
