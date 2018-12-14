@@ -110,7 +110,7 @@ class ValidationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOpti
 @dataclass
 class ChainOptions(object):
     """For `chain` command."""
-    __slots__ = 'element_options', 'next_script', 'universal_precedence', 'target_namespaces'
+    # __slots__ = 'element_options', 'next_script', 'universal_precedence', 'target_namespaces'
     element_options: BaseAutomaticWorkflowElementOptions = None
     next_script: Any = None  # ScriptsIteratorBase = None  # avoid circular dependency
     universal_precedence: Optional[URIRef] = None  # TODO: Find a better name for this option
