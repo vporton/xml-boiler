@@ -29,7 +29,6 @@ class AssetsExhausted(StopIteration):
 
 class AutomaticTranformation(object):
     def __init__(self, state, interpreter):
-        state.dom = myXMLParseString(state.xml_text)
         self.state = state
         self.interpreter = interpreter
         self.state.next_asset = self.state.opts.recursive_options.download_algorithm
@@ -72,7 +71,6 @@ class AutomaticTranformation(object):
         return True
 
     def run(self):
-        self.state.dom = myXMLParseString(self.state.xml_text)
         while self._step():  # may raise AssetsExhausted
             pass
 
