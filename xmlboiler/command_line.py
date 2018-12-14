@@ -112,7 +112,7 @@ def main(argv):
                                         help='Run a pipeline of XML filters',
                                         add_help=False)
     pipe_parser.set_defaults(subcommand='pipe')
-    pipe_parser.add_argument('pipe', help="+-separated pipeline of filters as a single argument")
+    pipe_parser.add_argument('pipe', metavar='PIPE', help="+-separated pipeline of filters as a single argument")
 
     try:
         args = parser.parse_args(argv)
