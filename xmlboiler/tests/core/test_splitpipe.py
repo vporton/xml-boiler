@@ -23,7 +23,7 @@ from xmlboiler.command_line.pipe import split_pipeline
 
 class TestSplitPipe(unittest.TestCase):
     def test_split(self):
-        s = r'a\\ \+  b + c\ d +'
-        self.assertEqual(str(split_pipeline(s)), r"[['a\\', '+', 'b'], ['c d', '+']]")
+        s = r'a+\\ \+  b + c\ d +'
+        self.assertEqual(str(split_pipeline(s)), r"[['a+\\', '+', 'b'], ['c d', '+']]")
         s = r''
         self.assertEqual(str(split_pipeline(s)), r"[['']]")
