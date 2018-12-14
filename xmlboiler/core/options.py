@@ -108,8 +108,13 @@ class ValidationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOpti
 ### Transformation ###
 
 @dataclass
-class ChainOptions(BaseAutomaticWorkflowElementOptions):
+class ChainOptions(object):
     """For `chain` command."""
+    element_options: BaseAutomaticWorkflowElementOptions = None
     next_script: Any = None  # ScriptsIteratorBase = None  # avoid circular dependency
     universal_precedence: Optional[URIRef] = None  # TODO: Find a better name for this option
     target_namespaces: frozenset = None  # frozenset[URIRef]
+
+    # quick hack
+    def __getattr__(self, attr):
+        return getattr(self.element_options, attr)

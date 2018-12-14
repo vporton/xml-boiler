@@ -36,7 +36,7 @@ from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_a
 import xmlboiler.core.interpreters.parse
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.options import ChainOptions, \
-    RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace
+    RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace, BaseAutomaticWorkflowElementOptions
 import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
 from xmlboiler.core.packages.config import determine_os
@@ -100,7 +100,7 @@ def main(argv):
                                          help='Automatically run a chain of transformations',
                                          add_help=False)
     chain_parser.set_defaults(options_object=ChainOptions)
-    chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')
+    chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')  # FIXME: It is a global option
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
 
@@ -117,11 +117,13 @@ def main(argv):
     error_logger = Contexts.logger('error', logging.WARNING)
     error_logger.addHandler(error_handler)
 
-    options = args.options_object(execution_context=execution_context,
-                                  log_level=args.log_level,
-                                  error_logger=error_logger,
-                                  command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
-                                  url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
+    element_options = BaseAutomaticWorkflowElementOptions(
+        execution_context=execution_context,
+        log_level=args.log_level,
+        error_logger=error_logger,
+        command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
+        url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
+    options = args.options_object(element_options=element_options)  # FIXME: bad code
 
     directories_map = {}
     if args.directory is not None:
