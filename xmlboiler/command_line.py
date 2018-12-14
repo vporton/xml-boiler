@@ -83,7 +83,8 @@ def main(argv):
                         choices=['none', 'breadth', 'depth'])
     parser.add_argument('-x', '--recursive-order', metavar='ORDER',
                         help='recursive download order (comma separated "sources", "targets", "workflowtargets")')
-    parser.add_argument('-y', '--directory', help='additional directory with assets', metavar='NAME=DIR', action='append')
+    parser.add_argument('-y', '--directory', help='additional directory with assets', metavar='NAME=DIR',
+                        action='append')
     parser.add_argument('-d', '--downloaders', metavar='DOWNLOADERS',
                         help='a plus-separated list of comma-separated lists of "builtin","DIR"')
     parser.add_argument('--software',
@@ -93,14 +94,16 @@ def main(argv):
                         choices=['package', 'executable', 'both'])
     parser.add_argument('-W', '--weight-formula', help='formula for weighting scripts',
                         choices=['inverseofsum', 'sumofinverses'], default='inverseofsum')
-    parser.add_argument('-T', '--timeout', help='HTTP and FTP timeout in seconds (default 10.0)', type=float, default=10)
+    parser.add_argument('-T', '--timeout', help='HTTP and FTP timeout in seconds (default 10.0)', type=float,
+                        default=10)
 
     chain_parser = subparsers.add_parser('chain', aliases=['c'],
                                          parents=[base_chain_parser],
                                          help='Automatically run a chain of transformations',
                                          add_help=False)
     # chain_parser.set_defaults(options_object=ChainOptions)
-    chain_parser.add_argument('source', nargs='?', help='source document (defaults to stdin)')  # FIXME: It is a global option
+    chain_parser.add_argument('source', nargs='?',
+                              help='source document (defaults to stdin)')  # FIXME: It is a global option
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
 
@@ -134,7 +137,8 @@ def main(argv):
                 return 1
             directories_map[m[1]] = m[2]
 
-    options.recursive_options.initial_assets = OrderedSet([] if args.preload is None else map(URIRef, args.preload))
+    options.element_options.recursive_options.initial_assets = OrderedSet(
+        [] if args.preload is None else map(URIRef, args.preload))
 
     if args.recursive_order is not None:
         elts = args.recursive_order.split(',')
@@ -146,12 +150,12 @@ def main(argv):
             print("Error: values are repeated more than once in --recursive-order option.")
             return 1
         m = {"sources": RecursiveRetrievalPriorityOrderElement.SOURCES,
-               "targets": RecursiveRetrievalPriorityOrderElement.TARGETS,
-               "workflowtargets": RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS}
-        options.recursive_options.retrieval_priority = OrderedSet([m[s] for s in elts])
+             "targets": RecursiveRetrievalPriorityOrderElement.TARGETS,
+             "workflowtargets": RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS}
+        options.element_options.recursive_options.retrieval_priority = OrderedSet([m[s] for s in elts])
     else:
         # TODO: Subject to change
-        options.recursive_options.retrieval_priority = \
+        options.element_options.recursive_options.retrieval_priority = \
             OrderedSet([RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS,
                         RecursiveRetrievalPriorityOrderElement.TARGETS,
                         RecursiveRetrievalPriorityOrderElement.SOURCES])
@@ -167,27 +171,27 @@ def main(argv):
     if args.downloaders:
         downloaders = [d.split(',') for d in args.downloaders.split('+')]
         try:
-            options.recursive_options.downloaders = \
+            options.element_options.recursive_options.downloaders = \
                 [[infer_downloader(s) for s in d] for d in downloaders]
         except ValueError:
             return 1
     else:
-        options.recursive_options.downloaders = [[local_asset_downloader]]
+        options.element_options.recursive_options.downloaders = [[local_asset_downloader]]
 
     output = None if not args.output or args.output[0] == '-' else args.output[0]
 
     options.target_namespaces = frozenset([] if args.target is None else [URIRef(t) for t in args.target])
 
-    options.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
-                             'remove': NotInTargetNamespace.REMOVE,
-                             'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
+    options.element_options.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
+                                             'remove': NotInTargetNamespace.REMOVE,
+                                             'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
 
     options.universal_precedence = args.universal_precedence
-    options.weight_formula = args.weight_formula
+    options.element_options.weight_formula = args.weight_formula
 
-    options.installed_soft_options.package_manager = determine_os() if args.software != 'executable' else None
-    options.installed_soft_options.use_path = args.software in ('executable', 'both')
-    if options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
+    options.element_options.installed_soft_options.package_manager = determine_os() if args.software != 'executable' else None
+    options.element_options.installed_soft_options.use_path = args.software in ('executable', 'both')
+    if options.element_options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
         sys.stderr.write("Package manager is not supported on this OS.\n")
 
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
@@ -208,14 +212,15 @@ def main(argv):
     download_execution_context = context_for_logger(execution_context,
                                                     Contexts.logger('asset', args.log_level))
     downloader_parse_context = default_parse_context(execution_context=download_execution_context)
-    options.recursive_options.download_algorithm = \
+    options.element_options.recursive_options.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
-         'depth': download_providers.depth_first_download}[args.recursive or 'breadth'](\
+         'depth': download_providers.depth_first_download}[args.recursive or 'breadth']( \
             state, parse_context=downloader_parse_context).download_iterator()
 
-    _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(options.installed_soft_options,
-                                                                                     log_level=args.log_level)
+    _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(
+        options.element_options.installed_soft_options,
+        log_level=args.log_level)
     try:
         try:
             algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
