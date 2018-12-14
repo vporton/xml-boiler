@@ -54,8 +54,6 @@ def main(argv):
 
     base_chain_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                                 description="Common chain argument")
-    base_chain_parser.add_argument('-W', '--weight-formula', help='formula for weighting scripts',
-                                   choices=['inverseofsum', 'sumofinverses'], default='inverseofsum')
     base_chain_parser.add_argument('-s', '--next-script',
                                    help='"next script" algorithm ("precedence" is not supported)',
                                    choices=['precedence', 'doc'], default='doc')
@@ -93,6 +91,8 @@ def main(argv):
                              '\'package\' are now supported only on Debian-based systems. ' + \
                              'Defaults to \'both\' on Debian-based and \'executable\' on others.',
                         choices=['package', 'executable', 'both'])
+    parser.add_argument('-W', '--weight-formula', help='formula for weighting scripts',
+                        choices=['inverseofsum', 'sumofinverses'], default='inverseofsum')
     parser.add_argument('-T', '--timeout', help='HTTP and FTP timeout in seconds (default 10.0)', type=float, default=10)
 
     chain_parser = subparsers.add_parser('chain', aliases=['c'],
