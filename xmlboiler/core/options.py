@@ -78,14 +78,21 @@ class BaseAlgorithmOptions(object):
     error_logger: Logger = None  # may be stderr
     command_runner: BaseCommandRunner = None
     url_opener: MyOpener = None
-    kind: WorklowKind = None
+    # kind: WorklowKind = None
     recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
+
+
+class NotInTargetNamespace(Enum):
+    IGNORE = auto()
+    REMOVE = auto()  # TODO: Not implemented
+    ERROR  = auto()
 
 
 @dataclass
 class BaseAutomaticWorkflowElementOptions(BaseAlgorithmOptions):
     weight_formula: str = None
+    not_in_target_namespace: NotInTargetNamespace = None
 
 ### Validation ###
 
@@ -100,15 +107,9 @@ class ValidationAutomaticWorkflowElementOptions(BaseAutomaticWorkflowElementOpti
 
 ### Transformation ###
 
-class NotInTargetNamespace(Enum):
-    IGNORE = auto()
-    REMOVE = auto()  # TODO: Not implemented
-    ERROR  = auto()
-
 @dataclass
 class ChainOptions(BaseAutomaticWorkflowElementOptions):
     """For `chain` command."""
     next_script: Any = None  # ScriptsIteratorBase = None  # avoid circular dependency
-    not_in_target_namespace: NotInTargetNamespace = None
     universal_precedence: Optional[URIRef] = None  # TODO: Find a better name for this option
     target_namespaces: frozenset = None  # frozenset[URIRef]
