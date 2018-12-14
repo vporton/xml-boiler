@@ -71,7 +71,7 @@ def main(argv):
     - Buy tokens at https://crypto4ngo.org/project/view/4
     
     Use http_proxy or ftp_proxy variables to specify proxy servers.""")
-    subparsers = parser.add_subparsers(title='subcommands')
+    subparsers = parser.add_subparsers(title='subcommands', dest='subcommand')
     subparsers.required = True
 
     parser.add_argument('-o', '--output', nargs=1, help='output file (defaults to stdout)')
@@ -101,11 +101,18 @@ def main(argv):
                                          parents=[base_chain_parser],
                                          help='Automatically run a chain of transformations',
                                          add_help=False)
-    # chain_parser.set_defaults(options_object=ChainOptions)
+    chain_parser.set_defaults(subcommand='chain')
     chain_parser.add_argument('source', nargs='?',
                               help='source document (defaults to stdin)')  # FIXME: It is a global option
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
+
+    pipe_parser = subparsers.add_parser('pipe', aliases=['p'],
+                                        parents=[base_chain_parser],
+                                        help='Run a pipeline of XML filters',
+                                        add_help=False)
+    pipe_parser.set_defaults(subcommand='pipe')
+    pipe_parser.add_argument('pipe', help="+-separated pipeline of filters as a single argument")
 
     try:
         args = parser.parse_args(argv)
@@ -120,13 +127,17 @@ def main(argv):
     error_logger = Contexts.logger('error', logging.WARNING)
     error_logger.addHandler(error_handler)
 
-    element_options = BaseAutomaticWorkflowElementOptions(
-        execution_context=execution_context,
-        log_level=args.log_level,
-        error_logger=error_logger,
-        command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
-        url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
-    options = ChainOptions(element_options=element_options)  # FIXME: bad code
+    if args.subcommand == 'chain':
+        element_options = BaseAutomaticWorkflowElementOptions(
+            execution_context=execution_context,
+            log_level=args.log_level,
+            error_logger=error_logger,
+            command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
+            url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
+        options = ChainOptions(element_options=element_options)  # FIXME: bad code
+    else:
+        sys.stderr.write("Command not supported!\n")
+        return 1
 
     directories_map = {}
     if args.directory is not None:
