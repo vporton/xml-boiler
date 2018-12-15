@@ -34,3 +34,18 @@ def split_pipeline(s):
     return res
 
 # print(split_pipeline(r'a\\ \+  b + c\ d +'))
+
+
+class PipelineProcessor(object):
+    def __init__(self, execution_context, error_logger, chain_parser):
+        self.execution_context = execution_context
+        self.error_logger = error_logger
+        self.chain_parser = chain_parser
+
+    def parse(self, pipe_str):
+        args = split_pipeline(pipe_str)
+        for arg in args:
+            if len(arg) == 0:
+                self.error_logger.error(self.execution_context.translate("Wrong command '' in the pipeline."))
+                return False
+            # TODO
