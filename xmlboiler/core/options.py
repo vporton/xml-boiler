@@ -94,8 +94,13 @@ class NotInTargetNamespace(Enum):
 
 
 @dataclass
-class BaseAutomaticWorkflowElementOptions(BaseAlgorithmOptions):
+class BaseAutomaticWorkflowElementOptions(object):
+    algorithm_options: BaseAlgorithmOptions = None
     not_in_target: NotInTargetNamespace = None
+
+    # quick hack
+    def __getattr__(self, attr):
+        return getattr(self.algorithm_options, attr)
 
 ### Validation ###
 

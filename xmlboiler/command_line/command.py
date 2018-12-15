@@ -36,7 +36,8 @@ from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_a
 import xmlboiler.core.interpreters.parse
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.options import ChainOptions, \
-    RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace, BaseAutomaticWorkflowElementOptions
+    RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace, BaseAutomaticWorkflowElementOptions, \
+    BaseAlgorithmOptions
 import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
 from xmlboiler.core.packages.config import determine_os
@@ -128,12 +129,13 @@ def main(argv):
     error_logger.addHandler(error_handler)
 
     if args.subcommand == 'chain':
-        element_options = BaseAutomaticWorkflowElementOptions(
+        algorithm_options = BaseAlgorithmOptions(
             execution_context=execution_context,
             log_level=args.log_level,
             error_logger=error_logger,
             command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
             url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
+        element_options = BaseAutomaticWorkflowElementOptions(algorithm_options=algorithm_options)
         m = {
             'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
             'doc': xmlboiler.core.alg.next_script2.ScriptsIterator,
@@ -152,7 +154,7 @@ def main(argv):
                 return 1
             directories_map[m[1]] = m[2]
 
-    options.element_options.recursive_options.initial_assets = OrderedSet(
+    options.element_options.algorithm_options.recursive_options.initial_assets = OrderedSet(
         [] if args.preload is None else map(URIRef, args.preload))
 
     if args.recursive_order is not None:
@@ -203,15 +205,16 @@ def main(argv):
 
     options.universal_precedence = args.universal_precedence
 
-    options.element_options.installed_soft_options.package_manager = determine_os() if args.software != 'executable' else None
-    options.element_options.installed_soft_options.use_path = args.software in ('executable', 'both')
+    options.element_options.algorithm_options.installed_soft_options.package_manager = \
+        determine_os() if args.software != 'executable' else None
+    options.element_options.algorithm_options.installed_soft_options.use_path = args.software in ('executable', 'both')
     if options.element_options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
         sys.stderr.write("Package manager is not supported on this OS.\n")
 
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
 
-    options.element_options.next_script = m[args.next_script](state)
-    options.element_options.weight_formula = args.weight_formula
+    options.element_options.algorithm_options.next_script = m[args.next_script](state)
+    options.element_options.algorithm_options.weight_formula = args.weight_formula
 
     if args.source and re.match(r'^[a-zA-Z]+:', args.source):
         state.xml_text = options.url_opener.open(args.source).read()
