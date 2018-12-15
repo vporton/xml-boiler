@@ -68,7 +68,7 @@ class PipelineProcessor(object):
                     sys.stderr.write("Error in an intermediary XML document during the transformation: " + str(e) + "\n")
                     return 1
             except AssetsExhausted:
-                if state.options.not_in_target != NotInTargetNamespace.IGNORE:
+                if state.opts.not_in_target != NotInTargetNamespace.IGNORE:
                     sys.stderr.write("The transformation failed, no more assets to load.\n")
                     if options.not_in_target == NotInTargetNamespace.ERROR:
                         return 1
