@@ -92,7 +92,7 @@ class NotInTargetNamespace(Enum):
 @dataclass
 class BaseAutomaticWorkflowElementOptions(BaseAlgorithmOptions):
     weight_formula: str = None
-    not_in_target_namespace: NotInTargetNamespace = None
+    not_in_target: NotInTargetNamespace = None
 
 ### Validation ###
 
