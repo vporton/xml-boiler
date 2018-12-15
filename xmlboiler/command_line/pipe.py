@@ -17,6 +17,9 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import re
+from copy import deepcopy
+
+from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor
 
 
 def split_pipeline(s):
@@ -37,30 +40,38 @@ def split_pipeline(s):
 
 
 class PipelineProcessor(object):
-    def __init__(self, execution_context, error_logger, chain_parser):
+    def __init__(self, element_options, execution_context, error_logger, chain_parser):
+        self.element_options = element_options
         self.execution_context = execution_context
         self.error_logger = error_logger
         self.chain_parser = chain_parser
 
+    def execute(self, pipe_str):
+        options_list = self.parse(pipe_str)
+
     def parse(self, pipe_str):
-        args = split_pipeline(pipe_str)
-        for arg in args:
-            if len(arg) == 0:
+        args_list = split_pipeline(pipe_str)
+        options_list = []
+        for args in args_list:
+            if len(args) == 0:
                 self.error_logger.error(self.execution_context.translate("Wrong command '' in the pipeline."))
                 return False
-            # local_element_options =
+            local_element_options = deepcopy(self.element_options)
+            modify_pipeline_element(args, local_element_options)
             method = {'chain': PipelineProcessor.chain_opts,
                       'c': PipelineProcessor.chain_opts}\
-                [arg[0]]
-            if not method(self, arg[1:]):
+                [args[0]]
+            options_object = method(self, args[1:], local_element_options)
+            if not options_object:
                 return False
-        return
+            options_list.append(options_object)
+        return options_list
 
-    def chain_opts(self, arg):
+    def chain_opts(self, args, element_options):
         try:
-            args = self.chain_parser.parse_args(arg)
+            pargs = self.chain_parser.parse_args(args)
         except TypeError:
             self.chain_parser.print_usage()
             return False
-        # TODO
-
+        processor = ChainOptionsProcessor(element_options, self.execution_context, self.error_logger)
+        return processor.process(pargs)
