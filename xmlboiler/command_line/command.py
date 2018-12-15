@@ -142,6 +142,8 @@ def main(argv):
     element_options = BaseAutomaticWorkflowElementOptions(algorithm_options=algorithm_options)
     element_options.algorithm_options.recursive_options.initial_assets = OrderedSet(
         [] if args.preload is None else map(URIRef, args.preload))
+    element_options.algorithm_options.weight_formula = args.weight_formula
+
 
     if args.recursive_order is not None:
         elts = args.recursive_order.split(',')
@@ -204,12 +206,10 @@ def main(argv):
     elif args.subcommand == 'pipe':
         options = PipelineOptions(element_options=element_options)
         processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
-        processor.execute(args.pipe)
+        pipe_options_list = processor.parse(args)
     else:
         sys.stderr.write("Command not supported!\n")
         return 1
-
-    options.element_options.algorithm_options.weight_formula = args.weight_formula
 
     modify_pipeline_element(args, element_options)
 

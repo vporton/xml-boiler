@@ -46,9 +46,8 @@ class PipelineProcessor(object):
         self.error_logger = error_logger
         self.chain_parser = chain_parser
 
-    def execute(self, pipe_str):
-        options_list = self.parse(pipe_str)
-        # TODO
+    def execute(self, options_list):
+        pass  # TODO
 
     def parse(self, pipe_str):
         args_list = split_pipeline(pipe_str)
