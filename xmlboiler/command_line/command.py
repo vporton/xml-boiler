@@ -206,7 +206,7 @@ def main(argv):
     elif args.subcommand == 'pipe':
         options = PipelineOptions(element_options=element_options)
         processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
-        pipe_options_list = processor.parse(args)
+        pipe_options_list = processor.parse(args.pipe)
     else:
         sys.stderr.write("Command not supported!\n")
         return 1
