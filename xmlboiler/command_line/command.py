@@ -28,6 +28,7 @@ from rdflib import URIRef
 
 import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
+from xmlboiler.command_line.modifiers import modify_pipeline_element
 from xmlboiler.core.alg import auto_transform
 from xmlboiler.core.alg.auto_transform import AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
@@ -199,9 +200,7 @@ def main(argv):
 
     options.target_namespaces = frozenset([] if args.target is None else [URIRef(t) for t in args.target])
 
-    options.element_options.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
-                                             'remove': NotInTargetNamespace.REMOVE,
-                                             'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
+    modify_pipeline_element(args, options.element_options)
 
     options.universal_precedence = args.universal_precedence
 
