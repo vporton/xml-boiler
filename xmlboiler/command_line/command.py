@@ -29,6 +29,7 @@ from rdflib import URIRef
 import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor
+from xmlboiler.command_line.pipe import PipelineProcessor
 from xmlboiler.core.alg import auto_transform
 from xmlboiler.core.alg.auto_transform import AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
@@ -187,6 +188,9 @@ def main(argv):
     if args.subcommand == 'chain':
         options_processor = ChainOptionsProcessor(element_options, execution_context, error_logger)
         options = options_processor.process(args)
+    elif args.subcommand == 'pipe':
+        processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
+        processor.execute(args['chain'])
     else:
         sys.stderr.write("Command not supported!\n")
         return 1
