@@ -82,6 +82,10 @@ class BaseAlgorithmOptions(object):
     recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
 
+    # TODO: Is it possible to move this to BaseAutomaticWorkflowElementOptions?
+    next_script: Any = None  # ScriptsIteratorBase = None  # avoid circular dependency
+    weight_formula: str = None
+
 
 class NotInTargetNamespace(Enum):
     IGNORE = auto()
@@ -91,7 +95,6 @@ class NotInTargetNamespace(Enum):
 
 @dataclass
 class BaseAutomaticWorkflowElementOptions(BaseAlgorithmOptions):
-    weight_formula: str = None
     not_in_target: NotInTargetNamespace = None
 
 ### Validation ###
@@ -112,7 +115,6 @@ class ChainOptions(object):
     """For `chain` command."""
     # __slots__ = 'element_options', 'next_script', 'universal_precedence', 'target_namespaces'
     element_options: BaseAutomaticWorkflowElementOptions = None
-    next_script: Any = None  # ScriptsIteratorBase = None  # avoid circular dependency
     universal_precedence: Optional[URIRef] = None  # TODO: Find a better name for this option
     target_namespaces: frozenset = None  # frozenset[URIRef]
 

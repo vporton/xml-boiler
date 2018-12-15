@@ -82,23 +82,23 @@ class TestUtility(XmlTest):
     def do_run_xinlude(self, order, next_script_mode):
         self.command(['-r',
                       order,
+                      '-s',
+                      next_script_mode,
                       'chain',
                       Global.get_filename("tests/core/data/xml/xinclude.xml"),
                       '-u',
-                      'http://portonvictor.org/ns/trans/precedence-include',
-                      '-s',
-                      next_script_mode])
+                      'http://portonvictor.org/ns/trans/precedence-include'])
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
 
     def do_run_comment(self, order, next_script_mode):
         self.command(['-r',
                       order,
+                      '-s',
+                      next_script_mode,
                       'chain',
                       Global.get_filename("tests/core/data/xml/comment.xml"),
                       '-u',
-                      'http://portonvictor.org/ns/trans/precedence-comment',
-                      '-s',
-                      next_script_mode])
+                      'http://portonvictor.org/ns/trans/precedence-comment'])
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
 
     def test_run(self):
@@ -117,11 +117,11 @@ class TestUtility(XmlTest):
                     with capture_stdin_and_stdout():
                         self.command(['-r',
                                       order,
+                                      '-s', next_script_mode,
                                       'chain',
                                       Global.get_filename("tests/core/data/xml/syntax.xml"),
                                       '-t', 'http://www.w3.org/1999/xhtml',
-                                      '-n', 'error',
-                                      '-s', next_script_mode])
+                                      '-n', 'error'])
                         # sys.stdout.buffer.write(b'<pre>...')
                         self.assertRegex(sys.stdout.buffer.getvalue().decode('utf-8'), r'<pre>')
 
@@ -145,12 +145,12 @@ class TestUtility(XmlTest):
     def test_nodownload(self):
         with capture_stdin_and_stdout():
             self.command(['-r', 'none',
+                          '-s', 'doc',
                           '-p', 'http://portonvictor.org/ns/comment',
                           'chain',
                           Global.get_filename("tests/core/data/xml/comment.xml"),
                           '-u',
-                          'http://portonvictor.org/ns/trans/precedence-comment',
-                          '-s', 'doc'])
+                          'http://portonvictor.org/ns/trans/precedence-comment'])
             self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
 
     def test_installed_packages(self):

@@ -54,9 +54,6 @@ def main(argv):
 
     base_chain_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                                 description="Common chain argument")
-    base_chain_parser.add_argument('-s', '--next-script',
-                                   help='"next script" algorithm ("precedence" is not supported)',
-                                   choices=['precedence', 'doc'], default='doc')
     base_chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not in target NS',
                                    choices=['ignore', 'remove', 'error'])
 
@@ -92,6 +89,9 @@ def main(argv):
                              '\'package\' are now supported only on Debian-based systems. ' + \
                              'Defaults to \'both\' on Debian-based and \'executable\' on others.',
                         choices=['package', 'executable', 'both'])
+    parser.add_argument('-s', '--next-script',
+                        help='"next script" algorithm ("precedence" is not supported)',
+                        choices=['precedence', 'doc'], default='doc')
     parser.add_argument('-W', '--weight-formula', help='formula for weighting scripts',
                         choices=['inverseofsum', 'sumofinverses'], default='inverseofsum')
     parser.add_argument('-T', '--timeout', help='HTTP and FTP timeout in seconds (default 10.0)', type=float,
@@ -134,6 +134,10 @@ def main(argv):
             error_logger=error_logger,
             command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
             url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
+        m = {
+            'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
+            'doc': xmlboiler.core.alg.next_script2.ScriptsIterator,
+        }
         options = ChainOptions(element_options=element_options)  # FIXME: bad code
     else:
         sys.stderr.write("Command not supported!\n")
@@ -198,7 +202,6 @@ def main(argv):
                                              'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
 
     options.universal_precedence = args.universal_precedence
-    options.element_options.weight_formula = args.weight_formula
 
     options.element_options.installed_soft_options.package_manager = determine_os() if args.software != 'executable' else None
     options.element_options.installed_soft_options.use_path = args.software in ('executable', 'both')
@@ -207,18 +210,15 @@ def main(argv):
 
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
 
+    options.element_options.next_script = m[args.next_script](state)
+    options.element_options.weight_formula = args.weight_formula
+
     if args.source and re.match(r'^[a-zA-Z]+:', args.source):
         state.xml_text = options.url_opener.open(args.source).read()
     else:
         source = sys.stdin if args.source is None or args.source == '-' else open(args.source)
         state.xml_text = source.buffer.read()
         source.close()
-
-    m = {
-        'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
-        'doc': xmlboiler.core.alg.next_script2.ScriptsIterator,
-    }
-    options.next_script = m[args.next_script](state)
 
     download_execution_context = context_for_logger(execution_context,
                                                     Contexts.logger('asset', args.log_level))
