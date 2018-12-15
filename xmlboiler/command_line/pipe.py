@@ -58,7 +58,6 @@ class PipelineProcessor(object):
                 self.error_logger.error(self.execution_context.translate("Wrong command '' in the pipeline."))
                 return False
             local_element_options = deepcopy(self.element_options)
-            modify_pipeline_element(args, local_element_options)
             method = {'chain': PipelineProcessor.chain_opts,
                       'c': PipelineProcessor.chain_opts}\
                 [args[0]]
@@ -74,5 +73,6 @@ class PipelineProcessor(object):
         except TypeError:
             self.chain_parser.print_usage()
             return False
+        modify_pipeline_element(pargs, element_options)
         processor = ChainOptionsProcessor(element_options, self.execution_context, self.error_logger)
         return processor.process(pargs)
