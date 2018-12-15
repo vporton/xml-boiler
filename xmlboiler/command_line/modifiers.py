@@ -20,6 +20,7 @@ from xmlboiler.core.options import NotInTargetNamespace
 
 
 def modify_pipeline_element(args, obj):
+    """Process command line options for a pipeline element or for a filter"""
     obj.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
                          'remove': NotInTargetNamespace.REMOVE,
                          'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
