@@ -31,7 +31,6 @@ class AutomaticTranformation(object):
     def __init__(self, state, interpreter):
         self.state = state
         self.interpreter = interpreter
-        self.state.next_asset = self.state.opts.recursive_options.download_algorithm
 
     def _step(self):
         all_namespaces = set()
