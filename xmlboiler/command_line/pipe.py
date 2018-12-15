@@ -48,6 +48,7 @@ class PipelineProcessor(object):
             if len(arg) == 0:
                 self.error_logger.error(self.execution_context.translate("Wrong command '' in the pipeline."))
                 return False
+            # local_element_options =
             method = {'chain': PipelineProcessor.chain_opts,
                       'c': PipelineProcessor.chain_opts}\
                 [arg[0]]

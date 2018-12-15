@@ -36,7 +36,7 @@ from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_asset_downloader
 import xmlboiler.core.interpreters.parse
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
-from xmlboiler.core.options import ChainOptions, \
+from xmlboiler.core.options import \
     RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace, BaseAutomaticWorkflowElementOptions, \
     BaseAlgorithmOptions
 import xmlboiler.core.alg.next_script1
@@ -129,30 +129,15 @@ def main(argv):
     error_logger = Contexts.logger('error', logging.WARNING)
     error_logger.addHandler(error_handler)
 
-    if args.subcommand == 'chain':
-        algorithm_options = BaseAlgorithmOptions(
-            execution_context=execution_context,
-            log_level=args.log_level,
-            error_logger=error_logger,
-            command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
-            url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
-        element_options = BaseAutomaticWorkflowElementOptions(algorithm_options=algorithm_options)
-        options_processor = ChainOptionsProcessor(element_options, execution_context, error_logger)
-        options = options_processor.process(args)
-    else:
-        sys.stderr.write("Command not supported!\n")
-        return 1
+    algorithm_options = BaseAlgorithmOptions(
+        execution_context=execution_context,
+        log_level=args.log_level,
+        error_logger=error_logger,
+        command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
+        url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
 
-    directories_map = {}
-    if args.directory is not None:
-        for eq in args.directory:
-            m = re.match(r'([^=]+)=(.*)', eq, re.S)
-            if not m:
-                sys.stderr.write("Wrong --directory flag format\n")
-                return 1
-            directories_map[m[1]] = m[2]
-
-    options.element_options.algorithm_options.recursive_options.initial_assets = OrderedSet(
+    element_options = BaseAutomaticWorkflowElementOptions(algorithm_options=algorithm_options)
+    element_options.algorithm_options.recursive_options.initial_assets = OrderedSet(
         [] if args.preload is None else map(URIRef, args.preload))
 
     if args.recursive_order is not None:
@@ -167,10 +152,10 @@ def main(argv):
         m = {"sources": RecursiveRetrievalPriorityOrderElement.SOURCES,
              "targets": RecursiveRetrievalPriorityOrderElement.TARGETS,
              "workflowtargets": RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS}
-        options.element_options.recursive_options.retrieval_priority = OrderedSet([m[s] for s in elts])
+        element_options.recursive_options.retrieval_priority = OrderedSet([m[s] for s in elts])
     else:
         # TODO: Subject to change
-        options.element_options.recursive_options.retrieval_priority = \
+        element_options.recursive_options.retrieval_priority = \
             OrderedSet([RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS,
                         RecursiveRetrievalPriorityOrderElement.TARGETS,
                         RecursiveRetrievalPriorityOrderElement.SOURCES])
@@ -186,22 +171,38 @@ def main(argv):
     if args.downloaders:
         downloaders = [d.split(',') for d in args.downloaders.split('+')]
         try:
-            options.element_options.recursive_options.downloaders = \
+            element_options.recursive_options.downloaders = \
                 [[infer_downloader(s) for s in d] for d in downloaders]
         except ValueError:
             return 1
     else:
-        options.element_options.recursive_options.downloaders = [[local_asset_downloader]]
+        element_options.recursive_options.downloaders = [[local_asset_downloader]]
+
+    element_options.algorithm_options.installed_soft_options.package_manager = \
+        determine_os() if args.software != 'executable' else None
+    element_options.algorithm_options.installed_soft_options.use_path = args.software in ('executable', 'both')
+    if element_options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
+        sys.stderr.write("Package manager is not supported on this OS.\n")
+
+    if args.subcommand == 'chain':
+        options_processor = ChainOptionsProcessor(element_options, execution_context, error_logger)
+        options = options_processor.process(args)
+    else:
+        sys.stderr.write("Command not supported!\n")
+        return 1
+
+    directories_map = {}
+    if args.directory is not None:
+        for eq in args.directory:
+            m = re.match(r'([^=]+)=(.*)', eq, re.S)
+            if not m:
+                sys.stderr.write("Wrong --directory flag format\n")
+                return 1
+            directories_map[m[1]] = m[2]
 
     output = None if not args.output or args.output[0] == '-' else args.output[0]
 
-    modify_pipeline_element(args, options.element_options)
-
-    options.element_options.algorithm_options.installed_soft_options.package_manager = \
-        determine_os() if args.software != 'executable' else None
-    options.element_options.algorithm_options.installed_soft_options.use_path = args.software in ('executable', 'both')
-    if options.element_options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
-        sys.stderr.write("Package manager is not supported on this OS.\n")
+    modify_pipeline_element(args, element_options)
 
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
 
