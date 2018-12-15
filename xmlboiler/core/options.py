@@ -126,3 +126,14 @@ class ChainOptions(object):
     # quick hack
     def __getattr__(self, attr):
         return getattr(self.element_options, attr)
+
+
+@dataclass
+class PipelineOptions(object):
+    """For `pipe` command."""
+    # __slots__ = 'element_options', 'next_script', 'universal_precedence', 'target_namespaces'
+    element_options: BaseAutomaticWorkflowElementOptions = None
+
+    # quick hack
+    # def __getattr__(self, attr):
+    #     return getattr(self.element_options, attr)

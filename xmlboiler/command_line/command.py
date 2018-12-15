@@ -39,7 +39,7 @@ import xmlboiler.core.interpreters.parse
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.options import \
     RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace, BaseAutomaticWorkflowElementOptions, \
-    BaseAlgorithmOptions
+    BaseAlgorithmOptions, PipelineOptions
 import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
 from xmlboiler.core.packages.config import determine_os
@@ -116,6 +116,8 @@ def main(argv):
                                         add_help=False)
     pipe_parser.set_defaults(subcommand='pipe')
     pipe_parser.add_argument('pipe', metavar='PIPE', help="+-separated pipeline of filters as a single argument")
+    pipe_parser.add_argument('source', nargs='?',
+                             help='source document (defaults to stdin)')  # FIXME: It is a global option
 
     try:
         args = parser.parse_args(argv)
@@ -189,6 +191,7 @@ def main(argv):
         options_processor = ChainOptionsProcessor(element_options, execution_context, error_logger)
         options = options_processor.process(args)
     elif args.subcommand == 'pipe':
+        options = PipelineOptions(element_options=element_options)
         processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
         processor.execute(args.pipe)
     else:
@@ -208,7 +211,7 @@ def main(argv):
 
     modify_pipeline_element(args, element_options)
 
-    state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
+    state = PipelineState(opts=options)
 
     m = {
         'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
