@@ -63,7 +63,7 @@ class AutomaticTranformation(object):
             RealNextScript(self.state, self.interpreter).step()
         except StopIteration:
             try:
-                next(self.state.next_asset)
+                next(self.state.opts.recursive_options.download_algorithm)
             except StopIteration:
                 raise AssetsExhausted()
 

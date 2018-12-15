@@ -239,7 +239,6 @@ def main(argv):
          'depth': download_providers.depth_first_download}[args.recursive or 'breadth']( \
             state, parse_context=downloader_parse_context).download_iterator()
 
-    state.next_asset = state.opts.recursive_options.download_algorithm  # TODO: Eliminate using two fields for the same
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(
         options.element_options.installed_soft_options,
         log_level=args.log_level)
