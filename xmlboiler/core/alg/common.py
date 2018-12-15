@@ -30,7 +30,7 @@ class RealNextScript(object):
 
     def step(self):
         while True:
-            script = next(self.state.opts.next_script)['script']
+            script = next(self.state.next_script)['script']
             node = self.interpreters.find_interpreter(script.more.language, script.more.min_version,
                                                       script.more.max_version)
             if node is None:

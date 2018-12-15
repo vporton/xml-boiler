@@ -82,8 +82,6 @@ class BaseAlgorithmOptions(object):
     recursive_options: RecursiveDownloadOptions = RecursiveDownloadOptions()
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
 
-    # TODO: Is it possible to move this to BaseAutomaticWorkflowElementOptions?
-    next_script: Any = None  # ScriptsIteratorBase = None  # avoid circular dependency
     weight_formula: str = None
 
 

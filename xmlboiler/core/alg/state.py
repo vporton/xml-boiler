@@ -16,12 +16,13 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 from dataclasses import dataclass, field
-from typing import Set, FrozenSet, List, Optional
+from typing import Set, FrozenSet, List, Optional, Any
 
 import xml.dom.minidom
 from rdflib import URIRef
 from rdflib.resource import Resource
 
+from xmlboiler.core.alg.next_script_base import ScriptsIteratorBase
 from xmlboiler.core.graph.connect import Connectivity
 from xmlboiler.core.options import ChainOptions
 from xmlboiler.core.rdf_format.asset import ScriptInfo, Transformer
@@ -50,6 +51,7 @@ class PipelineState(BaseState):
     singletons: Set[URIRef] = field(default_factory=set)
     precedences_higher: Connectivity = field(default_factory=Connectivity)
     precedences_subclasses: Connectivity = field(default_factory=Connectivity)
+    next_script: Any = None  # avoid circular dependency # ScriptsIteratorBase = None
 
     def add_asset(self, asset):
         self.scripts += [script for transformer in asset.transformers for script in transformer.scripts]

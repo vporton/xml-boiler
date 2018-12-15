@@ -209,6 +209,8 @@ def main(argv):
         sys.stderr.write("Command not supported!\n")
         return 1
 
+    options.element_options.algorithm_options.weight_formula = args.weight_formula
+
     modify_pipeline_element(args, element_options)
 
     state = PipelineState(opts=options)
@@ -217,8 +219,7 @@ def main(argv):
         'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
         'doc': xmlboiler.core.alg.next_script2.ScriptsIterator,
     }
-    options.element_options.algorithm_options.next_script = m[args.next_script](state)
-    options.element_options.algorithm_options.weight_formula = args.weight_formula
+    state.next_script = m[args.next_script](state)
 
     if args.source and re.match(r'^[a-zA-Z]+:', args.source):
         state.xml_text = options.url_opener.open(args.source).read()

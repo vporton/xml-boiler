@@ -24,8 +24,6 @@
 
 import networkx as nx
 
-from xmlboiler.core.alg.state import EnrichedScript
-
 
 # TODO: Wrap it also with "double graph" (https://cs.stackexchange.com/a/96348/39512) to have no adjanced
 # edges from graph2 (to increase the performance by reducing the number of paths of the same weight).
