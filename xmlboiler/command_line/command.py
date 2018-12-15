@@ -205,8 +205,8 @@ def main(argv):
         options = options_processor.process(args)
     elif args.subcommand == 'pipe':
         options = PipelineOptions(element_options=element_options)
-        processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
-        pipe_options_list = processor.parse(args.pipe)
+        pipe_processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
+        pipe_options_list = pipe_processor.parse(args.pipe)
     else:
         sys.stderr.write("Command not supported!\n")
         return 1
@@ -240,22 +240,25 @@ def main(argv):
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(
         options.element_options.installed_soft_options,
         log_level=args.log_level)
-    try:
+    if args.subcommand == 'chain':
         try:
-            algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
-        except MyXMLError as e:
-            sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-            return 1
-        try:
-            algorithm.run()
-        except MyXMLError as e:
-            sys.stderr.write("Error in an intermediary XML document during the transformation: " + str(e) + "\n")
-            return 1
-    except AssetsExhausted:
-        if options.not_in_target != NotInTargetNamespace.IGNORE:
-            sys.stderr.write("The transformation failed, no more assets to load.\n")
-            if options.not_in_target == NotInTargetNamespace.ERROR:
+            try:
+                algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
+            except MyXMLError as e:
+                sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
                 return 1
+            try:
+                algorithm.run()
+            except MyXMLError as e:
+                sys.stderr.write("Error in an intermediary XML document during the transformation: " + str(e) + "\n")
+                return 1
+        except AssetsExhausted:
+            if options.not_in_target != NotInTargetNamespace.IGNORE:
+                sys.stderr.write("The transformation failed, no more assets to load.\n")
+                if options.not_in_target == NotInTargetNamespace.ERROR:
+                    return 1
+    elif args.subcommand == 'pipe':
+        pipe_processor.execute(pipe_options_list)
 
     if output is None:
         sys.stdout.buffer.write(state.xml_text)
