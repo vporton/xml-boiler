@@ -190,7 +190,7 @@ def main(argv):
         options = options_processor.process(args)
     elif args.subcommand == 'pipe':
         processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
-        processor.execute(args.chain)
+        processor.execute(args.pipe)
     else:
         sys.stderr.write("Command not supported!\n")
         return 1
