@@ -72,6 +72,7 @@ class PipelineProcessor(object):
                     sys.stderr.write("The transformation failed, no more assets to load.\n")
                     if options.not_in_target == NotInTargetNamespace.ERROR:
                         return 1
+        return 0
 
     def parse(self, pipe_str):
         args_list = split_pipeline(pipe_str)

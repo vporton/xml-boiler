@@ -261,7 +261,9 @@ def main(argv):
                 if options.not_in_target == NotInTargetNamespace.ERROR:
                     return 1
     elif args.subcommand == 'pipe':
-        pipe_processor.execute(pipe_options_list, state, _interpreters)
+        res = pipe_processor.execute(pipe_options_list, state, _interpreters)
+        if res:
+            return res
 
     if output is None:
         sys.stdout.buffer.write(state.xml_text)
