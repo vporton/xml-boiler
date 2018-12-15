@@ -48,4 +48,18 @@ class PipelineProcessor(object):
             if len(arg) == 0:
                 self.error_logger.error(self.execution_context.translate("Wrong command '' in the pipeline."))
                 return False
-            # TODO
+            method = {'chain': PipelineProcessor.chain_opts,
+                      'c': PipelineProcessor.chain_opts}\
+                [arg[0]]
+            if not method(self, arg[1:]):
+                return False
+        return
+
+    def chain_opts(self, arg):
+        try:
+            args = self.chain_parser.parse_args(arg)
+        except TypeError:
+            self.chain_parser.print_usage()
+            return False
+        # TODO
+

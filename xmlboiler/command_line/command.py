@@ -28,7 +28,7 @@ from rdflib import URIRef
 
 import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
-from xmlboiler.command_line.modifiers import modify_pipeline_element
+from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor
 from xmlboiler.core.alg import auto_transform
 from xmlboiler.core.alg.auto_transform import AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
@@ -137,11 +137,8 @@ def main(argv):
             command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
             url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
         element_options = BaseAutomaticWorkflowElementOptions(algorithm_options=algorithm_options)
-        m = {
-            'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
-            'doc': xmlboiler.core.alg.next_script2.ScriptsIterator,
-        }
-        options = ChainOptions(element_options=element_options)  # FIXME: bad code
+        options_processor = ChainOptionsProcessor(element_options, execution_context, error_logger)
+        options = options_processor.process(args)
     else:
         sys.stderr.write("Command not supported!\n")
         return 1
@@ -198,11 +195,7 @@ def main(argv):
 
     output = None if not args.output or args.output[0] == '-' else args.output[0]
 
-    options.target_namespaces = frozenset([] if args.target is None else [URIRef(t) for t in args.target])
-
     modify_pipeline_element(args, options.element_options)
-
-    options.universal_precedence = args.universal_precedence
 
     options.element_options.algorithm_options.installed_soft_options.package_manager = \
         determine_os() if args.software != 'executable' else None
@@ -212,6 +205,10 @@ def main(argv):
 
     state = PipelineState(opts=options)  # TODO: Support for other commands than 'chain'
 
+    m = {
+        'precedence': xmlboiler.core.alg.next_script1.ScriptsIterator,
+        'doc': xmlboiler.core.alg.next_script2.ScriptsIterator,
+    }
     options.element_options.algorithm_options.next_script = m[args.next_script](state)
     options.element_options.algorithm_options.weight_formula = args.weight_formula
 
