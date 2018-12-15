@@ -1,7 +1,7 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
 
-_:xinclude
+_:comment
    a :Transformer ;
    :sourceNamespace <http://portonvictor.org/ns/comment> ;
    :universal true ;
