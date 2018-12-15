@@ -55,7 +55,6 @@ class RecursiveRetrievalPriority(OrderedSet):
 
 @dataclass
 class RecursiveDownloadOptions(object):
-    download_algorithm: Any = None  #BaseDownloadAlgorithm = None
     downloaders: List[List[Callable[[URIRef], Graph]]] = None
     initial_assets: OrderedSet = None  # OrderedSet[URIRef]  # downloaded before the main loop
     recursive_download: RecursiveDownload = None

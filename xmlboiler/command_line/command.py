@@ -233,7 +233,7 @@ def main(argv):
     download_execution_context = context_for_logger(execution_context,
                                                     Contexts.logger('asset', args.log_level))
     downloader_parse_context = default_parse_context(execution_context=download_execution_context)
-    options.element_options.recursive_options.download_algorithm = \
+    state.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
          'depth': download_providers.depth_first_download}[args.recursive or 'breadth']( \

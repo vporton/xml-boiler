@@ -52,6 +52,7 @@ class PipelineState(BaseState):
     precedences_higher: Connectivity = field(default_factory=Connectivity)
     precedences_subclasses: Connectivity = field(default_factory=Connectivity)
     next_script: Any = None  # avoid circular dependency # ScriptsIteratorBase = None
+    download_algorithm: Any = None  #BaseDownloadAlgorithm = None
 
     def add_asset(self, asset):
         self.scripts += [script for transformer in asset.transformers for script in transformer.scripts]
