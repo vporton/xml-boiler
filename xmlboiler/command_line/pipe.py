@@ -55,7 +55,7 @@ class PipelineProcessor(object):
         # TODO: Duplicate code with command_line/command.py
         # FIXME: Error messages may be wrong.
         for options in options_list:
-            state.options = options
+            state.opts = options
             try:
                 try:
                     algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
