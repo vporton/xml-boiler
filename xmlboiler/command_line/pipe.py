@@ -53,7 +53,7 @@ class PipelineProcessor(object):
 
     def execute(self, options_list, state, _interpreters):
         # TODO: Duplicate code with command_line/command.py
-        # FIXME: Error messages may be wrong.
+        # TODO: Fine tune error messages
         for options in options_list:
             state.opts = options
             try:
