@@ -57,9 +57,14 @@ class PipelineProcessor(object):
                 self.error_logger.error(self.execution_context.translate("Wrong command '' in the pipeline."))
                 return False
             local_element_options = deepcopy(self.element_options)
-            method = {'chain': PipelineProcessor.chain_opts,
-                      'c': PipelineProcessor.chain_opts}\
-                [args[0]]
+            try:
+                method = {'chain': PipelineProcessor.chain_opts,
+                          'c': PipelineProcessor.chain_opts}\
+                    [args[0]]
+            except KeyError:
+                msg = self.execution_context.translations.gettext("Wrong command '{cmd}' in the pipeline.".format(cmd=args[0]))
+                self.error_logger.error(msg)
+                return False
             options_object = method(self, args[1:], local_element_options)
             if not options_object:
                 return False
