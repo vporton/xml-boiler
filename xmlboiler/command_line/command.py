@@ -187,17 +187,6 @@ def main(argv):
     if element_options.installed_soft_options.package_manager is None and args.software in ('package', 'both'):
         sys.stderr.write("Package manager is not supported on this OS.\n")
 
-    if args.subcommand == 'chain':
-        options_processor = ChainOptionsProcessor(element_options, execution_context, error_logger)
-        options = options_processor.process(args)
-    elif args.subcommand == 'pipe':
-        options = PipelineOptions(element_options=element_options)
-        processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
-        processor.execute(args.pipe)
-    else:
-        sys.stderr.write("Command not supported!\n")
-        return 1
-
     directories_map = {}
     if args.directory is not None:
         for eq in args.directory:
@@ -208,6 +197,17 @@ def main(argv):
             directories_map[m[1]] = m[2]
 
     output = None if not args.output or args.output[0] == '-' else args.output[0]
+
+    if args.subcommand == 'chain':
+        options_processor = ChainOptionsProcessor(element_options, execution_context, error_logger)
+        options = options_processor.process(args)
+    elif args.subcommand == 'pipe':
+        options = PipelineOptions(element_options=element_options)
+        processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
+        processor.execute(args.pipe)
+    else:
+        sys.stderr.write("Command not supported!\n")
+        return 1
 
     modify_pipeline_element(args, element_options)
 
