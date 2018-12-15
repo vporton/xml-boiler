@@ -135,5 +135,5 @@ class PipelineOptions(object):
     element_options: BaseAutomaticWorkflowElementOptions = None
 
     # quick hack
-    # def __getattr__(self, attr):
-    #     return getattr(self.element_options, attr)
+    def __getattr__(self, attr):
+        return getattr(self.element_options, attr)
