@@ -17,9 +17,14 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import sys
 from copy import deepcopy
 
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor
+from xmlboiler.core.alg import auto_transform
+from xmlboiler.core.alg.auto_transform import AssetsExhausted
+from xmlboiler.core.options import NotInTargetNamespace
+from xmlboiler.core.util.xml import MyXMLError
 
 
 def split_pipeline(s):
@@ -46,8 +51,27 @@ class PipelineProcessor(object):
         self.error_logger = error_logger
         self.chain_parser = chain_parser
 
-    def execute(self, options_list):
-        pass  # TODO
+    def execute(self, options_list, state, _interpreters):
+        # TODO: Duplicate code with command_line/command.py
+        # FIXME: Error messages may be wrong.
+        for options in options_list:
+            state.options = options
+            try:
+                try:
+                    algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
+                except MyXMLError as e:
+                    sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+                    return 1
+                try:
+                    algorithm.run()
+                except MyXMLError as e:
+                    sys.stderr.write("Error in an intermediary XML document during the transformation: " + str(e) + "\n")
+                    return 1
+            except AssetsExhausted:
+                if state.options.not_in_target != NotInTargetNamespace.IGNORE:
+                    sys.stderr.write("The transformation failed, no more assets to load.\n")
+                    if options.not_in_target == NotInTargetNamespace.ERROR:
+                        return 1
 
     def parse(self, pipe_str):
         args_list = split_pipeline(pipe_str)

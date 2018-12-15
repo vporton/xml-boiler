@@ -207,6 +207,8 @@ def main(argv):
         options = PipelineOptions(element_options=element_options)
         pipe_processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
         pipe_options_list = pipe_processor.parse(args.pipe)
+        if not pipe_options_list:
+            return 1
     else:
         sys.stderr.write("Command not supported!\n")
         return 1
@@ -241,6 +243,7 @@ def main(argv):
         options.element_options.installed_soft_options,
         log_level=args.log_level)
     if args.subcommand == 'chain':
+        # TODO: Duplicate code with command_line/pipe.py
         try:
             try:
                 algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
@@ -258,7 +261,7 @@ def main(argv):
                 if options.not_in_target == NotInTargetNamespace.ERROR:
                     return 1
     elif args.subcommand == 'pipe':
-        pipe_processor.execute(pipe_options_list)
+        pipe_processor.execute(pipe_options_list, state, _interpreters)
 
     if output is None:
         sys.stdout.buffer.write(state.xml_text)
