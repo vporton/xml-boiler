@@ -18,7 +18,7 @@
 from rdflib import URIRef
 
 import xmlboiler
-from xmlboiler.core.options import NotInTargetNamespace, BaseAlgorithmOptions, ChainOptions
+from xmlboiler.core.options import NotInTargetNamespace, BaseAlgorithmOptions, ChainOptions, ScriptOptions
 
 
 class ChainOptionsProcessor(object):
@@ -31,8 +31,12 @@ class ChainOptionsProcessor(object):
                             target_namespaces=frozenset([] if args.target is None else [URIRef(t) for t in args.target]))
 
 
-def ScriptOptionsProcessor(object):
-    pass  # TODO
+class ScriptOptionsProcessor(object):
+    def __init__(self, element_options):
+        self.element_options = element_options
+
+    def process(self, args):
+        return ScriptOptions(element_options=self.element_options)
 
 
 def modify_pipeline_element(args, obj):

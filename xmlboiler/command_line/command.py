@@ -28,7 +28,7 @@ from rdflib import URIRef
 
 import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
-from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor
+from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor
 from xmlboiler.command_line.pipe import PipelineProcessor
 from xmlboiler.core.alg import auto_transform
 from xmlboiler.core.alg.auto_transform import AssetsExhausted
@@ -206,6 +206,9 @@ def main(argv):
     if args.subcommand == 'chain':
         options_processor = ChainOptionsProcessor(element_options)
         options = options_processor.process(args)
+    elif args.subcommand == 'script':
+        options_processor = ScriptOptionsProcessor(element_options)
+        options = options_processor.process(args)
     elif args.subcommand == 'pipe':
         options = PipelineOptions(element_options=element_options)
         pipe_processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
@@ -264,6 +267,8 @@ def main(argv):
                 sys.stderr.write("The transformation failed, no more assets to load.\n")
                 if options.not_in_target == NotInTargetNamespace.ERROR:
                     return 1
+    elif args.subcommand == 'script':
+        pass  # TODO
     elif args.subcommand == 'pipe':
         res = pipe_processor.execute(pipe_options_list, state, _interpreters)
         if res:
