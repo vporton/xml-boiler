@@ -126,6 +126,13 @@ class ChainOptions(object):
 
 
 @dataclass
+class ScriptOptions(object):
+    """For `script` command."""
+    element_options: BaseAutomaticWorkflowElementOptions = None
+    script_url: URIRef = None
+
+
+@dataclass
 class PipelineOptions(object):
     """For `pipe` command."""
     # __slots__ = 'element_options', 'next_script', 'universal_precedence', 'target_namespaces'

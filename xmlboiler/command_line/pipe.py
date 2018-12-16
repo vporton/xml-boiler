@@ -103,5 +103,5 @@ class PipelineProcessor(object):
             self.chain_parser.print_usage()
             return False
         modify_pipeline_element(pargs, element_options)
-        processor = ChainOptionsProcessor(element_options, self.execution_context, self.error_logger)
+        processor = ChainOptionsProcessor(element_options)
         return processor.process(pargs)

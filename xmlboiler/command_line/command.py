@@ -109,6 +109,13 @@ def main(argv):
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
 
+    script_parser = subparsers.add_parser('script', aliases=['s'],
+                                          # parents=[base_script_parser],
+                                          help='Run a script',
+                                          add_help=False)
+    script_parser.set_defaults(subcommand='script')
+    script_parser.add_argument('script', help='script to run', metavar='SCRIPT')
+
     pipe_parser = subparsers.add_parser('pipe', aliases=['p'],
                                         parents=[base_chain_parser],
                                         help='Run a pipeline of XML filters',
@@ -197,7 +204,7 @@ def main(argv):
     output = None if not args.output or args.output[0] == '-' else args.output[0]
 
     if args.subcommand == 'chain':
-        options_processor = ChainOptionsProcessor(element_options, execution_context, error_logger)
+        options_processor = ChainOptionsProcessor(element_options)
         options = options_processor.process(args)
     elif args.subcommand == 'pipe':
         options = PipelineOptions(element_options=element_options)

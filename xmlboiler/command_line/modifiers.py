@@ -22,15 +22,17 @@ from xmlboiler.core.options import NotInTargetNamespace, BaseAlgorithmOptions, C
 
 
 class ChainOptionsProcessor(object):
-    def __init__(self, element_options, execution_context, error_logger):
+    def __init__(self, element_options):
         self.element_options = element_options
-        self.execution_context = execution_context
-        self.error_logger = error_logger
 
     def process(self, args):
         return ChainOptions(element_options=self.element_options,
                             universal_precedence=args.universal_precedence,
                             target_namespaces=frozenset([] if args.target is None else [URIRef(t) for t in args.target]))
+
+
+def ScriptOptionsProcessor(object):
+    pass  # TODO
 
 
 def modify_pipeline_element(args, obj):
