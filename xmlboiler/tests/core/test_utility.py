@@ -84,8 +84,8 @@ class TestUtility(XmlTest):
                       order,
                       '-s',
                       next_script_mode,
+                      '-i', Global.get_filename("tests/core/data/xml/xinclude.xml"),
                       'chain',
-                      Global.get_filename("tests/core/data/xml/xinclude.xml"),
                       '-u',
                       'http://portonvictor.org/ns/trans/precedence-include'])
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
@@ -95,8 +95,8 @@ class TestUtility(XmlTest):
                       order,
                       '-s',
                       next_script_mode,
+                      '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
                       'chain',
-                      Global.get_filename("tests/core/data/xml/comment.xml"),
                       '-u',
                       'http://portonvictor.org/ns/trans/precedence-comment'])
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
@@ -118,8 +118,8 @@ class TestUtility(XmlTest):
                         self.command(['-r',
                                       order,
                                       '-s', next_script_mode,
+                                      '-i', Global.get_filename("tests/core/data/xml/syntax.xml"),
                                       'chain',
-                                      Global.get_filename("tests/core/data/xml/syntax.xml"),
                                       '-t', 'http://www.w3.org/1999/xhtml',
                                       '-n', 'error'])
                         # sys.stdout.buffer.write(b'<pre>...')
@@ -128,15 +128,15 @@ class TestUtility(XmlTest):
     def test_doc(self):
         with capture_stdin_and_stdout():
             self.command(['-r', 'breadth',
+                          '-i', Global.get_filename("doc/index.html"),
                           'chain',
-                          Global.get_filename("doc/index.html"),
                           '-t', 'http://www.w3.org/1999/xhtml',
                           '-n', 'error'])
             breadth = sys.stdout.buffer.getvalue()
         with capture_stdin_and_stdout():
             self.command(['-r', 'depth',
+                          '-i', Global.get_filename("doc/index.html"),
                           'chain',
-                          Global.get_filename("doc/index.html"),
                           '-t', 'http://www.w3.org/1999/xhtml',
                           '-n', 'error'])
             depth = sys.stdout.buffer.getvalue()
@@ -147,8 +147,8 @@ class TestUtility(XmlTest):
             self.command(['-r', 'none',
                           '-s', 'doc',
                           '-p', 'http://portonvictor.org/ns/comment',
+                          '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
                           'chain',
-                          Global.get_filename("tests/core/data/xml/comment.xml"),
                           '-u',
                           'http://portonvictor.org/ns/trans/precedence-comment'])
             self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
@@ -159,8 +159,8 @@ class TestUtility(XmlTest):
                 with capture_stdin_and_stdout():
                     self.command(['--software',
                                   installed,
+                                  '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
                                   'chain',
-                                  Global.get_filename("tests/core/data/xml/comment.xml"),
                                   '-u',
                                   'http://portonvictor.org/ns/trans/precedence-comment'])
                     self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)

@@ -74,6 +74,7 @@ def main(argv):
     subparsers = parser.add_subparsers(title='subcommands', dest='subcommand')
     subparsers.required = True
 
+    parser.add_argument('-i', '--input', nargs=1, help='source document (defaults to stdin)')
     parser.add_argument('-o', '--output', nargs=1, help='output file (defaults to stdout)')
     parser.add_argument('-l', '--log-level',
                         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO',
@@ -105,8 +106,6 @@ def main(argv):
                                          help='Automatically run a chain of transformations',
                                          add_help=False)
     chain_parser.set_defaults(subcommand='chain')
-    chain_parser.add_argument('source', nargs='?',
-                              help='source document (defaults to stdin)')  # FIXME: It is a global option
     chain_parser.add_argument('-t', '--target', help='target namespace(s)', action='append', metavar='NAMESPACE')
     chain_parser.add_argument('-u', '--universal-precedence', help='universal precedence', metavar='URL')
 
@@ -116,8 +115,6 @@ def main(argv):
                                         add_help=False)
     pipe_parser.set_defaults(subcommand='pipe')
     pipe_parser.add_argument('pipe', metavar='PIPE', help="+-separated pipeline of filters as a single argument")
-    pipe_parser.add_argument('source', nargs='?',
-                             help='source document (defaults to stdin)')  # FIXME: It is a global option
 
     try:
         args = parser.parse_args(argv)
@@ -143,7 +140,6 @@ def main(argv):
     element_options.algorithm_options.recursive_options.initial_assets = OrderedSet(
         [] if args.preload is None else map(URIRef, args.preload))
     element_options.algorithm_options.weight_formula = args.weight_formula
-
 
     if args.recursive_order is not None:
         elts = args.recursive_order.split(',')
@@ -223,10 +219,11 @@ def main(argv):
     }
     state.next_script = m[args.next_script](state)
 
-    if args.source and re.match(r'^[a-zA-Z]+:', args.source):
-        state.xml_text = options.url_opener.open(args.source).read()
+    input = None if not args.input or args.input[0] == '-' else args.input[0]
+    if input and re.match(r'^[a-zA-Z]+:', input):
+        state.xml_text = options.url_opener.open(input).read()
     else:
-        source = sys.stdin if args.source is None or args.source == '-' else open(args.source)
+        source = sys.stdin if input is None or input == '-' else open(input)
         state.xml_text = source.buffer.read()
         source.close()
 
