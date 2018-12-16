@@ -22,7 +22,6 @@ import xml.dom.minidom
 from rdflib import URIRef
 from rdflib.resource import Resource
 
-from xmlboiler.core.alg.next_script_base import ScriptsIteratorBase
 from xmlboiler.core.graph.connect import Connectivity
 from xmlboiler.core.options import ChainOptions
 from xmlboiler.core.rdf_format.asset import ScriptInfo, Transformer
