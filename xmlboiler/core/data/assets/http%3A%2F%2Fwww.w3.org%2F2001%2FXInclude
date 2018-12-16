@@ -1,18 +1,19 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
 
-_:xinclude
-   a :Transformer ;
-   :sourceNamespace <http://www.w3.org/2001/XInclude> ;
-   :universal true ;
-   :inward false ;
-   #:targetNamespace <...> ;
-   :precedence :precedence-include ;
-   :script [
-     a :Command ;
-     :language lang:XInclude ;
-     :transformerKind :entire ;
-     :preservance 1.0 ;
-     :stability 1.0 ;
-     :preference 1.0
-   ] .
+<http://portonvictor.org/ns/trans/XInclude#transformer>
+  a :Transformer ;
+  :sourceNamespace <http://www.w3.org/2001/XInclude> ;
+  :universal true ;
+  :inward false ;
+  #:targetNamespace <...> ;
+  :precedence :precedence-include ;
+  :script <http://portonvictor.org/ns/trans/XInclude#script1> .
+
+<http://portonvictor.org/ns/trans/XInclude#script1>
+  a :Command ;
+  :language lang:XInclude ;
+  :transformerKind :entire ;
+  :preservance 1.0 ;
+  :stability 1.0 ;
+  :preference 1.0 .

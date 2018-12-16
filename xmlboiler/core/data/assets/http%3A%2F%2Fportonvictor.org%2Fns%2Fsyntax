@@ -1,22 +1,23 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
 
-_:syntax
+<http://portonvictor.org/ns/trans/syntax#transformer>
    a :Transformer ;
    :sourceNamespace <http://portonvictor.org/ns/syntax> ;
    :targetNamespace <http://www.w3.org/1999/xhtml> ;
    :precedence :precedence-formatting ;
    :inward false ;
-   :script [
-     a :Command ;
-     :language lang:Syntax ;
-     :params
-        ([ :name "lexer" ;
-           :value [ :attribute [ :NS <http://portonvictor.org/ns/syntax> ; :name "format" ] ]
-         ]
-         [ :name "formatter" ; :value "html" ]) ;
-     :transformerKind :plainText ;
-     :preservance 1.0 ;
-     :stability 1.0 ;
-     :preference 1.0
-   ] .
+   :script <http://portonvictor.org/ns/trans/syntax#script1> .
+
+<http://portonvictor.org/ns/trans/syntax#script1>
+  a :Command ;
+  :language lang:Syntax ;
+  :params
+    ([ :name "lexer" ;
+        :value [ :attribute [ :NS <http://portonvictor.org/ns/syntax> ; :name "format" ] ]
+     ]
+     [ :name "formatter" ; :value "html" ]) ;
+  :transformerKind :plainText ;
+  :preservance 1.0 ;
+  :stability 1.0 ;
+  :preference 1.0 .

@@ -1,19 +1,20 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
 
-_:comment
-   a :Transformer ;
-   :sourceNamespace <http://portonvictor.org/ns/comment> ;
-   :universal true ;
-   #:targetNamespace <...> ;
-   :precedence :precedence-comment ;
-   :inward false ;
-   :script [
-     a :Command ;
-     :language lang:XSLT ;
-     :scriptURL <local:scripts/comment.xslt> ;
-     :transformerKind :entire ;
-     :preservance 1.0 ;
-     :stability 1.0 ;
-     :preference 1.0
-   ] .
+<http://portonvictor.org/ns/trans/comment#transformer>
+  a :Transformer ;
+  :sourceNamespace <http://portonvictor.org/ns/comment> ;
+  :universal true ;
+  #:targetNamespace <...> ;
+  :precedence :precedence-comment ;
+  :inward false ;
+  :script <http://portonvictor.org/ns/trans/comment#script-xslt> .
+
+<http://portonvictor.org/ns/trans/comment#script-xslt>
+  a :Command ;
+  :language lang:XSLT ;
+  :scriptURL <local:scripts/comment.xslt> ;
+  :transformerKind :entire ;
+  :preservance 1.0 ;
+  :stability 1.0 ;
+  :preference 1.0 .
