@@ -22,7 +22,7 @@ from copy import deepcopy
 
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor
 from xmlboiler.core.alg import auto_transform
-from xmlboiler.core.alg.auto_transform import AssetsExhausted
+from xmlboiler.core.alg.common import AssetsExhausted
 from xmlboiler.core.options import NotInTargetNamespace
 from xmlboiler.core.util.xml import MyXMLError
 

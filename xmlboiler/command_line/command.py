@@ -31,7 +31,7 @@ import xmlboiler.core.os_command.regular
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor
 from xmlboiler.command_line.pipe import PipelineProcessor
 from xmlboiler.core.alg import auto_transform
-from xmlboiler.core.alg.auto_transform import AssetsExhausted
+from xmlboiler.core.alg.common import AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
 from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_asset_downloader

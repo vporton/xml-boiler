@@ -19,7 +19,7 @@
 from dependency_injector import containers, providers
 from rdflib import URIRef
 
-from xmlboiler.core.alg.common import log_script_execution
+from xmlboiler.core.alg.common import log_script_execution, AssetsExhausted
 from xmlboiler.core.util.xml import myXMLParseString
 
 # it skips scripts for which there is no interpreter
@@ -59,10 +59,6 @@ class RealNextScript(object):
                     raise AssetsExhausted()  # TODO: It is correct exception?
                 self.state.xml_text = new_xml_text
                 return
-
-
-class AssetsExhausted(StopIteration):
-    pass
 
 
 class AutomaticTranformation(object):
