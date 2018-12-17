@@ -15,9 +15,9 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
+
 from rdflib import URIRef
 
-import xmlboiler
 from xmlboiler.core.options import NotInTargetNamespace, BaseAlgorithmOptions, ChainOptions, ScriptOptions
 
 
@@ -36,11 +36,15 @@ class ScriptOptionsProcessor(object):
         self.element_options = element_options
 
     def process(self, args):
-        return ScriptOptions(element_options=self.element_options)
+        return ScriptOptions(element_options=self.element_options,
+                             script_url=args.script)
 
 
 def modify_pipeline_element(args, obj):
     """Process command line options for a pipeline element or for a filter"""
-    obj.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
-                         'remove': NotInTargetNamespace.REMOVE,
-                         'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
+    if args.subcommand == 'chain':
+        obj.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
+                             'remove': NotInTargetNamespace.REMOVE,
+                             'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
+    elif args.subcommand == 'script':
+        obj.script_url = args.script

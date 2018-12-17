@@ -112,7 +112,7 @@ def main(argv):
     script_parser = subparsers.add_parser('script', aliases=['s'],
                                           # parents=[base_script_parser],
                                           help='Run a script',
-                                          add_help=False)
+                                          add_help=True)
     script_parser.set_defaults(subcommand='script')
     script_parser.add_argument('script', help='script to run', metavar='SCRIPT')
 
@@ -211,7 +211,7 @@ def main(argv):
         options = options_processor.process(args)
     elif args.subcommand == 'pipe':
         options = PipelineOptions(element_options=element_options)
-        pipe_processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser)
+        pipe_processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser, script_parser)
         pipe_options_list = pipe_processor.parse(args.pipe)
         if not pipe_options_list:
             return 1
