@@ -54,6 +54,7 @@ class RealNextScript(object):
                                                     self.state.opts.command_runner).\
                     run(self.state.xml_text)
                 if new_xml_text == self.state.xml_text:
+                    # FIXME: Stop iteration
                     msg = self.state.opts.execution_context.translate("Iteration stopped to avoid infinite loop.")
                     self.state.opts.error_logger.error(msg)
                 self.state.xml_text = new_xml_text
