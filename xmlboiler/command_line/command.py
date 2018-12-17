@@ -30,7 +30,7 @@ import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor
 from xmlboiler.command_line.pipe import PipelineProcessor
-from xmlboiler.core.alg import auto_transform
+from xmlboiler.core.alg import auto_transform, script_subcommand
 from xmlboiler.core.alg.common import AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
 from xmlboiler.core.alg.state import PipelineState
@@ -268,7 +268,12 @@ def main(argv):
                 if options.not_in_target == NotInTargetNamespace.ERROR:
                     return 1
     elif args.subcommand == 'script':
-        pass  # TODO
+        try:
+            algorithm = script_subcommand.Algorithms.chain_filter(args.script, state, _interpreters)
+        except MyXMLError as e:
+            sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+            return 1
+        algorithm.run()
     elif args.subcommand == 'pipe':
         res = pipe_processor.execute(pipe_options_list, state, _interpreters)
         if res:
