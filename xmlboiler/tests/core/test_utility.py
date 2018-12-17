@@ -89,8 +89,8 @@ class TestUtility(XmlTest):
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
 
     def do_run_comment(self, order, next_script_mode):
-        self.command(['-r',
-                      order, '-s', next_script_mode,
+        self.command(['-r', order,
+                      '-s', next_script_mode,
                       '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
                       'chain',
                       '-u',
