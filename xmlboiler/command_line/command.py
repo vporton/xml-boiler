@@ -58,7 +58,7 @@ def main(argv):
     base_chain_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                                 description="Common chain argument")
     base_chain_parser.add_argument('-n', '--not-in-target', help='what if a result is not in target NS',
-                                   choices=['ignore', 'remove', 'error'])
+                                   choices=['ignore', 'remove', 'error'], default='error')
 
     parser = argparse.ArgumentParser(parents=[base_chain_parser],
                                      add_help=False,
