@@ -28,7 +28,7 @@ from rdflib import URIRef
 
 import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
-from xmlboiler.command_line.common import run_subcommand
+from xmlboiler.command_line.common import run_filter_subcommand
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor, \
     TransformOptionsProcessor
 from xmlboiler.command_line.pipe import PipelineProcessor
@@ -263,7 +263,7 @@ def main(argv):
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(
         options.element_options.installed_soft_options,
         log_level=args.log_level)
-    ret = run_subcommand(args, state, _interpreters, pipe_options_list, pipe_processor)
+    ret = run_filter_subcommand(args, state, _interpreters, pipe_options_list, pipe_processor)
     if ret != 0:
         return ret
 

@@ -20,7 +20,7 @@ import re
 import sys
 from copy import deepcopy
 
-from xmlboiler.command_line.common import run_subcommand
+from xmlboiler.command_line.common import run_filter_subcommand
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor, \
     TransformOptionsProcessor
 from xmlboiler.core.alg import auto_transform, script_subcommand, transform_subcommand
@@ -59,7 +59,7 @@ class PipelineProcessor(object):
     def execute(self, options_list, state, _interpreters):
         for options in options_list:
             state.opts = options
-            run_subcommand(options, state, _interpreters, options_list, None)
+            run_filter_subcommand(options, state, _interpreters, options_list, None)
         return 0
 
     def parse(self, pipe_str):
