@@ -23,7 +23,7 @@ from xmlboiler.core.options import NotInTargetNamespace, ChainOptions, ScriptOpt
 from xmlboiler.core.util.xml import MyXMLError
 
 
-def run_filter_subcommand(args, state, _interpreters, pipe_options_list, pipe_processor):
+def run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processor):
     options = state.opts
     if isinstance(options, ChainOptions):
         # TODO: Fine tune error messages

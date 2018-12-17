@@ -268,7 +268,7 @@ def main(argv):
         if res:
             return res
     else:
-        ret = run_filter_subcommand(args, state, _interpreters, pipe_options_list, pipe_processor)
+        ret = run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processor)
         if ret != 0:
             return ret
 

@@ -59,7 +59,7 @@ class PipelineProcessor(object):
     def execute(self, options_list, state, _interpreters):
         for options in options_list:
             state.opts = options
-            run_filter_subcommand(options, state, _interpreters, options_list, None)
+            run_filter_subcommand(state, _interpreters, options_list, None)
         return 0
 
     def parse(self, pipe_str):
