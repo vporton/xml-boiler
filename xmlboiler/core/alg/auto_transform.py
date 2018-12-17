@@ -35,8 +35,9 @@ class RealNextScript(object):
     def step(self):
         while True:
             script = next(self.state.next_script)['script']
-            interpreter_node = self.interpreters.find_interpreter(script.more.language, script.more.min_version,
-                                                      script.more.max_version)
+            interpreter_node = self.interpreters.find_interpreter(script.more.language,
+                                                                  script.more.min_version,
+                                                                  script.more.max_version)
             if interpreter_node is None:
                 self.state.failed_scripts.add(script)
             else:
