@@ -20,6 +20,7 @@ import re
 import sys
 from copy import deepcopy
 
+from xmlboiler.command_line.common import run_subcommand
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor, \
     TransformOptionsProcessor
 from xmlboiler.core.alg import auto_transform, script_subcommand, transform_subcommand
@@ -46,7 +47,8 @@ def split_pipeline(s):
 
 
 class PipelineProcessor(object):
-    def __init__(self, element_options, execution_context, error_logger, chain_parser, script_parser, transform_parser):
+    def __init__(self, args, element_options, execution_context, error_logger, chain_parser, script_parser, transform_parser):
+        self.args = args
         self.element_options = element_options
         self.execution_context = execution_context
         self.error_logger = error_logger
@@ -57,40 +59,7 @@ class PipelineProcessor(object):
     def execute(self, options_list, state, _interpreters):
         for options in options_list:
             state.opts = options
-            # TODO: Duplicate code with command_line/command.py
-            # TODO: Fine tune error messages
-            if isinstance(options, ChainOptions):
-                try:
-                    try:
-                        algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
-                    except MyXMLError as e:
-                        sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-                        return 1
-                    try:
-                        algorithm.run()
-                    except MyXMLError as e:
-                        sys.stderr.write("Error in an intermediary XML document during the transformation: " + str(e) + "\n")
-                        return 1
-                except AssetsExhausted:
-                    if state.opts.not_in_target != NotInTargetNamespace.IGNORE:
-                        sys.stderr.write("The transformation failed, no more assets to load.\n")
-                        if options.not_in_target == NotInTargetNamespace.ERROR:
-                            return 1
-            elif isinstance(options, ScriptOptions):
-                try:
-                    algorithm = script_subcommand.Algorithms.script_filter(options.script_url, state, _interpreters)
-                except MyXMLError as e:
-                    sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-                    return 1
-                algorithm.run()
-            elif isinstance(options, TransformOptions):
-                try:
-                    algorithm = transform_subcommand.Algorithms.transform_filter(options.transform_url, state, _interpreters)
-                except MyXMLError as e:
-                    sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-                    return 1
-                algorithm.run()
-
+            run_subcommand(self.args, state, _interpreters, options_list, None)
         return 0
 
     def parse(self, pipe_str):

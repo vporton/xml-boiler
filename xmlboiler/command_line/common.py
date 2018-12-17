@@ -26,7 +26,7 @@ from xmlboiler.core.util.xml import MyXMLError
 def run_subcommand(args, state, _interpreters, pipe_options_list, pipe_processor):
     options = state.opts
     if isinstance(options, ChainOptions):
-        # TODO: Duplicate code with command_line/pipe.py
+        # TODO: Fine tune error messages
         try:
             try:
                 algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
