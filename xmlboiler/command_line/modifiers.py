@@ -52,6 +52,7 @@ class TransformOptionsProcessor(object):
 
 def modify_pipeline_element(args, obj):
     """Process command line options for a pipeline element or for a filter"""
+    # FIXME: only for `chain`. Also process not_in_target for the entire pipeline
     if args.subcommand in ('chain', 'script', 'transform'):
         obj.not_in_target = {'ignore': NotInTargetNamespace.IGNORE,
                              'remove': NotInTargetNamespace.REMOVE,
