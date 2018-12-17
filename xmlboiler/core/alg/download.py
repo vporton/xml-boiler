@@ -150,7 +150,8 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
                     pass
 
         # all other assets
-        for ns in itertools.chain(_enumerate_xml_namespaces(self.state), self.state.opts.target_namespaces):
+        for ns in itertools.chain(_enumerate_xml_namespaces(self.state),
+                                  self.state.opts.target_namespaces if hasattr(self.state.opts, 'target_namespaces') else []):
             yield from self.depth_first_download(ns, downloaders)  # recursion
 
     # Merge list of lists (in fact, iterators) into one list

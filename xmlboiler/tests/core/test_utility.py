@@ -84,8 +84,7 @@ class TestUtility(XmlTest):
                       '-s', next_script_mode,
                       '-i', Global.get_filename("tests/core/data/xml/xinclude.xml"),
                       'chain',
-                      '-u',
-                      'http://portonvictor.org/ns/trans/precedence-include'])
+                      '-u', 'http://portonvictor.org/ns/trans/precedence-include'])
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.XInclude_output)
 
     def do_run_comment(self, order, next_script_mode):
@@ -93,13 +92,26 @@ class TestUtility(XmlTest):
                       '-s', next_script_mode,
                       '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
                       'chain',
-                      '-u',
-                      'http://portonvictor.org/ns/trans/precedence-comment'])
+                      '-u', 'http://portonvictor.org/ns/trans/precedence-comment'])
+        self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+
+    def do_run_comment_script(self, order, next_script_mode):
+        self.command(['-r', order,
+                      '-s', next_script_mode,
+                      '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
+                      'script', 'http://portonvictor.org/ns/trans/comment#script-xslt'])
+        self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
+
+    def do_run_comment_transform(self, order, next_script_mode):
+        self.command(['-r', order,
+                      '-s', next_script_mode,
+                      '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
+                      'transform', 'http://portonvictor.org/ns/trans/comment#transformer'])
         self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
 
     def test_run(self):
         # stub_stdin(self, Global.get_resource_bytes("tests/core/data/xml/xinclude.xml"))
-        for func in [self.do_run_xinlude, self.do_run_comment]:
+        for func in [self.do_run_xinlude, self.do_run_comment, self.do_run_comment_script, self.do_run_comment_transform]:
             for next_script_mode in ['doc']:
                 for order in ['breadth', 'depth']:
                     with self.subTest(func=func.__name__, next_script=next_script_mode, order=order):
@@ -153,8 +165,7 @@ class TestUtility(XmlTest):
                           '-p', 'http://portonvictor.org/ns/comment',
                           '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
                           'chain',
-                          '-u',
-                          'http://portonvictor.org/ns/trans/precedence-comment'])
+                          '-u', 'http://portonvictor.org/ns/trans/precedence-comment'])
             self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
 
     def test_installed_packages(self):
@@ -165,6 +176,5 @@ class TestUtility(XmlTest):
                                   installed,
                                   '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
                                   'chain',
-                                  '-u',
-                                  'http://portonvictor.org/ns/trans/precedence-comment'])
+                                  '-u', 'http://portonvictor.org/ns/trans/precedence-comment'])
                     self.assertXmlEqual(sys.stdout.buffer.getvalue(), TestUtility.comment_output)
