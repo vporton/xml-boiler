@@ -80,10 +80,8 @@ class TestUtility(XmlTest):
         self.assertTrue(ret == 0)
 
     def do_run_xinlude(self, order, next_script_mode):
-        self.command(['-r',
-                      order,
-                      '-s',
-                      next_script_mode,
+        self.command(['-r', order,
+                      '-s', next_script_mode,
                       '-i', Global.get_filename("tests/core/data/xml/xinclude.xml"),
                       'chain',
                       '-u',
@@ -92,9 +90,7 @@ class TestUtility(XmlTest):
 
     def do_run_comment(self, order, next_script_mode):
         self.command(['-r',
-                      order,
-                      '-s',
-                      next_script_mode,
+                      order, '-s', next_script_mode,
                       '-i', Global.get_filename("tests/core/data/xml/comment.xml"),
                       'chain',
                       '-u',
@@ -115,8 +111,7 @@ class TestUtility(XmlTest):
             for order in ['breadth', 'depth']:
                 with self.subTest(next_script=next_script_mode, order=order):
                     with capture_stdin_and_stdout():
-                        self.command(['-r',
-                                      order,
+                        self.command(['-r', order,
                                       '-s', next_script_mode,
                                       '-i', Global.get_filename("tests/core/data/xml/syntax.xml"),
                                       'chain',
