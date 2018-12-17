@@ -25,9 +25,9 @@ from xmlboiler.core.util.xml import MyXMLError
 
 def run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processor):
     options = state.opts
-    if isinstance(options, ChainOptions):
+    try:
+        if isinstance(options, ChainOptions):
         # TODO: Fine tune error messages
-        try:
             try:
                 algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
             except MyXMLError as e:
@@ -38,23 +38,23 @@ def run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processo
             except MyXMLError as e:
                 sys.stderr.write("Error in an intermediary XML document during the transformation: " + str(e) + "\n")
                 return 1
-        except AssetsExhausted:
-            if options.not_in_target != NotInTargetNamespace.IGNORE:
-                sys.stderr.write("The transformation failed, no more assets to load.\n")
-                if options.not_in_target == NotInTargetNamespace.ERROR:
-                    return 1
-    elif isinstance(options, ScriptOptions):
-        try:
-            algorithm = script_subcommand.Algorithms.script_filter(options.script_url, state, _interpreters)
-        except MyXMLError as e:
-            sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-            return 1
-        algorithm.run()
-    elif isinstance(options, TransformOptions):
-        try:
-            algorithm = transform_subcommand.Algorithms.transform_filter(options.transform_url, state, _interpreters)
-        except MyXMLError as e:
-            sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-            return 1
-        algorithm.run()
+        elif isinstance(options, ScriptOptions):
+            try:
+                algorithm = script_subcommand.Algorithms.script_filter(options.script_url, state, _interpreters)
+            except MyXMLError as e:
+                sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+                return 1
+            algorithm.run()
+        elif isinstance(options, TransformOptions):
+            try:
+                algorithm = transform_subcommand.Algorithms.transform_filter(options.transform_url, state, _interpreters)
+            except MyXMLError as e:
+                sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+                return 1
+            algorithm.run()
+    except AssetsExhausted:
+        if options.not_in_target != NotInTargetNamespace.IGNORE:
+            sys.stderr.write("The transformation failed, no more assets to load.\n")
+            if options.not_in_target == NotInTargetNamespace.ERROR:
+                return 1
     return 0

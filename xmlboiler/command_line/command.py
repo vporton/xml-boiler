@@ -32,21 +32,19 @@ from xmlboiler.command_line.common import run_filter_subcommand
 from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor, \
     TransformOptionsProcessor
 from xmlboiler.command_line.pipe import PipelineProcessor
-from xmlboiler.core.alg import auto_transform, script_subcommand, transform_subcommand
-from xmlboiler.core.alg.common import AssetsExhausted
+from xmlboiler.core.alg import auto_transform
 from xmlboiler.core.alg.download import download_providers
 from xmlboiler.core.alg.state import PipelineState
 from xmlboiler.core.asset_downloaders import local_asset_downloader, directory_asset_downloader
 import xmlboiler.core.interpreters.parse
 from xmlboiler.core.execution_context_builders import context_for_logger, Contexts
 from xmlboiler.core.options import \
-    RecursiveRetrievalPriorityOrderElement, NotInTargetNamespace, BaseAutomaticWorkflowElementOptions, \
+    RecursiveRetrievalPriorityOrderElement, BaseAutomaticWorkflowElementOptions, \
     BaseAlgorithmOptions, PipelineOptions
 import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
 from xmlboiler.core.packages.config import determine_os
 from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
-from xmlboiler.core.util.xml import MyXMLError
 
 
 def main(argv):
