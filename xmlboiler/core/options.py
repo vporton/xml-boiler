@@ -131,6 +131,10 @@ class ScriptOptions(object):
     element_options: BaseAutomaticWorkflowElementOptions = None
     script_url: URIRef = None
 
+    # quick hack
+    def __getattr__(self, attr):
+        return getattr(self.element_options, attr)
+
 
 @dataclass
 class PipelineOptions(object):

@@ -19,6 +19,7 @@ from dependency_injector import containers, providers
 from rdflib import URIRef
 
 from xmlboiler.core.alg.common import AssetsExhausted
+from xmlboiler.core.util.xml import myXMLParseString
 
 
 class ChainFilter(object):
@@ -28,6 +29,7 @@ class ChainFilter(object):
         self.interpreter = interpreter
 
     def run(self):
+        self.state.dom = myXMLParseString(self.state.xml_text)
         while True:
             script = self.state.scripts_hash.get(URIRef(self.script_url))
             if script:
