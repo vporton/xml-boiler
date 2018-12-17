@@ -20,10 +20,11 @@ import re
 import sys
 from copy import deepcopy
 
-from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor
-from xmlboiler.core.alg import auto_transform, script_subcommand
+from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor, \
+    TransformOptionsProcessor
+from xmlboiler.core.alg import auto_transform, script_subcommand, transform_subcommand
 from xmlboiler.core.alg.common import AssetsExhausted
-from xmlboiler.core.options import NotInTargetNamespace, ChainOptions, ScriptOptions
+from xmlboiler.core.options import NotInTargetNamespace, ChainOptions, ScriptOptions, TransformOptions
 from xmlboiler.core.util.xml import MyXMLError
 
 
@@ -45,12 +46,13 @@ def split_pipeline(s):
 
 
 class PipelineProcessor(object):
-    def __init__(self, element_options, execution_context, error_logger, chain_parser, script_parser):
+    def __init__(self, element_options, execution_context, error_logger, chain_parser, script_parser, transform_parser):
         self.element_options = element_options
         self.execution_context = execution_context
         self.error_logger = error_logger
         self.chain_parser = chain_parser
         self.script_parser = script_parser
+        self.transform_parser = transform_parser
 
     def execute(self, options_list, state, _interpreters):
         for options in options_list:
@@ -81,6 +83,14 @@ class PipelineProcessor(object):
                     sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
                     return 1
                 algorithm.run()
+            elif isinstance(options, TransformOptions):
+                try:
+                    algorithm = transform_subcommand.Algorithms.transform_filter(options.transform_url, state, _interpreters)
+                except MyXMLError as e:
+                    sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+                    return 1
+                algorithm.run()
+
         return 0
 
     def parse(self, pipe_str):
@@ -95,7 +105,9 @@ class PipelineProcessor(object):
                 method = {'chain': PipelineProcessor.chain_opts,
                           'c': PipelineProcessor.chain_opts,
                           'script': PipelineProcessor.script_opts,
-                          's': PipelineProcessor.script_opts}\
+                          's': PipelineProcessor.script_opts,
+                          'transform': PipelineProcessor.transform_opts,
+                          't': PipelineProcessor.transform_opts}\
                     [args[0]]
             except KeyError:
                 msg = self.execution_context.translations.gettext("Wrong command '{cmd}' in the pipeline.".format(cmd=args[0]))
@@ -125,4 +137,14 @@ class PipelineProcessor(object):
             return False
         modify_pipeline_element(pargs, element_options)
         processor = ScriptOptionsProcessor(element_options)
+        return processor.process(pargs)
+
+    def transform_opts(self, args, element_options):
+        try:
+            pargs = self.transform_parser.parse_args(args)
+        except TypeError:
+            self.transform_parser.print_usage()
+            return False
+        modify_pipeline_element(pargs, element_options)
+        processor = TransformOptionsProcessor(element_options)
         return processor.process(pargs)
