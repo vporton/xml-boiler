@@ -46,6 +46,7 @@ class ValidatorKindEnum(Enum):
 class BaseScriptInfo(object):
     transformer: Any #Transformer
     script_kind: ScriptKindEnum
+    ns: URIRef = None
     preservance : float = None
     stability   : float = None
     preference  : float = None
@@ -79,6 +80,7 @@ class ScriptInfo(object):
 
 @dataclass
 class Transformer(object):
+    ns: URIRef = None
     source_namespaces: AbstractSet[URIRef] = None
     target_namespaces: AbstractSet[URIRef] = None
     ignore_target: bool = False

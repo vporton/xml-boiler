@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 from dataclasses import dataclass, field
-from typing import Set, FrozenSet, List, Optional, Any
+from typing import Set, FrozenSet, List, Optional, Any, Dict
 
 import xml.dom.minidom
 from rdflib import URIRef
@@ -44,8 +44,11 @@ class BaseState(object):
 class PipelineState(BaseState):
     dom: Optional[xml.dom.minidom.Document] = None
     all_namespaces: Optional[FrozenSet[URIRef]] = None
+    # FIXME: These scripts are not enriched
     scripts: List[EnrichedScript] = field(default_factory=list)
     executed_scripts: Set[EnrichedScript] = field(default_factory=set)
+    scripts_hash: Dict[URIRef, EnrichedScript] = field(default_factory=dict)
+    transformers_hash: Dict[URIRef, Transformer] = field(default_factory=dict)
     failed_scripts: Set[EnrichedScript] = field(default_factory=set)
     singletons: Set[URIRef] = field(default_factory=set)
     precedences_higher: Connectivity = field(default_factory=Connectivity)
@@ -55,5 +58,11 @@ class PipelineState(BaseState):
 
     def add_asset(self, asset):
         self.scripts += [script for transformer in asset.transformers for script in transformer.scripts]
+        for t in asset.transformers:
+            if isinstance(t.ns, URIRef):
+                self.transformers_hash.setdefault(t.ns, t)
+            for s in t.scripts:
+                if isinstance(s.base.ns, URIRef):
+                    self.scripts_hash.setdefault(s.script.base.ns, s)
         self.precedences_higher.add_relation(asset.precedences_higher.connectivity)
         self.precedences_subclasses.add_relation(asset.precedences_subclasses.connectivity)
