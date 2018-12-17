@@ -57,9 +57,4 @@ def run_filter_subcommand(args, state, _interpreters, pipe_options_list, pipe_pr
             sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
             return 1
         algorithm.run()
-    # FIXME: 'pipe' is not a filter subcommand
-    elif args.subcommand == 'pipe':
-        res = pipe_processor.execute(pipe_options_list, state, _interpreters)
-        if res:
-            return res
     return 0
