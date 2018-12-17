@@ -1,0 +1,2 @@
+<!-- an XML file with a deliberate syntax error -->
+<x><h xmlns='http://portonvictor.org/ns/comment'/></x>

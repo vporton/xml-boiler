@@ -125,6 +125,15 @@ class TestUtility(XmlTest):
                         # sys.stdout.buffer.write(b'<pre>...')
                         self.assertRegex(sys.stdout.buffer.getvalue().decode('utf-8'), r'<pre>')
 
+    def test_avoid_infinite_loop(self):
+        with capture_stdin_and_stdout():
+            ret = xmlboiler.command_line.command.main(
+                ['-i', Global.get_filename("tests/core/data/xml/wrong.xml"),
+                 'c',
+                 '-u', 'http://portonvictor.org/ns/trans/precedence-comment'])
+            self.assertTrue(ret != 0)
+            self.assertEqual(sys.stdout.buffer.getvalue().decode('utf-8'), "")
+
     def test_doc(self):
         with capture_stdin_and_stdout():
             self.command(['-r', 'breadth',
