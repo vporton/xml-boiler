@@ -73,7 +73,8 @@ def _enumerate_child_namespaces(state, asset):
                     yield PrioritizedNS(priority, s)
         elif order_part == RecursiveRetrievalPriorityOrderElement.WORKFLOW_TARGETS:
             # TODO: It may happen atmost once, may optimize not to run it again
-            yield from [PrioritizedNS(priority, ns) for ns in state.opts.target_namespaces]
+            if hasattr(state.opts, 'target_namespaces'):  # not for example for `script` subcommand
+                yield from [PrioritizedNS(priority, ns) for ns in state.opts.target_namespaces]
     priority += 1
     yield from [PrioritizedNS(priority, ns) for ns in asset.see_also_transform] # TODO: Support for validation
 

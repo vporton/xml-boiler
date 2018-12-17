@@ -19,14 +19,16 @@ from dependency_injector import containers, providers
 from rdflib import URIRef
 
 from xmlboiler.core.alg.common import AssetsExhausted
+from xmlboiler.core.scripts.xml import Providers
 from xmlboiler.core.util.xml import myXMLParseString
 
 
 class ChainFilter(object):
-    def __init__(self, script_url, state, interpreter):
+    def __init__(self, script_url, state, interpreters, xml_run_command=Providers.xml_run_command):
         self.script_url = script_url
         self.state = state
-        self.interpreter = interpreter
+        self.interpreters = interpreters
+        self.xml_run_command = xml_run_command
 
     def run(self):
         self.state.dom = myXMLParseString(self.state.xml_text)
@@ -39,17 +41,12 @@ class ChainFilter(object):
                 # Check subprocess's exit code (what to do with _run_plain_text() as it spawns multiple commands?)
                 # (It is not really necessary because we have an invalid XML then.)
                 # Does not quite conform dependency injection pattern:
-                new_xml_text = self.xml_run_command(self.state.opts.execution_context,
-                                                    script,
-                                                    self.interpreters,
-                                                    interpreter_node,
-                                                    self.state.opts.command_runner).\
+                self.state.xml_text = self.xml_run_command(self.state.opts.execution_context,
+                                                           script,
+                                                           self.interpreters,
+                                                           interpreter_node,
+                                                           self.state.opts.command_runner). \
                     run(self.state.xml_text)
-                if new_xml_text == self.state.xml_text:
-                    msg = self.state.opts.execution_context.translations.gettext("Iteration stopped to avoid infinite loop.")
-                    self.state.opts.error_logger.error(msg)
-                    raise AssetsExhausted()  # TODO: It is correct exception?
-                self.state.xml_text = new_xml_text
                 return
             else:
                 try:
