@@ -56,6 +56,6 @@ class PipelineState(BaseState):
                 self.transformers_hash.setdefault(t.ns, t)
             for s in t.scripts:
                 if isinstance(s.base.ns, URIRef):
-                    self.scripts_hash.setdefault(s.script.base.ns, s)
+                    self.scripts_hash.setdefault(s.base.ns, s)
         self.precedences_higher.add_relation(asset.precedences_higher.connectivity)
         self.precedences_subclasses.add_relation(asset.precedences_subclasses.connectivity)

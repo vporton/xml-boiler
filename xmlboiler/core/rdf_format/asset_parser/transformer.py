@@ -36,7 +36,7 @@ class TransformerParser(NodeParser):
         klass = URIRef(MAIN_NAMESPACE + "Transformer")
         check_node_class(self.subclasses, parse_context, graph, node, klass, ErrorMode.IGNORE)
 
-        result = Transformer()
+        result = Transformer(ns=node)
 
         source_namespaces_parser = OneOrMorePredicate(URIRef(MAIN_NAMESPACE + "sourceNamespace"),
                                                       IRILiteral(ErrorMode.WARNING),

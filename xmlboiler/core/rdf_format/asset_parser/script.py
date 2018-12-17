@@ -97,7 +97,7 @@ class BaseScriptInfoParser(NodeParser):
         return EnumParser(map)
 
     def parse(self, parse_context, graph, node):
-        result = BaseScriptInfo(transformer=self.transformer, script_kind=self.script_kind)
+        result = BaseScriptInfo(transformer=self.transformer, ns=node, script_kind=self.script_kind)
         float_parser = FloatLiteral(ErrorMode.WARNING)
         def float_msg():
             return parse_context.translate(
