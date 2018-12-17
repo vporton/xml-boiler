@@ -28,9 +28,10 @@ from rdflib import URIRef
 
 import xmlboiler.core.urls
 import xmlboiler.core.os_command.regular
-from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor
+from xmlboiler.command_line.modifiers import modify_pipeline_element, ChainOptionsProcessor, ScriptOptionsProcessor, \
+    TransformOptionsProcessor
 from xmlboiler.command_line.pipe import PipelineProcessor
-from xmlboiler.core.alg import auto_transform, script_subcommand
+from xmlboiler.core.alg import auto_transform, script_subcommand, transform_subcommand
 from xmlboiler.core.alg.common import AssetsExhausted
 from xmlboiler.core.alg.download import download_providers
 from xmlboiler.core.alg.state import PipelineState
@@ -115,6 +116,13 @@ def main(argv):
                                           add_help=True)
     script_parser.set_defaults(subcommand='script')
     script_parser.add_argument('script', help='script to run', metavar='SCRIPT')
+
+    transform_parser = subparsers.add_parser('transform', aliases=['t'],
+                                          # parents=[base_script_parser],
+                                          help='Run a transformation',
+                                          add_help=True)
+    transform_parser.set_defaults(subcommand='transform')
+    transform_parser.add_argument('transform', help='transformation to run', metavar='TRANSFORMATION')
 
     pipe_parser = subparsers.add_parser('pipe', aliases=['p'],
                                         parents=[base_chain_parser],
@@ -209,6 +217,9 @@ def main(argv):
     elif args.subcommand == 'script':
         options_processor = ScriptOptionsProcessor(element_options)
         options = options_processor.process(args)
+    elif args.subcommand == 'transform':
+        options_processor = TransformOptionsProcessor(element_options)
+        options = options_processor.process(args)
     elif args.subcommand == 'pipe':
         options = PipelineOptions(element_options=element_options)
         pipe_processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser, script_parser)
@@ -269,7 +280,14 @@ def main(argv):
                     return 1
     elif args.subcommand == 'script':
         try:
-            algorithm = script_subcommand.Algorithms.chain_filter(args.script, state, _interpreters)
+            algorithm = script_subcommand.Algorithms.script_filter(args.script, state, _interpreters)
+        except MyXMLError as e:
+            sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+            return 1
+        algorithm.run()
+    elif args.subcommand == 'transform':
+        try:
+            algorithm = transform_subcommand.Algorithms.transform_filter(args.transform, state, _interpreters)
         except MyXMLError as e:
             sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
             return 1

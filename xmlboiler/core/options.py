@@ -137,6 +137,17 @@ class ScriptOptions(object):
 
 
 @dataclass
+class TransformOptions(object):
+    """For `script` command."""
+    element_options: BaseAutomaticWorkflowElementOptions = None
+    transform_url: URIRef = None
+
+    # quick hack
+    def __getattr__(self, attr):
+        return getattr(self.element_options, attr)
+
+
+@dataclass
 class PipelineOptions(object):
     """For `pipe` command."""
     # __slots__ = 'element_options', 'next_script', 'universal_precedence', 'target_namespaces'

@@ -23,7 +23,7 @@ from xmlboiler.core.scripts.xml import Providers
 from xmlboiler.core.util.xml import myXMLParseString
 
 
-class ChainFilter(object):
+class ScriptFilter(object):
     def __init__(self, script_url, state, interpreters, xml_run_command=Providers.xml_run_command):
         self.script_url = script_url
         self.state = state
@@ -56,4 +56,4 @@ class ChainFilter(object):
 
 
 class Algorithms(containers.DeclarativeContainer):
-    chain_filter = providers.Factory(ChainFilter)
+    script_filter = providers.Factory(ScriptFilter)

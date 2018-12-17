@@ -29,3 +29,12 @@ def log_script_execution(state, script):
         state.opts.execution_context.logger.info(
             state.opts.execution_context.translations.gettext("Executed script for {s}").format(
                 s=script.more.language))
+
+
+def calculate_weight(weight_formula, script):
+    if weight_formula == 'inverseofsum':
+        return 1 / (script.base.preservance + script.base.stability + script.base.preference)
+    elif weight_formula == 'sumofinverses':
+        return 1 / script.base.preservance + 1 / script.base.stability + 1 / script.base.preference
+    else:
+        assert False

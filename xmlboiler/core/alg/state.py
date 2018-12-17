@@ -42,7 +42,7 @@ class PipelineState(BaseState):
     executed_scripts: Set[ScriptInfo] = field(default_factory=set)
     scripts_hash: Dict[URIRef, ScriptInfo] = field(default_factory=dict)
     transformers_hash: Dict[URIRef, Transformer] = field(default_factory=dict)
-    failed_scripts: Set[ScriptInfo] = field(default_factory=set)
+    failed_scripts: Set[ScriptInfo] = field(default_factory=set)  # FIXME: Store IDs/URIs of the scripts not scripts themselves
     singletons: Set[URIRef] = field(default_factory=set)
     precedences_higher: Connectivity = field(default_factory=Connectivity)
     precedences_subclasses: Connectivity = field(default_factory=Connectivity)

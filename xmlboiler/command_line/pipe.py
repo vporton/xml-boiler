@@ -76,7 +76,7 @@ class PipelineProcessor(object):
                             return 1
             elif isinstance(options, ScriptOptions):
                 try:
-                    algorithm = script_subcommand.Algorithms.chain_filter(options.script_url, state, _interpreters)
+                    algorithm = script_subcommand.Algorithms.script_filter(options.script_url, state, _interpreters)
                 except MyXMLError as e:
                     sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
                     return 1

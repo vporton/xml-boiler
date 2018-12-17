@@ -27,6 +27,9 @@ import networkx as nx
 
 # TODO: Wrap it also with "double graph" (https://cs.stackexchange.com/a/96348/39512) to have no adjanced
 # edges from graph2 (to increase the performance by reducing the number of paths of the same weight).
+from xmlboiler.core.alg.common import calculate_weight
+
+
 class GraphWithProxy(object):
     """
     We have two directed multigraphs. A traversal must has at least one edge of the first graph.
@@ -68,12 +71,7 @@ class GraphOfScripts(object):
         for scr in enriched_scripts:
             source = frozenset(scr.base.transformer.source_namespaces)
             target = frozenset(scr.base.transformer.target_namespaces)
-            if self.weight_formula == 'inverseofsum':
-                weight = 1 / (scr.base.preservance + scr.base.stability + scr.base.preference)
-            elif self.weight_formula == 'sumofinverses':
-                weight = 1 / scr.base.preservance + 1 / scr.base.stability + 1 / scr.base.preference
-            else:
-                assert False
+            weight = calculate_weight(self.weight_formula, scr)
             if scr.base.transformer.universal and \
                     self.precedences_graph.is_connected(self.universal_precedence, scr.base.transformer.precedence):
                 target = frozenset()

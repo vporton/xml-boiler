@@ -18,7 +18,8 @@
 
 from rdflib import URIRef
 
-from xmlboiler.core.options import NotInTargetNamespace, BaseAlgorithmOptions, ChainOptions, ScriptOptions
+from xmlboiler.core.options import NotInTargetNamespace, BaseAlgorithmOptions, ChainOptions, ScriptOptions, \
+    TransformOptions
 
 
 class ChainOptionsProcessor(object):
@@ -40,6 +41,15 @@ class ScriptOptionsProcessor(object):
                              script_url=args.script)
 
 
+class TransformOptionsProcessor(object):
+    def __init__(self, element_options):
+        self.element_options = element_options
+
+    def process(self, args):
+        return TransformOptions(element_options=self.element_options,
+                                transform_url=args.transform)
+
+
 def modify_pipeline_element(args, obj):
     """Process command line options for a pipeline element or for a filter"""
     if args.subcommand == 'chain':
@@ -48,3 +58,5 @@ def modify_pipeline_element(args, obj):
                              'error': NotInTargetNamespace.ERROR}[args.not_in_target or 'error']
     elif args.subcommand == 'script':
         obj.script_url = args.script
+    elif args.subcommand == 'transform':
+        obj.transform_url = args.transform
