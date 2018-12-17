@@ -172,7 +172,7 @@ class BreadthFirstDownloader(BaseDownloadAlgorithm):
             v = Q.get()
             if v.root:  # enumerate the top level differently
                 # use priority above all other priorities
-                childs = [(100, info) for info in self.state.opts.recursive_options.initial_assets]
+                childs = [PrioritizedNS(100, info) for info in self.state.opts.recursive_options.initial_assets]
                 childs.extend([PrioritizedNS(0, ns) for ns in _enumerate_xml_namespaces(self.state)])  # below all priorities in _enumerate_child_namespaces()
             else:
                 childs = _enumerate_child_namespaces(self.state, v.ns)
