@@ -48,7 +48,7 @@ def split_pipeline(s):
 
 class PipelineProcessor(object):
     def __init__(self, args, element_options, execution_context, error_logger, chain_parser, script_parser, transform_parser):
-        self.args = args
+        self.args = args  # TODO: No need for this argument
         self.element_options = element_options
         self.execution_context = execution_context
         self.error_logger = error_logger
@@ -59,7 +59,7 @@ class PipelineProcessor(object):
     def execute(self, options_list, state, _interpreters):
         for options in options_list:
             state.opts = options
-            run_subcommand(self.args, state, _interpreters, options_list, None)
+            run_subcommand(options, state, _interpreters, options_list, None)
         return 0
 
     def parse(self, pipe_str):

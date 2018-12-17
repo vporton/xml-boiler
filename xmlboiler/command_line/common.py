@@ -45,14 +45,14 @@ def run_subcommand(args, state, _interpreters, pipe_options_list, pipe_processor
                     return 1
     elif isinstance(options, ScriptOptions):
         try:
-            algorithm = script_subcommand.Algorithms.script_filter(args.script, state, _interpreters)
+            algorithm = script_subcommand.Algorithms.script_filter(options.script_url, state, _interpreters)
         except MyXMLError as e:
             sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
             return 1
         algorithm.run()
     elif isinstance(options, TransformOptions):
         try:
-            algorithm = transform_subcommand.Algorithms.transform_filter(args.transform, state, _interpreters)
+            algorithm = transform_subcommand.Algorithms.transform_filter(options.transform_url, state, _interpreters)
         except MyXMLError as e:
             sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
             return 1
