@@ -19,13 +19,13 @@ import sys
 
 from xmlboiler.core.alg import auto_transform, script_subcommand, transform_subcommand
 from xmlboiler.core.alg.common import AssetsExhausted
-from xmlboiler.core.options import NotInTargetNamespace
+from xmlboiler.core.options import NotInTargetNamespace, ChainOptions, ScriptOptions, TransformOptions
 from xmlboiler.core.util.xml import MyXMLError
 
 
 def run_subcommand(args, state, _interpreters, pipe_options_list, pipe_processor):
     options = state.opts
-    if args.subcommand == 'chain':
+    if isinstance(options, ChainOptions):
         # TODO: Duplicate code with command_line/pipe.py
         try:
             try:
@@ -43,14 +43,14 @@ def run_subcommand(args, state, _interpreters, pipe_options_list, pipe_processor
                 sys.stderr.write("The transformation failed, no more assets to load.\n")
                 if options.not_in_target == NotInTargetNamespace.ERROR:
                     return 1
-    elif args.subcommand == 'script':
+    elif isinstance(options, ScriptOptions):
         try:
             algorithm = script_subcommand.Algorithms.script_filter(args.script, state, _interpreters)
         except MyXMLError as e:
             sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
             return 1
         algorithm.run()
-    elif args.subcommand == 'transform':
+    elif isinstance(options, TransformOptions):
         try:
             algorithm = transform_subcommand.Algorithms.transform_filter(args.transform, state, _interpreters)
         except MyXMLError as e:
