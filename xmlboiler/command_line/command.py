@@ -266,9 +266,8 @@ def main(argv):
         if res:
             return res
     else:
-        ret = run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processor)
-        if ret != 0:
-            return ret
+        if not run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processor):
+            return 1
 
     if output is None:
         sys.stdout.buffer.write(state.xml_text)

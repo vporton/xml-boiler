@@ -32,30 +32,30 @@ def run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processo
                 algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
             except MyXMLError as e:
                 sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-                return 1
+                return False
             try:
                 algorithm.run()
             except MyXMLError as e:
                 sys.stderr.write("Error in an intermediary XML document during the transformation: " + str(e) + "\n")
-                return 1
+                return False
         elif isinstance(options, ScriptOptions):
             try:
                 algorithm = script_subcommand.Algorithms.script_filter(options.script_url, state, _interpreters)
             except MyXMLError as e:
                 sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-                return 1
+                return False
             algorithm.run()
         elif isinstance(options, TransformOptions):
             try:
                 algorithm = transform_subcommand.Algorithms.transform_filter(options.transform_url, state, _interpreters)
             except MyXMLError as e:
                 sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
-                return 1
+                return False
             algorithm.run()
     except AssetsExhausted:
         # FIXME: Seems wrong (especially for pipe)
         if hasattr(options, 'not_in_target') and options.not_in_target != NotInTargetNamespace.IGNORE:
             sys.stderr.write("The transformation failed, no more assets to load.\n")
             if options.not_in_target == NotInTargetNamespace.ERROR:
-                return 1
-    return 0
+                return False
+    return True
