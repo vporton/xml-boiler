@@ -53,9 +53,11 @@ def my_logger(name='main', level=logging.INFO):
     return logger
 
 class _BaseContexts(containers.DeclarativeContainer):
+    # logger = providers.Callable(my_logger)
     logger = providers.Callable(my_logger)
 
 class Contexts(_BaseContexts):
+    # FIXME: _BaseContexts.logger is called twice when initializing execution_context
     default_translations = providers.ThreadSafeSingleton(init_locale, logger=_BaseContexts.logger)
     # 'unknown' is a hack not to modify an existing logger
     execution_context = providers.Factory(ExecutionContext, logger=_BaseContexts.logger, translations=default_translations)
