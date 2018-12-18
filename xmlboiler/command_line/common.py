@@ -26,8 +26,8 @@ from xmlboiler.core.util.xml import MyXMLError
 def run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processor):
     options = state.opts
     try:
-        if isinstance(options, ChainOptions):
         # TODO: Fine tune error messages
+        if isinstance(options, ChainOptions):
             try:
                 algorithm = auto_transform.Algorithms.automatic_transformation(state, _interpreters)
             except MyXMLError as e:
@@ -42,14 +42,14 @@ def run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processo
             try:
                 algorithm = script_subcommand.Algorithms.script_filter(options.script_url, state, _interpreters)
             except MyXMLError as e:
-                sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+                sys.stderr.write("Error in the XML document: " + str(e) + "\n")
                 return False
             algorithm.run()
         elif isinstance(options, TransformOptions):
             try:
                 algorithm = transform_subcommand.Algorithms.transform_filter(options.transform_url, state, _interpreters)
             except MyXMLError as e:
-                sys.stderr.write("Error in the input XML document: " + str(e) + "\n")
+                sys.stderr.write("Error in the XML document: " + str(e) + "\n")
                 return False
             algorithm.run()
     except AssetsExhausted:
