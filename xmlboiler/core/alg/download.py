@@ -88,7 +88,8 @@ class BaseDownloadAlgorithm(object):
         self.state = state
         self.parse_context = parse_context
         self.subclasses = subclasses
-        self.parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
+        self.parser = xmlboiler.core.rdf_format.asset_parser.asset.asset_parser_provider(\
+            parse_context=self.parse_context, subclasses=self.subclasses)
 
     def add_ns(self, ns):
         if ns not in self.state.assets:
