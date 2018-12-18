@@ -55,7 +55,7 @@ class SubclassRelation(Connectivity):
 class SubclassRelationForType(SubclassRelation):
     def __init__(self,
                  node_class,
-                 context=Contexts.execution_context(),
+                 context,
                  graph=None,
                  relation=RDFS.subClassOf):
         super().__init__(context=context, graph=graph, relation=relation)
