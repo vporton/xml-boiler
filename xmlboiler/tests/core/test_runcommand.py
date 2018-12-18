@@ -25,7 +25,10 @@ from xmlboiler.core.os_command.regular import *
 class TestRunCommand(unittest.TestCase):
     def setUp(self):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
-        self.context = Contexts.execution_context()
+
+        base_logger = Contexts.logger('main', level='debug')
+        translations = Contexts.default_translations(base_logger)
+        self.context = Contexts.execution_context(logger=base_logger, translations=translations)
 
     def do_test_ok(self, command, input):
         runner = regular_provider(timeout=None, timeout2=None, context=self.context)
@@ -54,7 +57,9 @@ class TestRunCommand(unittest.TestCase):
 class TestRunFirejailCommand(unittest.TestCase):
     def setUp(self):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
-        self.context = Contexts.execution_context()
+        base_logger = Contexts.logger('main', level='debug')
+        translations = Contexts.default_translations(base_logger)
+        self.context = Contexts.execution_context(logger=base_logger, translations=translations)
 
     def do_test_ok(self, command, input):
         runner = firejail_provider(timeout=None, timeout2=None, context=self.context)

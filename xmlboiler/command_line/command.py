@@ -138,7 +138,8 @@ def main(argv):
         return 1
 
     base_logger = Contexts.logger('main', args.log_level)
-    execution_context = Contexts.execution_context(logger=base_logger)
+    translations = Contexts.default_translations(logger=base_logger)
+    execution_context = Contexts.execution_context(logger=base_logger, translations=translations)
     error_handler = logging.StreamHandler()
     error_handler.setFormatter(logging.Formatter('%(message)s'))
     error_logger = Contexts.logger('error', logging.WARNING)
@@ -264,6 +265,7 @@ def main(argv):
 
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(
         options.element_options.installed_soft_options,
+        execution_context=execution_context,
         log_level=args.log_level)
     if args.subcommand == 'pipe':
         res = pipe_processor.execute(pipe_options_list, state, _interpreters)
