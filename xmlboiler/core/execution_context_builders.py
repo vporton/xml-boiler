@@ -58,7 +58,7 @@ class _BaseContexts(containers.DeclarativeContainer):
 class Contexts(_BaseContexts):
     default_translations = providers.ThreadSafeSingleton(init_locale, logger=_BaseContexts.logger)
     # 'unknown' is a hack not to modify an existing logger
-    execution_context = providers.Factory(ExecutionContext, logger=_BaseContexts.logger('unknown'), translations=default_translations)
+    execution_context = providers.Factory(ExecutionContext, logger=_BaseContexts.logger, translations=default_translations)
 
 
 def context_for_logger(context, logger):

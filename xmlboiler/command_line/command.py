@@ -137,8 +137,8 @@ def main(argv):
         parser.print_usage()
         return 1
 
-    execution_context = context_for_logger(Contexts.execution_context(),
-                                           Contexts.logger('main', args.log_level))
+    base_logger = Contexts.logger('main', args.log_level)
+    execution_context = Contexts.execution_context(logger=base_logger)
     error_handler = logging.StreamHandler()
     error_handler.setFormatter(logging.Formatter('%(message)s'))
     error_logger = Contexts.logger('error', logging.WARNING)
