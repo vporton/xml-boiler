@@ -252,6 +252,7 @@ def main(argv):
     download_execution_context = context_for_logger(execution_context,
                                                     Contexts.logger('asset', args.log_level))
     downloader_parse_context = default_parse_context(execution_context=download_execution_context)
+    # FIXME: pass subclasses= to downloader
     state.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
