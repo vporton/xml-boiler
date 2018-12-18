@@ -27,7 +27,7 @@ from xmlboiler.core.data import Global
 from .execution_context import ExecutionContext
 
 
-def init_locale(lang=None):
+def init_locale(logger, lang=None):
     #locale.setlocale(locale.LC_ALL, '')  # call from your app
     try:
         if lang is None:
@@ -35,7 +35,7 @@ def init_locale(lang=None):
         file = Global.get_resource_stream("res/messages_%s.mo" % lang)
         trans = gettext.GNUTranslations(file)
     except (ValueError, IOError):
-        logging.debug("Locale not found. Using default messages")
+        logger.debug("Locale not found. Using default messages")
         trans = gettext.NullTranslations()
     #trans.set_output_charset()  # TODO
     return trans
@@ -48,11 +48,13 @@ def my_logger(name='main', level=logging.INFO):
     logger.setLevel(level)
     return logger
 
-class Contexts(containers.DeclarativeContainer):
+class _BaseContexts(containers.DeclarativeContainer):
     logger = providers.Callable(my_logger)
-    default_translations = providers.ThreadSafeSingleton(init_locale)
+
+class Contexts(_BaseContexts):
+    default_translations = providers.ThreadSafeSingleton(init_locale, logger=_BaseContexts.logger)
     # 'unknown' is a hack not to modify an existing logger
-    execution_context = providers.Factory(ExecutionContext, logger=logger('unknown'), translations=default_translations)
+    execution_context = providers.Factory(ExecutionContext, logger=_BaseContexts.logger('unknown'), translations=default_translations)
 
 
 def context_for_logger(context, logger):

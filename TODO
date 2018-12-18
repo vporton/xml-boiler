@@ -1,7 +1,6 @@
 * Correct error on RDF syntax error in an asset.
 
-* Error in error messages: 1. "Wrong command 'cx' in the pipeline." is said twice.
-  2. Raw exception on missing input file.
+* Error in error messages: Raw exception on missing input file.
 
 * .translate() in command_line/command.py
 
