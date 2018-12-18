@@ -1,5 +1,3 @@
-* AssetsExhausted should be caught.
-
 * Correct error on RDF syntax error in an asset.
 
 * Error in error messages: 1. "Wrong command 'cx' in the pipeline." is said twice.
