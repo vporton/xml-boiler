@@ -50,8 +50,10 @@ def capture_stdin_and_stdout():
     # finally:
     #     sys.stdin = stdin
     #     sys.stdout = stdout
-    with contextlib.redirect_stdout(TextIOWrapper(BytesIO(), sys.stdin.encoding)), \
-         contextlib.redirect_stderr(TextIOWrapper(BytesIO(), sys.stderr.encoding)):
+    # with contextlib.redirect_stdout(TextIOWrapper(BytesIO(), sys.stdin.encoding)), \
+    #      contextlib.redirect_stderr(TextIOWrapper(BytesIO(), sys.stderr.encoding)):
+    #     yield
+    with contextlib.redirect_stdout(TextIOWrapper(BytesIO(), sys.stdin.encoding)):
         yield
 
 

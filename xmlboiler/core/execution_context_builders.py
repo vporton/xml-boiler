@@ -46,6 +46,10 @@ def my_logger(name='main', level=logging.INFO):
     # logger = providers.Callable(logging.getLogger, name=name)()
     logger = logging.getLogger(name=name)
     logger.setLevel(level)
+
+    # handler = logging.StreamHandler()
+    # logger.addHandler(handler)
+
     return logger
 
 class _BaseContexts(containers.DeclarativeContainer):

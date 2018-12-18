@@ -88,6 +88,7 @@ class BaseDownloadAlgorithm(object):
         self.state = state
         self.parse_context = parse_context
         self.subclasses = subclasses
+        self.parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
 
     def add_ns(self, ns):
         if ns not in self.state.assets:
@@ -99,12 +100,11 @@ class BaseDownloadAlgorithm(object):
         if ns is None:
             return []
         self.add_ns(ns)
-        parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
         assets = []
         for graph in [downloader(ns) for downloader in downloaders]:
             if graph is None:
                 continue
-            asset_info = parser.parse(graph)
+            asset_info = self.parser.parse(graph)
             self.state.add_asset(asset_info)
             assets.append(asset_info)
             yield asset_info
@@ -162,7 +162,6 @@ class DepthFirstDownloader(BaseDownloadAlgorithm):
 class BreadthFirstDownloader(BaseDownloadAlgorithm):
     # https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial/
     def _breadth_first_download(self, downloaders):
-        parser = xmlboiler.core.rdf_format.asset_parser.asset.AssetParser(self.parse_context, self.subclasses)
         Q = queue.PriorityQueue()
         # we start with this item as the top node of the search (later remove it)
         fake_root = PrioritizedNS()
