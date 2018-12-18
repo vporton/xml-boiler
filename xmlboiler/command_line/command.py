@@ -44,6 +44,7 @@ from xmlboiler.core.options import \
 import xmlboiler.core.alg.next_script1
 import xmlboiler.core.alg.next_script2
 from xmlboiler.core.packages.config import determine_os
+from xmlboiler.core.rdf_base.subclass import SubclassContainers
 from xmlboiler.core.rdf_recursive_descent.base import default_parse_context
 
 
@@ -252,12 +253,14 @@ def main(argv):
     download_execution_context = context_for_logger(execution_context,
                                                     Contexts.logger('asset', args.log_level))
     downloader_parse_context = default_parse_context(execution_context=download_execution_context)
-    # FIXME: pass subclasses= to downloader
+    basic_subclasses = SubclassContainers.basic_subclasses(context=download_execution_context)
     state.download_algorithm = \
         {'none': download_providers.no_download,
          'breadth': download_providers.breadth_first_download,
          'depth': download_providers.depth_first_download}[args.recursive or 'breadth']( \
-            state, parse_context=downloader_parse_context).download_iterator()
+            state,
+            parse_context=downloader_parse_context,
+            subclasses=basic_subclasses).download_iterator()
 
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(
         options.element_options.installed_soft_options,
