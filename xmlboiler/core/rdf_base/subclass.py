@@ -26,7 +26,7 @@ from xmlboiler.core.execution_context_builders import Contexts
 
 class SubclassRelation(Connectivity):
     def __init__(self,
-                 context=Contexts.execution_context(),
+                 context,
                  graph=None,
                  relation=RDFS.subClassOf):
         super().__init__()
@@ -75,5 +75,5 @@ basic_subclasses_graph = providers.ThreadSafeSingleton(Global.load_rdf, filename
 
 class SubclassContainers(containers.DeclarativeContainer):
     basic_subclasses = providers.ThreadSafeSingleton(SubclassRelation,
-                                                     context=Contexts.execution_context(),
+                                                     context=Contexts.execution_context,
                                                      graph=basic_subclasses_graph)
