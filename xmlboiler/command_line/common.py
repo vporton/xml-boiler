@@ -53,8 +53,10 @@ def run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processo
                 return False
             algorithm.run()
     except AssetsExhausted:
-        # FIXME: Seems wrong (especially for pipe)
-        if hasattr(options, 'not_in_target') and options.not_in_target != NotInTargetNamespace.IGNORE:
+        if not isinstance(options, ChainOptions):
+            sys.stderr.write("The transformation failed, no more assets to load.\n")
+            return False
+        if options.not_in_target != NotInTargetNamespace.IGNORE:
             sys.stderr.write("The transformation failed, no more assets to load.\n")
             if options.not_in_target == NotInTargetNamespace.ERROR:
                 return False
