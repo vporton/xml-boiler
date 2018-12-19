@@ -137,13 +137,16 @@ def main(argv):
         parser.print_usage()
         return 1
 
-    # FIXME: basicConfig() as in https://bugs.python.org/issue35530
+    logging.basicConfig()
     log_handler = logging.StreamHandler()
     log_handler.setLevel(args.log_level)
-    log_handler.setFormatter(logging.Formatter('%(message)s'))
+    # log_handler.setFormatter(logging.Formatter('%(message)s'))
     base_logger = Contexts.logger('main', args.log_level, log_handler=log_handler)
     translations = Contexts.default_translations(logger=base_logger)
-    execution_context = Contexts.execution_context(logger=base_logger, translations=translations, log_handler=log_handler)
+    execution_context = Contexts.execution_context(logger=base_logger,
+                                                   translations=translations,
+                                                   log_handler=log_handler,
+                                                   log_level=args.log_level)
     error_logger = Contexts.logger('error', logging.WARNING, log_handler=log_handler)
 
     algorithm_options = BaseAlgorithmOptions(
@@ -252,8 +255,7 @@ def main(argv):
         state.xml_text = source.buffer.read()
         source.close()
 
-    download_execution_context = context_for_logger(execution_context,
-                                                    Contexts.logger('asset', args.log_level))
+    download_execution_context = context_for_logger(execution_context, 'asset')
     downloader_parse_context = default_parse_context(execution_context=download_execution_context)
     basic_subclasses = SubclassContainers.basic_subclasses(context=download_execution_context)
     state.download_algorithm = \
