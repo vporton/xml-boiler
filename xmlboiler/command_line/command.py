@@ -154,7 +154,6 @@ def main(argv):
 
     algorithm_options = BaseAlgorithmOptions(
         execution_context=execution_context,
-        log_level=args.log_level,
         error_logger=error_logger,
         command_runner=xmlboiler.core.os_command.regular.regular_provider(context=execution_context),
         url_opener=xmlboiler.core.urls.OurOpeners.our_opener(timeout=args.timeout))
