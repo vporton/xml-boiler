@@ -1,0 +1,15 @@
+@prefix : <http://portonvictor.org/ns/trans/> .
+@prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+
+<http://portonvictor.org/ns/base#xml-format>
+  a :Transformer ;
+  :inward false ;
+  :script <http://portonvictor.org/ns/base#xml-format-script> .
+
+<http://portonvictor.org/ns/base#xml-format-script>
+  a :Command ;
+  :language lang:format ;
+  :transformerKind :entire ;
+  :preservance 1.0 ;
+  :stability 1.0 ;
+  :preference 1.0 .

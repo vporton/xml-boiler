@@ -38,9 +38,8 @@ class TransformerParser(NodeParser):
 
         result = Transformer(ns=node)
 
-        source_namespaces_parser = OneOrMorePredicate(URIRef(MAIN_NAMESPACE + "sourceNamespace"),
-                                                      IRILiteral(ErrorMode.WARNING),
-                                                      ErrorMode.WARNING)
+        source_namespaces_parser = ZeroOrMorePredicate(URIRef(MAIN_NAMESPACE + "sourceNamespace"),
+                                                       IRILiteral(ErrorMode.WARNING))
         result.source_namespaces = source_namespaces_parser.parse(parse_context, graph, node)
         target_namespaces_parser = ZeroOrMorePredicate(URIRef(MAIN_NAMESPACE + "targetNamespace"),
                                                        IRILiteral(ErrorMode.WARNING))
