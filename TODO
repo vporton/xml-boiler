@@ -1,7 +1,5 @@
 * Correct error on RDF syntax error in an asset.
 
-* Error in error messages: Raw exception on missing input file.
-
 * .translate() in command_line/command.py
 
 * https://pypi.org/project/executor/ for spawning processes?

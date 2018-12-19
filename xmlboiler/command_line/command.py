@@ -22,6 +22,7 @@ import logging
 import os
 import re
 import sys
+from urllib.error import URLError
 
 from ordered_set import OrderedSet
 from rdflib import URIRef
@@ -251,9 +252,17 @@ def main(argv):
 
     input = None if not args.input or args.input[0] == '-' else args.input[0]
     if input and re.match(r'^[a-zA-Z]+:', input):
-        state.xml_text = options.url_opener.open(input).read()
+        try:
+            state.xml_text = options.url_opener.open(input).read()
+        except URLError as e:
+            sys.stderr.write(str(e) + "\n")
+            return 1
     else:
-        source = sys.stdin if input is None or input == '-' else open(input)
+        try:
+            source = sys.stdin if input is None or input == '-' else open(input)
+        except OSError as e:
+            sys.stderr.write(str(e) + "\n")
+            return 1
         state.xml_text = source.buffer.read()
         source.close()
 
@@ -279,10 +288,14 @@ def main(argv):
         if not run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processor):
             return 1
 
-    if output is None:
-        sys.stdout.buffer.write(state.xml_text)
-    else:
-        with open(output, 'wb') as file:
-            file.write(state.xml_text)
+    try:
+        if output is None:
+            sys.stdout.buffer.write(state.xml_text)
+        else:
+            with open(output, 'wb') as file:
+                file.write(state.xml_text)
+    except OSError as e:
+        sys.stderr.write(str(e) + "\n")
+        return 1
 
     return 0
