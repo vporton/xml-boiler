@@ -4,8 +4,6 @@
 
 * .translate() in command_line/command.py
 
-* Use argparse.FileType
-
 * https://pypi.org/project/executor/ for spawning processes?
 
 * to make processing of RDF deterministic:
