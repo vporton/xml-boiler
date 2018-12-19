@@ -232,7 +232,8 @@ def main(argv):
         options = options_processor.process(args)
     elif args.subcommand == 'pipe':
         options = PipelineOptions(element_options=element_options)
-        pipe_processor = PipelineProcessor(args, element_options, execution_context, error_logger, chain_parser, script_parser, transform_parser)
+        pipe_processor = PipelineProcessor(element_options, execution_context, error_logger, chain_parser,
+                                           script_parser, transform_parser)
         pipe_options_list = pipe_processor.parse(args.pipe)
         if not pipe_options_list:
             return 1
