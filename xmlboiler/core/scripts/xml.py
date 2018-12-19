@@ -66,11 +66,11 @@ class XMLRunCommandWrapper(object):
             while parents and not found:
                 v = parents.pop()
                 for w in v.childNodes:
-                    if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces:
+                    if URIRef(w.namespaceURI) in self.script.base.transformer.source_namespaces:
                         found = True
                         break
                     else:
-                        if any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in w.attributes.values()):
+                        if any(URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces for a in w.attributes.values()):
                             found = True
                             break
                     parents.append(w)
@@ -85,7 +85,7 @@ class XMLRunCommandWrapper(object):
         while parents:
             v = parents.pop()
             for w in v.childNodes:
-                if URIRef(w.namespaceURI) in self.script.transformer.source_namespaces:
+                if w.namespaceURI is not None and URIRef(w.namespaceURI) in self.script.base.transformer.source_namespaces:
                     str = w.toxml('utf-8')
                     str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(w))
                     frag = myXMLParseString(str2)
@@ -153,14 +153,14 @@ class XMLRunCommandWrapper(object):
     def _is_primary_node(self, node):
         # See also https://bugs.python.org/issue34306
         if node.parentNode.parentNode is None:  # if parentNode is minidom.Document
-            if node.namespaceURI and URIRef(node.namespaceURI) in self.script.transformer.source_namespaces or \
-                    any(URIRef(a.namespaceURI) in self.script.transformer.source_namespaces for a in node.attributes.values()):
+            if node.namespaceURI and URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces or \
+                    any(URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces for a in node.attributes.values()):
                 return True
             return False
         if node.namespaceURI != node.parentNode.namespaceURI and \
-                URIRef(node.namespaceURI) in self.script.transformer.source_namespaces:
+                URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces:
             return True
-        return any(a.namespaceURI != node.namespaceURI and URIRef(a.namespaceURI) in self.script.transformer.source_namespaces \
+        return any(a.namespaceURI != node.namespaceURI and URIRef(a.namespaceURI) in self.script.base.transformer.source_namespaces \
                    for a in node.attributes.values())
 
     def adjust_params(self, node):
