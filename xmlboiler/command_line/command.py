@@ -137,6 +137,7 @@ def main(argv):
         parser.print_usage()
         return 1
 
+    # FIXME: basicConfig() as in https://bugs.python.org/issue35530
     log_handler = logging.StreamHandler()
     log_handler.setLevel(args.log_level)
     log_handler.setFormatter(logging.Formatter('%(message)s'))
