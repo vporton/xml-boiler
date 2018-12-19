@@ -17,7 +17,7 @@ setup(
     author='Victor Porton',
     author_email='porton@narod.ru',
     description='Automatically transform between XML namespaces',
-    long_description='Automatically transform between XML namespaces, possible doing a chain of file format conversions',
+    long_description='Automatically transform between XML namespaces, possibly doing a chain of file format conversions',
     keywords='XML,XML namespaces,file format conversion',
     classifiers=[
         'Development Status :: 3 - Alpha',
