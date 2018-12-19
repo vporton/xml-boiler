@@ -15,21 +15,27 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+import logging
 import unittest
 
 from xmlboiler.core.os_command.firejail import *
 from xmlboiler.core.os_command.regular import *
 
 
-class TestRunCommand(unittest.TestCase):
+class BaseTestRunCommand(unittest.TestCase):
     def setUp(self):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
 
-        base_logger = Contexts.logger('main', level='DEBUG')
-        translations = Contexts.default_translations(base_logger)
-        self.context = Contexts.execution_context(logger=base_logger, translations=translations)
+        log_handler = logging.StreamHandler()
+        base_logger = Contexts.logger('main', level='DEBUG', log_handler=log_handler)
+        translations = Contexts.default_translations(logger=base_logger)
+        self.context = Contexts.execution_context(logger=base_logger,
+                                                  translations=translations,
+                                                  log_handler=log_handler,
+                                                  log_level='INFO')
 
+
+class TestRunCommand(BaseTestRunCommand):
     def do_test_ok(self, command, input):
         runner = regular_provider(timeout=None, timeout2=None, context=self.context)
         code, output = runner.run_pipe(command, input)
@@ -50,17 +56,11 @@ class TestRunCommand(unittest.TestCase):
 
     def test_sleep(self):
         with self.assertRaises(Timeout):
-            runner = regular_provider(timeout=0.1, timeout2=1)
+            runner = regular_provider(timeout=0.1, timeout2=1, context=self.context)
             runner.run_pipe(['sleep', '1000000'], b"")
 
 
-class TestRunFirejailCommand(unittest.TestCase):
-    def setUp(self):
-        self.long = bytes(map(lambda i: i%3, range(1000000)))
-        base_logger = Contexts.logger('main', level='DEBUG')
-        translations = Contexts.default_translations(base_logger)
-        self.context = Contexts.execution_context(logger=base_logger, translations=translations)
-
+class TestRunFirejailCommand(BaseTestRunCommand):
     def do_test_ok(self, command, input):
         runner = firejail_provider(timeout=None, timeout2=None, context=self.context)
         code, output = runner.run_pipe(command, input)
@@ -81,5 +81,5 @@ class TestRunFirejailCommand(unittest.TestCase):
 
     def test_sleep(self):
         with self.assertRaises(Timeout):
-            runner = firejail_provider(timeout=0.1, timeout2=1)
+            runner = firejail_provider(timeout=0.1, timeout2=1, context=self.context)
             runner.run_pipe(['sleep', '1000000'], b"")
