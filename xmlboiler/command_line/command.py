@@ -140,14 +140,17 @@ def main(argv):
     logging.basicConfig()
     log_handler = logging.StreamHandler()
     log_handler.setLevel(args.log_level)
-    # log_handler.setFormatter(logging.Formatter('%(message)s'))
+    log_handler.setFormatter(logging.Formatter('%(name)s:%(levelname)s:%(message)s'))
     base_logger = Contexts.logger('main', args.log_level, log_handler=log_handler)
     translations = Contexts.default_translations(logger=base_logger)
     execution_context = Contexts.execution_context(logger=base_logger,
                                                    translations=translations,
                                                    log_handler=log_handler,
                                                    log_level=args.log_level)
-    error_logger = Contexts.logger('error', logging.WARNING, log_handler=log_handler)
+    error_log_handler = logging.StreamHandler()
+    error_log_handler.setLevel(args.log_level)
+    error_log_handler.setFormatter(logging.Formatter('%(message)s'))
+    error_logger = Contexts.logger('error', logging.WARNING, log_handler=error_log_handler)
 
     algorithm_options = BaseAlgorithmOptions(
         execution_context=execution_context,

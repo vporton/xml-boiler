@@ -46,8 +46,9 @@ def my_logger(name='main', level=logging.INFO, log_handler=None):
     # logger = providers.ThreadSafeSingleton(logging.getLogger)(name=name)
     # logger = providers.Callable(logging.getLogger, name=name)()
     logger = logging.getLogger(name=name)
+    logger.propagate = False
     logger.setLevel(level)
-    # logger.addHandler(log_handler)
+    logger.addHandler(log_handler)
 
     return logger
 
