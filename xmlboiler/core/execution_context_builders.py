@@ -41,14 +41,12 @@ def init_locale(logger, lang=None):
     return trans
 
 
-def my_logger(name='main', level=logging.INFO):
+def my_logger(name='main', level=logging.INFO, log_handler=None):
     # logger = providers.ThreadSafeSingleton(logging.getLogger)(name=name)
     # logger = providers.Callable(logging.getLogger, name=name)()
     logger = logging.getLogger(name=name)
     logger.setLevel(level)
-
-    # handler = logging.StreamHandler()
-    # logger.addHandler(handler)
+    logger.addHandler(log_handler)
 
     return logger
 
@@ -61,5 +59,8 @@ class Contexts(_BaseContexts):
     execution_context = providers.Factory(ExecutionContext, logger=_BaseContexts.logger)
 
 
+# FIXME: Wrong: Should get logger name not logger object (now it initializes with None)
 def context_for_logger(context, logger):
-    return Contexts.execution_context(logger=logger, translations=context.translations)
+    return Contexts.execution_context(logger=logger,
+                                      translations=context.translations,
+                                      log_handler=context.log_handler)

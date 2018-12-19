@@ -21,10 +21,11 @@
 # Currently contains logging and localization.
 
 class ExecutionContext(object):
-    def __init__(self, logger, translations):
+    def __init__(self, logger, translations, log_handler):
         """
         :param logger: logger
         :param translations: usually should be gettext.GNUTranslations
         """
         self.logger = logger
         self.translations = translations
+        self.log_handler = log_handler
