@@ -41,14 +41,24 @@ def init_locale(logger, lang=None):
     return trans
 
 
+# FIXME: Does it work in multi-thread?
+# needed to avoid repeated initialization in command line tests
+_initialized_loggers = {}
+
+
 # TODO: log_handler=None is wrong
 def my_logger(name='main', level=logging.INFO, log_handler=None):
     # logger = providers.ThreadSafeSingleton(logging.getLogger)(name=name)
     # logger = providers.Callable(logging.getLogger, name=name)()
-    logger = logging.getLogger(name=name)
-    logger.propagate = False
-    logger.setLevel(level)
-    logger.addHandler(log_handler)
+    global _initialized_loggers
+    if name in _initialized_loggers:
+        logger = _initialized_loggers[name]
+    else:
+        logger = logging.getLogger(name=name)
+        _initialized_loggers[name] = logger
+        logger.propagate = False
+        logger.setLevel(level)
+        logger.addHandler(log_handler)
 
     return logger
 
