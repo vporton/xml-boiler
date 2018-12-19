@@ -26,7 +26,7 @@ class TestRunCommand(unittest.TestCase):
     def setUp(self):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
 
-        base_logger = Contexts.logger('main', level='debug')
+        base_logger = Contexts.logger('main', level='DEBUG')
         translations = Contexts.default_translations(base_logger)
         self.context = Contexts.execution_context(logger=base_logger, translations=translations)
 
@@ -57,7 +57,7 @@ class TestRunCommand(unittest.TestCase):
 class TestRunFirejailCommand(unittest.TestCase):
     def setUp(self):
         self.long = bytes(map(lambda i: i%3, range(1000000)))
-        base_logger = Contexts.logger('main', level='debug')
+        base_logger = Contexts.logger('main', level='DEBUG')
         translations = Contexts.default_translations(base_logger)
         self.context = Contexts.execution_context(logger=base_logger, translations=translations)
 
