@@ -36,7 +36,7 @@ from .parse_impl import MainParser, InterpreterParseContext
 PREFIX = "http://portonvictor.org/ns/trans/internal/"
 
 
-class _FromPackageVersion:
+class _FromPackageVersion(object):
     pass
 
 
