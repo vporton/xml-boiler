@@ -41,17 +41,17 @@ def run_filter_subcommand(state, _interpreters, pipe_options_list, pipe_processo
         elif isinstance(options, ScriptOptions):
             try:
                 algorithm = script_subcommand.Algorithms.script_filter(options.script_url, state, _interpreters)
+                algorithm.run()
             except MyXMLError as e:
                 sys.stderr.write("Error in the XML document: " + str(e) + "\n")
                 return False
-            algorithm.run()
         elif isinstance(options, TransformOptions):
             try:
                 algorithm = transform_subcommand.Algorithms.transform_filter(options.transform_url, state, _interpreters)
+                algorithm.run()
             except MyXMLError as e:
                 sys.stderr.write("Error in the XML document: " + str(e) + "\n")
                 return False
-            algorithm.run()
     except AssetsExhausted:
         if not isinstance(options, ChainOptions):
             sys.stderr.write("The transformation failed, no more assets to load.\n")
