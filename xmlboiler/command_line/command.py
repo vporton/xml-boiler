@@ -137,7 +137,6 @@ def main(argv):
         parser.print_usage()
         return 1
 
-    # FIXME: In tests Contexts.logger('main', ...) is run multiple times, what causes repeated msgs
     logging.basicConfig()
     log_handler = logging.StreamHandler()
     log_handler.setLevel(args.log_level)
