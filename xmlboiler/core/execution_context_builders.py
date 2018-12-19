@@ -47,7 +47,7 @@ def my_logger(name='main', level=logging.INFO, log_handler=None):
     # logger = providers.Callable(logging.getLogger, name=name)()
     logger = logging.getLogger(name=name)
     logger.setLevel(level)
-    logger.addHandler(log_handler)
+    # logger.addHandler(log_handler)
 
     return logger
 
