@@ -272,8 +272,7 @@ def main(argv):
 
     _interpreters = xmlboiler.core.interpreters.parse.Providers.interpreters_factory(
         options.element_options.installed_soft_options,
-        execution_context=execution_context,
-        log_level=args.log_level)
+        execution_context=execution_context)
     if args.subcommand == 'pipe':
         res = pipe_processor.execute(pipe_options_list, state, _interpreters)
         if res:

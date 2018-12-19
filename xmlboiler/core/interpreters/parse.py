@@ -41,8 +41,7 @@ class _FromPackageVersion:
 
 
 class Interpeters(object):
-    # TODO: remove log_level argument
-    def __init__(self, soft_options, execution_context, log_level, graph):
+    def __init__(self, soft_options, execution_context, graph):
         self.soft_options = soft_options
         self.graph = graph
         self.execution_context = context_for_logger(execution_context, 'interpreters')
