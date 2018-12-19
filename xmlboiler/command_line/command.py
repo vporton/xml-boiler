@@ -140,10 +140,10 @@ def main(argv):
     base_logger = Contexts.logger('main', args.log_level)
     translations = Contexts.default_translations(logger=base_logger)
     execution_context = Contexts.execution_context(logger=base_logger, translations=translations)
-    error_handler = logging.StreamHandler()
-    error_handler.setFormatter(logging.Formatter('%(message)s'))
+    # error_handler = logging.StreamHandler()
+    # error_handler.setFormatter(logging.Formatter('%(message)s'))
     error_logger = Contexts.logger('error', logging.WARNING)
-    error_logger.addHandler(error_handler)
+    # error_logger.addHandler(error_handler)
 
     algorithm_options = BaseAlgorithmOptions(
         execution_context=execution_context,

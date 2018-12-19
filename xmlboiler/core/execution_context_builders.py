@@ -53,7 +53,6 @@ def my_logger(name='main', level=logging.INFO):
     return logger
 
 class _BaseContexts(containers.DeclarativeContainer):
-    # logger = providers.Callable(my_logger)
     logger = providers.Callable(my_logger)
 
 class Contexts(_BaseContexts):
