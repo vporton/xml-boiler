@@ -11,12 +11,13 @@ class MyBuild(DistutilsBuild):
 
 setup(
     name='xml-boiler',
-    version='0.9.2',
+    version='0.9.3',
     url='https://github.com/vporton/xml-boiler',
     license='AGPLv3',
     author='Victor Porton',
     author_email='porton@narod.ru',
     description='Automatically transform between XML namespaces',
+    long_description='Automatically transform between XML namespaces, possible doing a chain of file format conversions',
     keywords='XML,XML namespaces,file format conversion',
     classifiers=[
         'Development Status :: 3 - Alpha',
