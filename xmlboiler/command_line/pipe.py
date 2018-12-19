@@ -70,7 +70,7 @@ class PipelineProcessor(object):
             if len(args) == 0:
                 self.error_logger.error(self.execution_context.translate("Wrong command '' in the pipeline."))
                 return False
-            local_element_options = deepcopy(self.element_options)
+            local_element_options = self.element_options.my_deepcopy()
             try:
                 method = {'chain': PipelineProcessor.chain_opts,
                           'c': PipelineProcessor.chain_opts,

@@ -72,7 +72,7 @@ class InstalledSoftwareOptions(object):
 # options for different elements.
 @dataclass
 class BaseAlgorithmOptions(object):
-    log_level: Any = None
+    log_level: Any = None  # FIXME: remove this member
     execution_context: ExecutionContext = None
     error_logger: Logger = None  # may be stderr
     command_runner: BaseCommandRunner = None
@@ -82,6 +82,16 @@ class BaseAlgorithmOptions(object):
     installed_soft_options: InstalledSoftwareOptions = InstalledSoftwareOptions()
 
     weight_formula: str = None
+
+    def my_deepcopy(self):
+        return BaseAlgorithmOptions(log_level=self.log_level,
+                                    execution_context=self.execution_context,
+                                    error_logger=self.error_logger,
+                                    command_runner=self.command_runner,
+                                    url_opener=self.url_opener,
+                                    recursive_options=self.recursive_options,
+                                    installed_soft_options=self.installed_soft_options,
+                                    weight_formula=self.weight_formula)
 
 
 class NotInTargetNamespace(Enum):
