@@ -55,7 +55,7 @@ class XMLRunCommandWrapper(object):
         return map[self.kind](input)
 
     def _run_entire(self, input: bytes) -> bytes:
-        return RunCommand(self.script, self.interpreters, self.interpreter, self.interpreter, self.command_runner).run(input, self.params)
+        return RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(input, self.params)
 
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
@@ -90,7 +90,8 @@ class XMLRunCommandWrapper(object):
                     str2 = RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(str, self.adjust_params(w))
                     frag = myXMLParseString(str2)
                     v.replaceChild(frag.documentElement, w)
-                parents.append(w)
+                else:
+                    parents.append(w)
         return doc.toxml('utf-8')
 
     def _run_down_up(self, input: bytes) -> bytes:
@@ -136,7 +137,7 @@ class XMLRunCommandWrapper(object):
 
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))
-            input = RunCommand(self.script, self.interpreters, self.interpreter, self.interpreter, self.command_runner).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
+            input = RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
             doc2 = myXMLParseString(input)
             if node.namespaceURI and URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces:
                 node.parentNode.replaceChild(doc2.documentElement, node)
