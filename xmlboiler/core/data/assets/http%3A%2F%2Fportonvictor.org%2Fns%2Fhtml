@@ -1,5 +1,6 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+@prefix prec: <http://portonvictor.org/ns/prec/> .
 
 <http://portonvictor.org/ns/html#tidy>
   a :Transformer ;
@@ -10,6 +11,7 @@
 # It is of a limited usefulness, as we don't provide any arguments to Tidy
 <http://portonvictor.org/ns/html#tidy-script>
   a :Command ;
+  a prec:formatting ;
   :language lang:HTMLTidy ;
   :transformerKind :subdocumentSequential ;
   :preservance 1.0 ;

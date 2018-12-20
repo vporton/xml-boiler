@@ -1,8 +1,10 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+@prefix prec: <http://portonvictor.org/ns/prec/> .
 
 <http://portonvictor.org/ns/trans/comment#transformer>
   a :Transformer ;
+  a prec:comment ;
   :sourceNamespace <http://portonvictor.org/ns/comment> ;
   :universal true ;
   #:targetNamespace <...> ;

@@ -1,8 +1,10 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+@prefix prec: <http://portonvictor.org/ns/prec/> .
 
 <http://portonvictor.org/ns/trans/XInclude#transformer>
   a :Transformer ;
+  a prec:include ;
   :sourceNamespace <http://www.w3.org/2001/XInclude> ;
   :universal true ;
   :inward false ;

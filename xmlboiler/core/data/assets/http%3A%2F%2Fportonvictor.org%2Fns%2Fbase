@@ -15,6 +15,10 @@
   :stability 1.0 ;
   :preference 1.0 .
 
+prec:comment
+  a :Precedence ;
+  :higherThan prec:macro .
+
 prec:macro
   a :Precedence ;
   :higherThan prec:include .

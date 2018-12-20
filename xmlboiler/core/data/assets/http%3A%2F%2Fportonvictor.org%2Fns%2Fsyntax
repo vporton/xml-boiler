@@ -1,13 +1,15 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+@prefix prec: <http://portonvictor.org/ns/prec/> .
 
 <http://portonvictor.org/ns/trans/syntax#transformer>
-   a :Transformer ;
-   :sourceNamespace <http://portonvictor.org/ns/syntax> ;
-   :targetNamespace <http://www.w3.org/1999/xhtml> ;
-   :precedence :precedence-formatting ;
-   :inward false ;
-   :script <http://portonvictor.org/ns/trans/syntax#script1> .
+  a :Transformer ;
+  a prec:formatting ;
+  :sourceNamespace <http://portonvictor.org/ns/syntax> ;
+  :targetNamespace <http://www.w3.org/1999/xhtml> ;
+  :precedence :precedence-formatting ;
+  :inward false ;
+  :script <http://portonvictor.org/ns/trans/syntax#script1> .
 
 <http://portonvictor.org/ns/trans/syntax#script1>
   a :Command ;

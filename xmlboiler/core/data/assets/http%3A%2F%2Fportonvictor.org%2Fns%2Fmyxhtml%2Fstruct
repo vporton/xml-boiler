@@ -1,8 +1,10 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+@prefix prec: <http://portonvictor.org/ns/prec/> .
 
 <http://portonvictor.org/ns/trans/html-struct#transformer>
   a :Transformer ;
+  a prec:formatting ;
   :sourceNamespace <http://portonvictor.org/ns/myxhtml/struct> ;
   :targetNamespace <http://www.w3.org/1999/xhtml> ;
   :precedence :precedence-syntax ;
