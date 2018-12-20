@@ -48,14 +48,16 @@ class AssetParser(object):
         result.see_also_transform = self.scan_see_also(graph, MAIN_NAMESPACE + "transform")
         result.see_also_validate  = self.scan_see_also(graph, MAIN_NAMESPACE + "validate")
 
-        result.precedences_subclasses = SubclassRelationForType(URIRef(MAIN_NAMESPACE + "Precedence"),
-                                                                context=self.parse_context.execution_context,
-                                                                graph=graph,
-                                                                relation=RDFS.subClassOf)
-        result.precedences_higher = SubclassRelationForType(URIRef(MAIN_NAMESPACE + "Precedence"),
-                                                            context=self.parse_context.execution_context,
-                                                            graph=graph,
-                                                            relation=URIRef(MAIN_NAMESPACE + "higherThan"))
+        result.precedences_subclasses = SubclassContainers.basic_subclasses_for_type(
+            node_class=URIRef(MAIN_NAMESPACE + "Precedence"),
+            context=self.parse_context.execution_context,
+            graph=graph,
+            relation=RDFS.subClassOf)
+        result.precedences_higher = SubclassContainers.basic_subclasses_for_type(
+            node_class=URIRef(MAIN_NAMESPACE + "Precedence"),
+            context=self.parse_context.execution_context,
+            graph=graph,
+            relation=URIRef(MAIN_NAMESPACE + "higherThan"))
 
         return result
 
@@ -73,4 +75,4 @@ class AssetParser(object):
 
 asset_parser_provider = providers.Factory(AssetParser,
                                           parse_context=default_parse_context,
-                                          subclasses=SubclassContainers.basic_subclasses)
+                                          subclasses=SubclassContainers.basic_subclasses_for_type)

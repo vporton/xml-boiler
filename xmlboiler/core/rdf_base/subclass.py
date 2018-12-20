@@ -58,8 +58,8 @@ class SubclassRelationForType(SubclassRelation):
                  context,
                  graph=None,
                  relation=RDFS.subClassOf):
+        self.node_class = node_class  # need to set before super().__init__()
         super().__init__(context=context, graph=graph, relation=relation)
-        self.node_class = node_class
 
     def check_types(self, graph, src, dst):
         src_ok = (src, RDF.type, self.node_class) in graph
@@ -73,8 +73,10 @@ class SubclassRelationForType(SubclassRelation):
 basic_subclasses_graph = providers.ThreadSafeSingleton(Global.load_rdf, filename='core/data/subclasses.ttl')
 
 
-# FIXME: SubclassRelation or SubclassRelationForType?
 class SubclassContainers(containers.DeclarativeContainer):
     basic_subclasses = providers.Factory(SubclassRelation,
                                          context=Contexts.execution_context,
                                          graph=basic_subclasses_graph)
+    basic_subclasses_for_type = providers.Factory(SubclassRelationForType,
+                                                  context=Contexts.execution_context,
+                                                  graph=basic_subclasses_graph)
