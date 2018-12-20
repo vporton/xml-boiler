@@ -67,6 +67,47 @@
     </struct:section>
 
     <struct:section>
+        <struct:title>The magic of chain</struct:title>
+
+        <p>The command <code>chain</code> is magical. It automatically finds a chain of tranformations
+        of the source document into the destination namespace. To do this it consults assets located at namespaces in
+            the documents, preloaded (<code>preload</code>) assets, etc.</p>
+
+        <p>For more details on how it works
+            <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">see the specification</a>.</p>
+
+        <p>Why then not just to run a Unix pipeline instead of XML Boiler? The reasons are:</p>
+        <p>You need only a single command to run all transformations, no need to write a lengthy pipeline of
+            commands.</p>
+        <p>XML Boiler decides which scripts to run automatically; you don’t need to find specific scripts and decide
+            their order of running, it is done by XML Boiler automatically based on the namespaces in the documents.</p>
+        <p>XML Boiler can automatically extract subdocuments from the main XML document. For example (just for fun) if
+            the input document is an XML RDF containing several XHTML documents (to be more interesting, containing a
+            command to create tables of content), then XML Boiler would extract every XHTML file automatically and
+            process them independently and then assemble them (with added tables of content) back into the XML
+            container. So XML Boiler has a good support for embedding one XML document into another one (distinguished
+            by XML namespaces).</p>
+    </struct:section>
+
+    <struct:section>
+        <struct:title>Scripts vs transformations</struct:title>
+
+        <p>The main thing that assets define are <em>transformations</em>.</p>
+
+        <p>A transformation may for example define how to transform from one XML namespace to another one.</p>
+
+        <p>You can (provided that the asset defining the transformation is loaded) call a transformation like
+        this:</p>
+
+        <pre>boiler --preload http://portonvictor.org/ns/base transform 'http://portonvictor.org/ns/base#xml-format'</pre>
+
+        <p>A transformation can provide several alternative <q>scripts</q>. You can more selectively run a particular
+        script instead of automatically chosen script for a transformation:</p>
+
+        <pre>boiler --preload http://portonvictor.org/ns/base script 'http://portonvictor.org/ns/base#xml-format-script'</pre>
+    </struct:section>
+
+    <struct:section>
         <struct:title>Command line</struct:title>
 
         <struct:section>
@@ -156,7 +197,106 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>Support/donate</struct:title>
+        <struct:title>Future plans</struct:title>
+
+        <p>The key opportunities this project opens:</p>
+        <ul>
+            <li>
+                <p>freely
+                    intermix tag sets of different sets of tag semantics (using XML
+                    namespaces), without disturbing each other (such as by name clash)
+                    in the global world</p>
+            </li>
+            <li>
+                <p>add your new
+                    tags to HTML (and other XML-based formats)</p>
+                <ul>
+                    <li>
+                        <p>get rid of
+                            using HTML in future Web, switch it to proper semantic XML
+                            formats</p>
+                        <ul>
+                            <li>
+                                <p>make
+                                    XSL-format based browsers with automatic generation of XSL from
+                                    other XML formats</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>make
+                            automatic coloring of source listings (for example)</p>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>add macroses
+                    and include (such as by XInclude) other files in XML</p>
+            </li>
+            <li>
+                <p>intermix
+                    different XML formats, with intelligent automatic processing of the
+                    mix</p>
+                <ul>
+                    <li>
+                        <p>embed one XML
+                            format in another one</p>
+                    </li>
+                    <li>
+                        <p>automatically
+                            choose the order of different XML converters applied to your mixed
+                            XML file</p>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>make browsers
+                    to show your XML in arbitrary format</p>
+            </li>
+            <li>
+                <p>make
+                    processing XML intelligent (with your custom scripts)</p>
+            </li>
+            <li>
+                <p>integrating
+                    together XML conversion and validation scripts written in multiple
+                    programming languages</p>
+            </li>
+            <li>
+                <p>associating
+                    semantics (such as relations with other namespaces and validation
+                    rules) to a namespace</p>
+                <ul>
+                    <li>
+                        <p>semantics can
+                            be described as an RDF resource at a namespace URL (or a related
+                            URL)</p>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>file
+                    transformation with an automatically found “chain” of several
+                    conversions between different formats</p>
+            </li>
+            <li>
+                <p>many more
+                    opportunities</p>
+            </li>
+            <li>
+                <p>integrate all
+                    of the above in single command</p>
+            </li>
+            <li>
+                <p>(in the
+                    future) make it also a HTTP(S) proxy server</p>
+            </li>
+        </ul>
+
+    </struct:section>
+
+    <struct:section>
+    <struct:title>Support/donate</struct:title>
 
         <p>Support this project by money:</p>
         <ul>
