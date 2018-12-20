@@ -18,16 +18,23 @@
     <p><a href="https://github.com/vporton/xml-boiler">XML Boiler</a> is a command line program (in the future I am going to make also HTTP(S) proxy interface)
     which automatically processes XML based on its namespaces.</p>
 
-    <p>This is a rough alpha (not thoroughly tested) release.</p>
+    <p>This is an alpha (not thoroughly tested) release.</p>
 
     <p>This program (well, almost) conforms to
         <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">the specification</a>.
     See the specification for more details of what this program does and what is its purpose.</p>
 
     <struct:section>
+        <struct:title>Prerequisites</struct:title>
+        <p>You need to know what is XML and what are XML namespaces before reading this document.
+        You also need to know RDF to make anything except things like simple examples shown in this document.</p>
+    </struct:section>
+
+    <struct:section>
         <struct:title>Introduction</struct:title>
 
-        <p>Consider an XML file with XInclude:</p>
+        <p>Consider an XML file with an <a href="https://en.wikipedia.org/wiki/XInclude">XInclude</a>
+            directive:</p>
 
         <pre syntax:format="xml">
 &lt;y xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
@@ -35,8 +42,28 @@
 &lt;/y&gt;
         </pre>
 
-        <p>We run XML Boiler as follows:</p>
-        <pre>xmlboiler -r order chain tests/core/data/xml/xinclude.xml -u http://portonvictor.org/ns/trans/precedence-include</pre>
+        <p>To expand the XInclude directive,
+            we can run XML Boiler as follows:</p>
+        <pre>boiler -i xinclude.xml script 'http://portonvictor.org/ns/trans/XInclude#script1'</pre>
+        <p>But the magic goes here: boiler can figure out which script to run, given an input XML file
+            and possibly the precedence (such as <q>include</q> operation below).</p>
+        <pre>boiler -i xinclude.xml chain -u http://portonvictor.org/ns/trans/precedence-include</pre>
+        <p>We can chain several commands separating them by plus:</p>
+        <pre>boiler --preload 'http://portonvictor.org/ns/base' -i xinclude.xml pipe \
+  'script http://portonvictor.org/ns/trans/XInclude#script1 + script http://portonvictor.org/ns/base#NSClean-script'</pre>
+        <p>or</p>
+        <pre>boiler --preload 'http://portonvictor.org/ns/base' -i xinclude.xml pipe \
+  'chain -u http://portonvictor.org/ns/trans/precedence-include + script http://portonvictor.org/ns/base#NSClean-script'</pre>
+        <p>The later script <code>http://portonvictor.org/ns/base#NSClean-script</code> removes unused namespaces
+            (<code>http://www.w3.org/2001/XInclude</code> in our case).</p>
+        <p>The last script above required to load <code>http://portonvictor.org/ns/base</code> asset, because
+        this asset defines the script <code>http://portonvictor.org/ns/base#NSClean-script</code> which we use.
+        (Two previosus examples used asset <code>http://www.w3.org/2001/XInclude</code> which loaded automatically
+        because the URL of the asset was present in the input file.)</p>
+        <p>In the current version of this software assets are really loaded from local files despite of their
+        names look like URLs. In a future vesion of this software we should make possible to load assets from
+        real Web URLs, so allowing the namespace owners to put description of their XML tags online to be used
+            by this software.</p>
     </struct:section>
 
     <struct:section>
@@ -45,9 +72,15 @@
         <struct:section>
             <struct:title>Common options</struct:title>
 
+            <p>This list is not complete. Use <code>--help</code> for the full list of options.</p>
+
             <dl>
                 <dt><code>-h</code>, <code>--help</code></dt>
                 <dd>Help message</dd>
+                <dt><code>-i <i>INPUT</i></code>, <code>--input <i>INPUT</i></code></dt>
+                <dd>input file (defaults to stdin)</dd>
+                <dt><code>-o <i>OUTPUT</i></code>, <code>--output <i>OUTPUT</i></code></dt>
+                <dd>output file (defaults to stdout)</dd>
                 <dt><code>-l <i>{DEBUG,INFO,WARNING,ERROR,CRITICAL}</i></code>, <code>--log-level <i>{DEBUG,INFO,WARNING,ERROR,CRITICAL}</i></code></dt>
                 <dd>Set log level.</dd>
                 <dt><code>-p <i>NAMESPACE</i></code>, <code>--preload <i>NAMESPACE</i></code></dt>
@@ -56,10 +89,20 @@
                 <dd>recursive download mode (none, breadth-first, depth-first)</dd>
                 <dt><code>-y <i>NAME</i>=<i>DIR</i></code>, <code>--directory <i>NAME</i>=<i>DIR</i></code></dt>
                 <dd>additional directory with assets</dd>
+                <dt><code>--software <i>{package,executable,both}</i></code></dt>
+                <dd>determine installed software by package manager and/or
+                        executables in PATH. 'package' are now supported only
+                        on Debian-based systems. Defaults to 'both' on Debian-
+                        based and 'executable' on others.</dd>
                 <dt><code>-d <i>DOWNLOADERS</i></code>, <code>--downloaders <i>DOWNLOADERS</i></code></dt>
                 <dd>assets to be loaded before the main loop; a plus-separated list of comma-separated lists of
                     "builtin","<i>DIR</i>" (<i>DIR</i> is given by <code>--directory</code> option,
                     "builtin" is the assets distributed with XML Boiler)</dd>
+                <dt><code>-s <i>{precedence,doc}</i></code>, <code>--next-script <i>{precedence,doc}</i></code></dt>
+                <dd><q>next script</q> algorithm (<q>precedence</q> is not supported)</dd>
+                <dt><code>-n <i>{ignore,remove,error}</i></code>, <code>--not-in-target <i>{ignore,remove,error}</i></code></dt>
+                <dd>What to do if the result XML file contains namespaces not in the target. <q>remove</q> is
+                not supported.</dd>
             </dl>
         </struct:section>
         <struct:section>
@@ -69,22 +112,10 @@
                 transformation pipeline (see the specification). It accepts the name of the input file
                 (none or <code>-</code> for stdin) and the following options:</p>
             <dl>
-                <dt><code>-o <i>OUTPUT</i></code></dt>
-                <dd>output file (defaults to stdout)</dd>
                 <dt><code>-t <i>NAMESPACE</i></code>, <code>--target <i>NAMESPACE</i></code></dt>
                 <dd>target namespace (often the XHTML namespace <code>http://www.w3.org/1999/xhtml</code>)</dd>
-                <dt><code>-s <i>{precedence,doc}</i></code>, <code>--next-script <i>{precedence,doc}</i></code></dt>
-                <dd><q>next script</q> algorithm (<q>precedence</q> is not supported)</dd>
-                <dt><code>-n <i>{ignore,remove,error}</i></code>, <code>--not-in-target <i>{ignore,remove,error}</i></code></dt>
-                <dd>What to do if the result XML file contains namespaces not in the target. <q>remove</q> is
-                not supported.</dd>
                 <dt><code>-u <i>URL</i></code>, <code>--universal-precedence <i>URL</i></code></dt>
                 <dd>universal precedence (see the specification)</dd>
-                <dt><code>--software <i>{package,executable,both}</i></code></dt>
-                <dd>determine installed software by package manager and/or
-                        executables in PATH. 'package' are now supported only
-                        on Debian-based systems. Defaults to 'both' on Debian-
-                        based and 'executable' on others.</dd>
             </dl>
         </struct:section>
     </struct:section>
@@ -124,6 +155,20 @@
 
     </struct:section>
 
+    <struct:section>
+        <struct:title>Prerequisites</struct:title>
+
+        <p>Support this project by money:</p>
+        <ul>
+            <li>PayPal <a href="mailto:porton@narod.ru">porton@narod.ru</a> or <a href="https://paypal.me/victorporton">this link</a></li>
+            <li>BitCoin <a href="bitcoin:1BdUaP3uRuUC1TXcLgxKXdWWfQKXL2tmqa">1BdUaP3uRuUC1TXcLgxKXdWWfQKXL2tmqa</a></li>
+            <li>Ether <a href="ethereum:0x36A0356d43EE4168ED24EFA1CAe3198708667ac0">0x36A0356d43EE4168ED24EFA1CAe3198708667ac0</a></li>
+            <li>Buy tokens at <a href="https://crypto4ngo.org/project/view/4">this page</a></li>
+        </ul>
+
+        <p>If you know Python 3, participate in programming.</p>
+
+    </struct:section>
     <hr/>
 
     <p>Copyright &#169; Victor Porton 2018</p>
