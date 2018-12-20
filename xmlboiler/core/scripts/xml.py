@@ -55,7 +55,7 @@ class XMLRunCommandWrapper(object):
         return map[self.kind](input)
 
     def _run_entire(self, input: bytes) -> bytes:
-        return RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(input, self.params)
+        return RunCommand(self.script, self.interpreters, self.interpreter, self.interpreter, self.command_runner).run(input, self.params)
 
     def _run_simple_seq(self, input: bytes) -> bytes:
         while True:
@@ -87,9 +87,9 @@ class XMLRunCommandWrapper(object):
             for w in v.childNodes:
                 if w.namespaceURI is not None and URIRef(w.namespaceURI) in self.script.base.transformer.source_namespaces:
                     str = w.toxml('utf-8')
-                    str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(w))
+                    str2 = RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(str, self.adjust_params(w))
                     frag = myXMLParseString(str2)
-                    v.replaceChild(w, frag.documentElement)
+                    v.replaceChild(frag.documentElement, w)
                 parents.append(w)
         return doc.toxml('utf-8')
 
@@ -109,7 +109,7 @@ class XMLRunCommandWrapper(object):
                 for node in reversed(parents):
                     if self._is_primary_node(node):
                         str = node.toxml('utf-8')
-                        str2 = RunCommand(self.script, self.interpreters).run(str, self.adjust_params(node))  # TODO: Don't run adjust_params() in  a loop
+                        str2 = RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(str, self.adjust_params(node))  # TODO: Don't run adjust_params() in  a loop
                         frag = myXMLParseString(str2)
                         node.parentNode.replaceChild(node, frag.documentElement)
                         return doc.toxml('utf-8')
@@ -136,7 +136,7 @@ class XMLRunCommandWrapper(object):
 
         for node, text in our_elements:
             # input = self._run_down_up_step(str(text).encode('utf-8'))
-            input = RunCommand(self.script, self.interpreters, self.interpreter, self.command_runner).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
+            input = RunCommand(self.script, self.interpreters, self.interpreter, self.interpreter, self.command_runner).run(text.nodeValue.encode('utf-8'), self.adjust_params(node))
             doc2 = myXMLParseString(input)
             if node.namespaceURI and URIRef(node.namespaceURI) in self.script.base.transformer.source_namespaces:
                 node.parentNode.replaceChild(doc2.documentElement, node)

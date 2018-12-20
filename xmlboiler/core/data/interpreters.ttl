@@ -77,7 +77,7 @@ int:XInclude
 
 int:HTMLTidy
     :lang lang:HTMLTidy ;
-    :inlineCommand ("tidy" "-xml" "-asxml") ;
+    :inlineCommand ("tidy" "-q" "-xml" "-asxml") ;
     :executable "tidy" ;
     :debianPackage "tidy" .
 

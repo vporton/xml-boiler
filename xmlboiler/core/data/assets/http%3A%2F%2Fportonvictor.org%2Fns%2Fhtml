@@ -3,6 +3,7 @@
 
 <http://portonvictor.org/ns/html#tidy>
   a :Transformer ;
+  :sourceNamespace <http://www.w3.org/1999/xhtml> ;
   :inward false ;
   :script <http://portonvictor.org/ns/html#tidy-script> .
 
