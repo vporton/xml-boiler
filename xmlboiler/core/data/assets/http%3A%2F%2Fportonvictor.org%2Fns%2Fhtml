@@ -7,6 +7,7 @@
   :inward false ;
   :script <http://portonvictor.org/ns/html#tidy-script> .
 
+# It is of a limited usefulness, as we don't provide any arguments to Tidy
 <http://portonvictor.org/ns/html#tidy-script>
   a :Command ;
   :language lang:HTMLTidy ;
