@@ -64,11 +64,12 @@ int:Python3
     :executable "python3" ;
     :debianPackage "python3" .
 
-int:nsclean
-    :lang lang:format ;
-    :inlineCommand ("xmllint" "--nsclean" "--nonet" "-") ;
-    :executable "xmllint" ;
-    :debianPackage "libxml2-utils" .
+# It does not remove unused namespaces
+#int:nsclean
+#    :lang lang:nsclean ;
+#    :inlineCommand ("xmllint" "--nsclean" "--nonet" "-") ;
+#    :executable "xmllint" ;
+#    :debianPackage "libxml2-utils" .
 
 int:format
     :lang lang:format ;
