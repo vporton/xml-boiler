@@ -15,6 +15,19 @@
   :stability 1.0 ;
   :preference 1.0 .
 
+<http://portonvictor.org/ns/base#NSClean>
+  a :Transformer ;
+  :inward false ;
+  :script <http://portonvictor.org/ns/base#NSClean-script> .
+
+<http://portonvictor.org/ns/base#NSClean-script>
+  a :Command ;
+  :language lang:nsclean ;
+  :transformerKind :entire ;
+  :preservance 1.0 ;
+  :stability 1.0 ;
+  :preference 1.0 .
+
 prec:comment
   a :Precedence ;
   :higherThan prec:macro .
