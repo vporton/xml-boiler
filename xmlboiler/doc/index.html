@@ -18,11 +18,13 @@
     <p><a href="https://github.com/vporton/xml-boiler">XML Boiler</a> is a command line program (in the future I am going to make also HTTP(S) proxy interface)
     which automatically processes XML based on its namespaces.</p>
 
-    <p>This is an alpha (not thoroughly tested) release.</p>
+    <p>This is an alpha (not thoroughly tested) release. The URLs used belows surely will change in future versions
+        (so not preserving backward compatibility).</p>
 
     <p>This program (well, almost) conforms to
         <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">the specification</a>.
-    See the specification for more details of what this program does and what is its purpose.</p>
+    See the specification for more details of what this program does and what is its purpose.
+    One important thing which does not yet work is XML validation.</p>
 
     <struct:section>
         <struct:title>Prerequisites</struct:title>
@@ -56,10 +58,10 @@
   'chain -u http://portonvictor.org/ns/trans/precedence-include + script http://portonvictor.org/ns/base#NSClean-script'</pre>
         <p>The later script <code>http://portonvictor.org/ns/base#NSClean-script</code> removes unused namespaces
             (<code>http://www.w3.org/2001/XInclude</code> in our case).</p>
-        <p>The last script above required to load <code>http://portonvictor.org/ns/base</code> asset, because
+        <p>The last script above required to preload <code>http://portonvictor.org/ns/base</code> asset, because
         this asset defines the script <code>http://portonvictor.org/ns/base#NSClean-script</code> which we use.
         (Two previosus examples used asset <code>http://www.w3.org/2001/XInclude</code> which loaded automatically
-        because the URL of the asset was present in the input file.)</p>
+        because the URL of the asset was present in the input file as a namespace URI.)</p>
         <p>In the current version of this software assets are really loaded from local files despite of their
         names look like URLs. In a future vesion of this software we should make possible to load assets from
         real Web URLs, so allowing the namespace owners to put description of their XML tags online to be used
@@ -77,16 +79,25 @@
             <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">see the specification</a>.</p>
 
         <p>Why then not just to run a Unix pipeline instead of XML Boiler? The reasons are:</p>
-        <p>You need only a single command to run all transformations, no need to write a lengthy pipeline of
-            commands.</p>
-        <p>XML Boiler decides which scripts to run automatically; you don’t need to find specific scripts and decide
-            their order of running, it is done by XML Boiler automatically based on the namespaces in the documents.</p>
-        <p>XML Boiler can automatically extract subdocuments from the main XML document. For example (just for fun) if
-            the input document is an XML RDF containing several XHTML documents (to be more interesting, containing a
-            command to create tables of content), then XML Boiler would extract every XHTML file automatically and
-            process them independently and then assemble them (with added tables of content) back into the XML
-            container. So XML Boiler has a good support for embedding one XML document into another one (distinguished
-            by XML namespaces).</p>
+        <ul>
+            <li>You need only a single command to run all transformations, no need to write a lengthy pipeline of
+                commands.
+            </li>
+            <li>XML Boiler decides which scripts to run automatically; you don’t need to find specific scripts and
+                decide
+                their order of running, it is done by XML Boiler automatically based on the namespaces in the documents.
+            </li>
+            <li>XML Boiler can automatically extract subdocuments from the main XML document. For example (just for fun)
+                if
+                the input document is an XML RDF containing several XHTML documents (to be more interesting, containing
+                a
+                command to create tables of content), then XML Boiler would extract every XHTML file automatically and
+                process them independently and then assemble them (with added tables of content) back into the XML
+                container. So XML Boiler has a good support for embedding one XML document into another one
+                (distinguished
+                by XML namespaces).
+            </li>
+        </ul>
     </struct:section>
 
     <struct:section>
@@ -162,15 +173,13 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>Supported namespaces</struct:title>
+        <struct:title>Supported namespaces and scripts</struct:title>
 
-        <p>It produces the file with namespaces (in our case the namespace <code>xi:</code>) of priority above
-            <code>http://portonvictor.org/ns/trans/precedence-include</code> to be automatically processed.</p>
-
-        <p>We support also the following namespaces:</p>
+        <p>We currently have implicit support for the following namespaces:</p>
 
         <struct:section id="xinclude"> <!-- id just for testing -->
             <struct:title><code>http://www.w3.org/2001/XInclude</code> (XInclude)</struct:title>
+            <p>XInclude standard allows to include one XML document inside another.</p>
             <p><a href="https://en.wikipedia.org/wiki/XInclude">See Wikipedia.</a></p>
         </struct:section>
 
@@ -194,6 +203,32 @@
             <pre syntax:format="JavaScript">function() { return 123 }</pre>
         </struct:section>
 
+        <p>Also we support the following scripts and transformations:</p>
+
+        <p><code>http://portonvictor.org/ns/base#xml-format</code> transformation
+            (or <code>http://portonvictor.org/ns/base#xml-format-script</code>)
+            from <code>http://portonvictor.org/ns/base</code> asset
+        indents XML code.</p>
+
+        <p><code>http://portonvictor.org/ns/base#NSClean</code> transformation
+            (or <code>http://portonvictor.org/ns/base#NSClean-script</code>)
+            from <code>http://portonvictor.org/ns/base</code> asset
+        removes unused XML namespaces.</p>
+
+    </struct:section>
+
+    <struct:section>
+        <struct:title>Your own transformations</struct:title>
+
+        <p>You can create your own tranformations (and scripts) (after reading
+            <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">the specification</a>).
+        Currently transformations in Python and XSLT are supported, but to add support for new language is
+        not very difficult. A script is simply a program which receives XML on stdin and prints transformed
+        XML on stdout.</p>
+        <p>You can put your own assets (with your transformation, for example) into a directory and name the file
+        with the asset as percent-encoded URI of the asset.</p>
+        <p>Then you use <code>--directory <i>NAME</i>=<i>DIR</i></code> option to instruct XML Boiler to read
+        assets from this directory.</p>
     </struct:section>
 
     <struct:section>
