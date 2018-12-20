@@ -1,5 +1,6 @@
 @prefix : <http://portonvictor.org/ns/trans/> .
 @prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+@prefix prec: <http://portonvictor.org/ns/prec/> .
 
 <http://portonvictor.org/ns/base#xml-format>
   a :Transformer ;
@@ -13,3 +14,14 @@
   :preservance 1.0 ;
   :stability 1.0 ;
   :preference 1.0 .
+
+prec:macro
+  a :Precedence ;
+  :higherThan prec:include .
+
+prec:include
+  a :Precedence .
+
+prec:formatting
+  a :Precedence ;
+  :lowerThan prec:include .

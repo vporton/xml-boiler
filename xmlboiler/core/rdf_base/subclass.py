@@ -73,7 +73,8 @@ class SubclassRelationForType(SubclassRelation):
 basic_subclasses_graph = providers.ThreadSafeSingleton(Global.load_rdf, filename='core/data/subclasses.ttl')
 
 
+# FIXME: SubclassRelation or SubclassRelationForType?
 class SubclassContainers(containers.DeclarativeContainer):
-    basic_subclasses = providers.ThreadSafeSingleton(SubclassRelation,
-                                                     context=Contexts.execution_context,
-                                                     graph=basic_subclasses_graph)
+    basic_subclasses = providers.Factory(SubclassRelation,
+                                         context=Contexts.execution_context,
+                                         graph=basic_subclasses_graph)
