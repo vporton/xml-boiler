@@ -15,3 +15,5 @@
 * --before cmdline option to set order of precedences
 
 * ScriptsIterator should remember the message with the reason it stopped for.
+
+* Rewrite everything in D programming language, Python is too slow.
