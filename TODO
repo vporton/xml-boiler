@@ -17,3 +17,5 @@
 * ScriptsIterator should remember the message with the reason it stopped for.
 
 * Rewrite everything in D programming language, Python is too slow.
+
+* Fast incremental processing of changed XML files (with a server).
