@@ -55,10 +55,10 @@ The benefits of the project include:
 
 * integrating together XML conversion and validation scripts written in multiple programming languages
 
-*    associating semantics (such as relations with other namespaces and validation rules) to a namespace
+* associating semantics (such as relations with other namespaces and validation rules) to a namespace
 
-  *      semantics can be described as an RDF resource at a namespace URL (or a related URL)
+  * semantics can be described as an RDF resource at a namespace URL (or a related URL)
 
-*    many more opportunities
+* many more opportunities
 
-*    integrate all of the above in single command
+* integrate all of the above in single command
