@@ -83,7 +83,7 @@ class GraphOfScripts(object):
         # TODO: The below is inefficient
         for i in self.graph1.nodes:
             for j in self.graph1.nodes:
-                if i < j:
+                if i < j:  # FIXME: It seems i and j are always single-element sets, so this is impossible - error
                     if not self.graph2.has_edge(i, j):
                         self.graph2.add_edge(i, j, weight=0)
         self.graph = GraphWithProxy(self.graph1, self.graph2)
