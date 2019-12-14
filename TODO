@@ -1,3 +1,7 @@
+* It does not work:
+
+PYTHONPATH=. ./bin/boiler -l DEBUG -i xmlboiler/tests/core/data/xml/emm.xml --preload http://portonvictor.org/ns/base --preload 'http://portonvictor.org/ns/EMM' pipe 'c -t https://www.w3.org/2002/06/xhtml2/ -n ignore + t http://portonvictor.org/ns/base#NSClean'
+
 * Correct error on RDF syntax error in an asset.
 
 * .translate() in command_line/command.py
