@@ -187,12 +187,22 @@
         </struct:section>
 
         <struct:section>
+            <struct:h><a href="https://en.wikiversity.org/wiki/Extensible_modular_markup" target="_blank"
+            >Extensible Modular Markup</a></struct:h>
+            <p>The following transforms <a href="https://en.wikiversity.org/wiki/Extensible_modular_markup" target="_blank"
+            >EMM</a> to XHTML2:</p>
+            <pre syntax:format="bash">PYTHONPATH=. ./bin/boiler -l DEBUG -i xmlboiler/tests/core/data/xml/emm.xml --preload http://portonvictor.org/ns/base --preload 'http://portonvictor.org/ns/EMM' \
+pipe 'c -t https://www.w3.org/2002/06/xhtml2/ -n ignore + t http://portonvictor.org/ns/base#NSClean'</pre>
+        </struct:section>
+
+        <struct:section>
             <struct:h><code>http://portonvictor.org/ns/comment</code> (Comment)</struct:h>
             <p>Tags <code>c:comment</code> of this namespace are simply removed from the XML.</p>
         </struct:section>
 
         <struct:section>
             <struct:h><code>http://portonvictor.org/ns/EMM/sections</code> (Structure)</struct:h>
+            <p>This is transforming a EMM module into an XHTML1 document.</p>
             <p>See the <a href="https://github.com/vporton/xml-boiler/blob/master/xmlboiler/doc/index.html">source
                 of this document</a> for an example. <code>&lt;h?&gt;</code> tags of the correct nesting are
             automatically created. This allows to generate <code>&lt;h?&gt;</code> tags of correct nesting.</p>
