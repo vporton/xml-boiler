@@ -28,8 +28,8 @@
               </xsl:choose>
             </xsl:variable>
             <a href="#{$id}">
-              <xsl:copy-of select="struct:title/@xml:lang"/>
-              <xsl:apply-templates select="struct:title/node()"/>
+              <xsl:copy-of select="struct:h/@xml:lang"/>
+              <xsl:apply-templates select="struct:h/node()"/>
             </a>
             <xsl:call-template name="struct:toc"/>
           </li>
