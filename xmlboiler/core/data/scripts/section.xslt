@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://www.w3.org/1999/xhtml"
-                xmlns:struct="http://portonvictor.org/ns/myxhtml/struct"
+                xmlns:struct="http://portonvictor.org/ns/EMM/sections"
                 version='1.0'
                 exclude-result-prefixes="struct">
 
@@ -50,7 +50,7 @@
           <xsl:otherwise><xsl:value-of select="generate-id()"/></xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <xsl:apply-templates select="struct:title[1]/node()" />
+      <xsl:apply-templates select="struct:h[1]/node()" />
     </xsl:element>
     <xsl:apply-templates/>
   </xsl:template>
@@ -62,6 +62,6 @@
     </xsl:attribute>
   </xsl:template-->
 
-  <xsl:template match="struct:title" />
+  <xsl:template match="struct:h" />
 
 </xsl:stylesheet>

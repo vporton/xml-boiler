@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"
-      xmlns:struct="http://portonvictor.org/ns/myxhtml/struct"
+      xmlns:struct="http://portonvictor.org/ns/EMM/sections"
       xmlns:syntax="http://portonvictor.org/ns/syntax">
 <head>
     <meta charset="UTF-8"/>
@@ -27,7 +27,7 @@
     One important thing which does not yet work is XML validation.</p>
 
     <struct:section>
-        <struct:title>Prerequisites</struct:title>
+        <struct:h>Prerequisites</struct:h>
         <p>You need to know what is XML and what are XML namespaces before reading this document.
         You also need to know RDF to make anything except things like simple examples shown in this document.</p>
 
@@ -36,7 +36,7 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>Introduction</struct:title>
+        <struct:h>Introduction</struct:h>
 
         <p>Consider an XML file with an <a href="https://en.wikipedia.org/wiki/XInclude">XInclude</a>
             directive:</p>
@@ -72,7 +72,7 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>The magic of chain</struct:title>
+        <struct:h>The magic of chain</struct:h>
 
         <p>The command <code>chain</code> is magical. It automatically finds a chain of tranformations
         of the source document into the destination namespace. To do this it consults assets located at namespaces in
@@ -104,7 +104,7 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>Scripts vs transformations</struct:title>
+        <struct:h>Scripts vs transformations</struct:h>
 
         <p>The main thing that assets define are <em>transformations</em>.</p>
 
@@ -122,10 +122,10 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>Command line</struct:title>
+        <struct:h>Command line</struct:h>
 
         <struct:section>
-            <struct:title>Common options</struct:title>
+            <struct:h>Common options</struct:h>
 
             <p>This list is not complete. Use <code>--help</code> for the full list of options.</p>
 
@@ -161,7 +161,7 @@
             </dl>
         </struct:section>
         <struct:section>
-            <struct:title>Chain</struct:title>
+            <struct:h>Chain</struct:h>
 
             <p><code>chain</code> or <code>c</code> command (<code>boiler chain ...</code>) runs an automatic
                 transformation pipeline (see the specification). It accepts the name of the input file
@@ -176,23 +176,23 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>Supported namespaces and scripts</struct:title>
+        <struct:h>Supported namespaces and scripts</struct:h>
 
         <p>We currently have implicit support for the following namespaces:</p>
 
         <struct:section id="xinclude"> <!-- id just for testing -->
-            <struct:title><code>http://www.w3.org/2001/XInclude</code> (XInclude)</struct:title>
+            <struct:h><code>http://www.w3.org/2001/XInclude</code> (XInclude)</struct:h>
             <p>XInclude standard allows to include one XML document inside another.</p>
             <p><a href="https://en.wikipedia.org/wiki/XInclude">See Wikipedia.</a></p>
         </struct:section>
 
         <struct:section>
-            <struct:title><code>http://portonvictor.org/ns/comment</code> (Comment)</struct:title>
+            <struct:h><code>http://portonvictor.org/ns/comment</code> (Comment)</struct:h>
             <p>Tags <code>c:comment</code> of this namespace are simply removed from the XML.</p>
         </struct:section>
 
         <struct:section>
-            <struct:title><code>http://portonvictor.org/ns/myxhtml/struct</code> (Structure)</struct:title>
+            <struct:h><code>http://portonvictor.org/ns/myxhtml/struct</code> (Structure)</struct:h>
             <p>See the <a href="https://github.com/vporton/xml-boiler/blob/master/xmlboiler/doc/index.html">source
                 of this document</a> for an example. <code>&lt;h?&gt;</code> tags of the correct nesting are
             automatically created. This allows to generate <code>&lt;h?&gt;</code> tags of correct nesting.</p>
@@ -200,7 +200,7 @@
         </struct:section>
 
         <struct:section>
-            <struct:title><code>http://portonvictor.org/ns/syntax</code> (Syntax highlighting)</struct:title>
+            <struct:h><code>http://portonvictor.org/ns/syntax</code> (Syntax highlighting)</struct:h>
             <pre syntax:format="xml">&lt;pre syntax:format="JavaScript">function() { return 123 }&lt;/pre&gt;</pre>
             <p>produces</p>
             <pre syntax:format="JavaScript">function() { return 123 }</pre>
@@ -221,7 +221,7 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>Your own transformations</struct:title>
+        <struct:h>Your own transformations</struct:h>
 
         <p>You can create your own tranformations (and scripts) (after reading
             <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">the specification</a>).
@@ -235,7 +235,7 @@
     </struct:section>
 
     <struct:section>
-        <struct:title>Future plans</struct:title>
+        <struct:h>Future plans</struct:h>
 
         <p>The key opportunities this project opens:</p>
         <ul>
@@ -334,7 +334,7 @@
     </struct:section>
 
     <struct:section>
-    <struct:title>Support/donate</struct:title>
+    <struct:h>Support/donate</struct:h>
 
         <p>Support this project by money:</p>
         <ul>

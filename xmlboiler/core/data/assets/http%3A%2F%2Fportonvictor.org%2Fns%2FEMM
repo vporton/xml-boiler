@@ -1,0 +1,35 @@
+@prefix : <http://portonvictor.org/ns/trans/> .
+@prefix lang: <http://portonvictor.org/ns/trans/scripts/#> .
+@prefix prec: <http://portonvictor.org/ns/prec/> .
+
+<http://portonvictor.org/ns/EMM#emm-to-xhtml2>
+  a :Transformer ;
+  a prec:include ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/basic> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/text> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/access> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/handlers> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/xforms> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/struct> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/sections> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/caption> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/table> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/list> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/media> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/events> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/script> ;
+  :targetNamespace <https://www.w3.org/2002/06/xhtml2/>;
+  :inward false ;
+  #:targetNamespace <...> ;
+  :precedence :precedence-formatting ;
+  :script <http://portonvictor.org/ns/EMM#script1> .
+
+<http://portonvictor.org/ns/EMM#script1>
+  a :Command ;
+  :language lang:XSLT ;
+  :minVersion "1.0" ;
+  :scriptURL <local:scripts/emm/emm-to-xhtml.xslt> ;
+  :transformerKind :entire ;
+  :preservance 1.0 ;
+  :stability 1.0 ;
+  :preference 1.0 .

@@ -5,7 +5,7 @@
 <http://portonvictor.org/ns/trans/html-struct#transformer>
   a :Transformer ;
   a prec:formatting ;
-  :sourceNamespace <http://portonvictor.org/ns/myxhtml/struct> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/sections> ;
   :targetNamespace <http://www.w3.org/1999/xhtml> ;
   :precedence :precedence-syntax ;
   :script <http://portonvictor.org/ns/trans/html-struct/#script-xslt> .
