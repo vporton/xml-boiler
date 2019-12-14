@@ -33,17 +33,16 @@ def shortest_path_to_edges(graph, path, weight):
     """
     result = []
     for i in range(len(path) - 1):
-        last_weight = math.inf
-        last_edges = []
-
+        shortest_edges = []  # shortest edges between path[i] and path[i+1]
+        last_weight = math.inf  # minimum found weight between them
         for _, e in graph[path[i]][path[i + 1]].items():
             new_weight = weight(e['attr_dict'])
             if new_weight < last_weight:
-                last_edges = []
-            if new_weight <= last_weight:
+                shortest_edges = []
                 last_weight = new_weight
-                last_edges.append(e['attr_dict'])
-        result.append(last_edges)
+            if new_weight <= last_weight:
+                shortest_edges.append(e['attr_dict'])
+        result.append(shortest_edges)
     return result
 
 
@@ -56,18 +55,15 @@ def shortest_paths_to_edges(graph, paths, weight):
     """
     result = []
     last_weight = math.inf
-    try:
-        for path in paths:
-            new_lists_of_edges = shortest_path_to_edges(graph, path, weight)
-            for new_edges in new_lists_of_edges:
-                new_weight = functools.reduce(operator.add, map(weight, new_edges), 0)
-                if new_weight < last_weight:
-                    result = []
-                if new_weight <= last_weight:
-                    last_weight = new_weight
-                    result.append(new_edges)
-    except NetworkXNoPath:
-        pass
+    for path in paths:
+        new_lists_of_edges = shortest_path_to_edges(graph, path, weight)
+        for new_edges in new_lists_of_edges:
+            new_weight = functools.reduce(operator.add, map(weight, new_edges), 0)
+            if new_weight < last_weight:
+                result = []
+                last_weight = new_weight
+            if new_weight <= last_weight:
+                result.append(new_edges)
     return result
 
 
