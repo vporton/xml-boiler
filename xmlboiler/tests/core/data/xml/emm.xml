@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://portonvictor.org/ns/EMM/basic"
+      xmlns:struct="http://portonvictor.org/ns/EMM/struct"
+      xml:lang="en">
+  <head>
+    <title>Virtual Library</title>
+  </head>
+  <body>
+    <struct:p>Moved to <a href="http://example.org/">example.org</a>.</struct:p>
+  </body>
+</html>
