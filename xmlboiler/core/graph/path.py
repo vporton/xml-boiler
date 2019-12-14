@@ -49,21 +49,21 @@ def shortest_path_to_edges(graph, path, weight):
 def shortest_paths_to_edges(graph, paths, weight):
     r"""
     :param graph:
-    :param paths: a list of lists of nodes
+    :param paths: a list of lists of nodes (representing several possible pathes)
     :param weight: a function
-    :return: a list of lists of edges
+    :return: a list of lists of edges (every of which is the shortest)
     """
     result = []
     last_weight = math.inf
     for path in paths:
-        new_lists_of_edges = shortest_path_to_edges(graph, path, weight)
-        for new_edges in new_lists_of_edges:
-            new_weight = functools.reduce(operator.add, map(weight, new_edges), 0)
-            if new_weight < last_weight:
-                result = []
-                last_weight = new_weight
-            if new_weight <= last_weight:
-                result.append(new_edges)
+        list_of_lists_of_edges = shortest_path_to_edges(graph, path, weight)
+        one_of_the_ways = [lst[0] for lst in list_of_lists_of_edges]
+        new_weight = functools.reduce(operator.add, map(weight, one_of_the_ways), 0)
+        if new_weight < last_weight:
+            result = []
+            last_weight = new_weight
+        if new_weight <= last_weight:
+            result.extend(list_of_lists_of_edges)  # FIXME: Need to take product
     return result
 
 
