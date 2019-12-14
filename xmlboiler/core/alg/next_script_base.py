@@ -101,7 +101,7 @@ class ScriptsIteratorBase(ABC):
         except nx.NetworkXNoPath:
             return None
         p2 = shortest_paths_to_edges(available_chains.graph.composite_graph, paths, lambda e: e['weight'])
-        p2 = [p for p in p2 if 'script' in p]  # We filter out "fake" edges.
+        p2 = [p for p in p2 if 'script' in p[0]]  # We filter out "fake" edges.
         return [path for path in p2 if not path[0]['script'].base.transformer.inwardness]
 
     # Almost duplicate code with first_child_in_target()
