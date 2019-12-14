@@ -14,16 +14,12 @@
                 xmlns:script="http://portonvictor.org/ns/EMM/script"
                 xmlns:html="https://www.w3.org/2002/06/xhtml2">
 
-    <xml:template match="basic:*|text:*|access:*|handler:*|xforms:*|struct:*|sections:*|caption:*|table:*|list:*|media:*|events:*|script:*">
-        <xslt:element name="local-name" namespace="https://www.w3.org/2002/06/xhtml2">
-            <xsl:apply-templates select="node()|@*"/>
-        </xslt:element>
-    </xml:template>
-    
-    <xsl:template match="@*|node()">
-        <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
-    </xsl:template>
+    <xsl:import href="../copy.xslt"/>
 
+    <xsl:template match="basic:*|text:*|access:*|handler:*|xforms:*|struct:*|sections:*|caption:*|table:*|list:*|media:*|events:*|script:*">
+        <xsl:element name="{local-name()}" namespace="https://www.w3.org/2002/06/xhtml2">
+            <xsl:apply-templates select="node()|@*"/>
+        </xsl:element>
+    </xsl:template>
+    
 </xsl:stylesheet>
