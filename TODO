@@ -1,5 +1,7 @@
 * <struct:toc/> copies hyperlinks from the header to the ToC, what is wrong.
 
+* Should --preload fail if there is no such asset?
+
 * Correct error on RDF syntax error in an asset.
 
 * .translate() in command_line/command.py
