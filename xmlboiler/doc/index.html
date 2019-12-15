@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"
-      xmlns:struct="http://portonvictor.org/ns/EMM/sections"
+      xmlns:sections="http://portonvictor.org/ns/EMM/sections"
+      xmlns:toc="http://portonvictor.org/ns/EMM/toc"
       xmlns:syntax="http://portonvictor.org/ns/syntax">
 <head>
     <meta charset="UTF-8"/>
@@ -13,7 +14,7 @@
 
     <h2>Table of Contents</h2>
 
-    <struct:toc/>
+    <toc:toc/>
 
     <p><a href="https://github.com/vporton/xml-boiler">XML Boiler</a> is a command line program (in the future I am going to make also HTTP(S) proxy interface)
     which automatically processes XML based on its namespaces.</p>
@@ -26,17 +27,17 @@
     See the specification for more details of what this program does and what is its purpose.
     One important thing which does not yet work is XML validation.</p>
 
-    <struct:section>
-        <struct:h>Prerequisites</struct:h>
+    <sections:section>
+        <sections:h>Prerequisites</sections:h>
         <p>You need to know what is XML and what are XML namespaces before reading this document.
         You also need to know RDF to make anything except things like simple examples shown in this document.</p>
 
         <p>To install XML Boiler, first install Python 3.7 (or above), then run:</p>
         <pre>pip install xml-boiler</pre>
-    </struct:section>
+    </sections:section>
 
-    <struct:section>
-        <struct:h>Introduction</struct:h>
+    <sections:section>
+        <sections:h>Introduction</sections:h>
 
         <p>Consider an XML file with an <a href="https://en.wikipedia.org/wiki/XInclude">XInclude</a>
             directive:</p>
@@ -69,10 +70,10 @@
         names look like URLs. In a future vesion of this software we should make possible to load assets from
         real Web URLs, so allowing the namespace owners to put description of their XML tags online to be used
             by this software.</p>
-    </struct:section>
+    </sections:section>
 
-    <struct:section>
-        <struct:h>The magic of chain</struct:h>
+    <sections:section>
+        <sections:h>The magic of chain</sections:h>
 
         <p>The command <code>chain</code> is magical. It automatically finds a chain of tranformations
         of the source document into the destination namespace. To do this it consults assets located at namespaces in
@@ -101,10 +102,10 @@
                 by XML namespaces).
             </li>
         </ul>
-    </struct:section>
+    </sections:section>
 
-    <struct:section>
-        <struct:h>Scripts vs transformations</struct:h>
+    <sections:section>
+        <sections:h>Scripts vs transformations</sections:h>
 
         <p>The main thing that assets define are <em>transformations</em>.</p>
 
@@ -119,13 +120,13 @@
         script instead of automatically chosen script for a transformation:</p>
 
         <pre>boiler --preload http://portonvictor.org/ns/base script 'http://portonvictor.org/ns/base#xml-format-script'</pre>
-    </struct:section>
+    </sections:section>
 
-    <struct:section>
-        <struct:h>Command line</struct:h>
+    <sections:section>
+        <sections:h>Command line</sections:h>
 
-        <struct:section>
-            <struct:h>Common options</struct:h>
+        <sections:section>
+            <sections:h>Common options</sections:h>
 
             <p>This list is not complete. Use <code>--help</code> for the full list of options.</p>
 
@@ -159,9 +160,9 @@
                 <dd>What to do if the result XML file contains namespaces not in the target. <q>remove</q> is
                 not supported.</dd>
             </dl>
-        </struct:section>
-        <struct:section>
-            <struct:h>Chain</struct:h>
+        </sections:section>
+        <sections:section>
+            <sections:h>Chain</sections:h>
 
             <p><code>chain</code> or <code>c</code> command (<code>boiler chain ...</code>) runs an automatic
                 transformation pipeline (see the specification). It accepts the name of the input file
@@ -172,49 +173,49 @@
                 <dt><code>-u <i>URL</i></code>, <code>--universal-precedence <i>URL</i></code></dt>
                 <dd>universal precedence (see the specification)</dd>
             </dl>
-        </struct:section>
-    </struct:section>
+        </sections:section>
+    </sections:section>
 
-    <struct:section>
-        <struct:h>Supported namespaces and scripts</struct:h>
+    <sections:section>
+        <sections:h>Supported namespaces and scripts</sections:h>
 
         <p>We currently have implicit support for the following namespaces:</p>
 
-        <struct:section id="xinclude"> <!-- id just for testing -->
-            <struct:h><code>http://www.w3.org/2001/XInclude</code> (XInclude)</struct:h>
+        <sections:section id="xinclude"> <!-- id just for testing -->
+            <sections:h><code>http://www.w3.org/2001/XInclude</code> (XInclude)</sections:h>
             <p>XInclude standard allows to include one XML document inside another.</p>
             <p><a href="https://en.wikipedia.org/wiki/XInclude">See Wikipedia.</a></p>
-        </struct:section>
+        </sections:section>
 
-        <struct:section>
-            <struct:h><a href="https://en.wikiversity.org/wiki/Extensible_modular_markup" target="_blank"
-            >Extensible Modular Markup</a></struct:h>
+        <sections:section>
+            <sections:h><a href="https://en.wikiversity.org/wiki/Extensible_modular_markup" target="_blank"
+            >Extensible Modular Markup</a></sections:h>
             <p>The following transforms <a href="https://en.wikiversity.org/wiki/Extensible_modular_markup" target="_blank"
             >EMM</a> to XHTML2:</p>
             <pre syntax:format="bash">PYTHONPATH=. ./bin/boiler -l DEBUG -i xmlboiler/tests/core/data/xml/emm.xml --preload http://portonvictor.org/ns/base --preload 'http://portonvictor.org/ns/EMM' \
 pipe 'c -t https://www.w3.org/2002/06/xhtml2/ -n ignore + t http://portonvictor.org/ns/base#NSClean'</pre>
-        </struct:section>
+        </sections:section>
 
-        <struct:section>
-            <struct:h><code>http://portonvictor.org/ns/comment</code> (Comment)</struct:h>
+        <sections:section>
+            <sections:h><code>http://portonvictor.org/ns/comment</code> (Comment)</sections:h>
             <p>Tags <code>c:comment</code> of this namespace are simply removed from the XML.</p>
-        </struct:section>
+        </sections:section>
 
-        <struct:section>
-            <struct:h><code>http://portonvictor.org/ns/EMM/sections</code> (Structure)</struct:h>
+        <sections:section>
+            <sections:h><code>http://portonvictor.org/ns/EMM/sections</code> (Structure)</sections:h>
             <p>This is transforming a EMM module into an XHTML1 document.</p>
             <p>See the <a href="https://github.com/vporton/xml-boiler/blob/master/xmlboiler/doc/index.html">source
                 of this document</a> for an example. <code>&lt;h?&gt;</code> tags of the correct nesting are
             automatically created. This allows to generate <code>&lt;h?&gt;</code> tags of correct nesting.</p>
-            <p><code>&lt;struct:toc/&gt;</code> automatically generates a table of contents.</p>
-        </struct:section>
+            <p><code>&lt;sections:toc/&gt;</code> automatically generates a table of contents.</p>
+        </sections:section>
 
-        <struct:section>
-            <struct:h><code>http://portonvictor.org/ns/syntax</code> (Syntax highlighting)</struct:h>
+        <sections:section>
+            <sections:h><code>http://portonvictor.org/ns/syntax</code> (Syntax highlighting)</sections:h>
             <pre syntax:format="xml">&lt;pre syntax:format="JavaScript">function() { return 123 }&lt;/pre&gt;</pre>
             <p>produces</p>
             <pre syntax:format="JavaScript">function() { return 123 }</pre>
-        </struct:section>
+        </sections:section>
 
         <p>Also we support the following scripts and transformations:</p>
 
@@ -228,10 +229,10 @@ pipe 'c -t https://www.w3.org/2002/06/xhtml2/ -n ignore + t http://portonvictor.
             from <code>http://portonvictor.org/ns/base</code> asset
         removes unused XML namespaces.</p>
 
-    </struct:section>
+    </sections:section>
 
-    <struct:section>
-        <struct:h>Your own transformations</struct:h>
+    <sections:section>
+        <sections:h>Your own transformations</sections:h>
 
         <p>You can create your own tranformations (and scripts) (after reading
             <a href="https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces">the specification</a>).
@@ -242,10 +243,10 @@ pipe 'c -t https://www.w3.org/2002/06/xhtml2/ -n ignore + t http://portonvictor.
         with the asset as percent-encoded URI of the asset.</p>
         <p>Then you use <code>--directory <i>NAME</i>=<i>DIR</i></code> option to instruct XML Boiler to read
         assets from this directory.</p>
-    </struct:section>
+    </sections:section>
 
-    <struct:section>
-        <struct:h>Future plans</struct:h>
+    <sections:section>
+        <sections:h>Future plans</sections:h>
 
         <p>The key opportunities this project opens:</p>
         <ul>
@@ -341,10 +342,10 @@ pipe 'c -t https://www.w3.org/2002/06/xhtml2/ -n ignore + t http://portonvictor.
             </li>
         </ul>
 
-    </struct:section>
+    </sections:section>
 
-    <struct:section>
-    <struct:h>Support/donate</struct:h>
+    <sections:section>
+    <sections:h>Support/donate</sections:h>
 
         <p>Support this project by money:</p>
         <ul>
@@ -356,7 +357,7 @@ pipe 'c -t https://www.w3.org/2002/06/xhtml2/ -n ignore + t http://portonvictor.
 
         <p>If you know Python 3, participate in programming.</p>
 
-    </struct:section>
+    </sections:section>
     <hr/>
 
     <p>Copyright &#169; Victor Porton 2018</p>

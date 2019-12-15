@@ -6,6 +6,7 @@
   a :Transformer ;
   a prec:formatting ;
   :sourceNamespace <http://portonvictor.org/ns/EMM/sections> ;
+  :sourceNamespace <http://portonvictor.org/ns/EMM/toc> ;
   :targetNamespace <http://www.w3.org/1999/xhtml> ;
   :precedence :precedence-syntax ;
   :script <http://portonvictor.org/ns/trans/html-struct/#script-xslt> .
