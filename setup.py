@@ -11,7 +11,7 @@ class MyBuild(DistutilsBuild):
 
 setup(
     name='xml-boiler',
-    version='0.9.11',
+    version='0.9.13',
     url='https://github.com/vporton/xml-boiler',
     license='AGPLv3',
     author='Victor Porton',
