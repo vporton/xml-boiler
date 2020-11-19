@@ -4,6 +4,10 @@ Automatically transform between XML namespaces.
 
 https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces
 
+Donate:
+* https://gitcoin.co/grants/178/automatic-transformation-of-xml-namespaces-and-xm
+* https://crypto4ngo.org/project/view/4
+
 This is an alpha. It is already useful to process XInclude, XML comments,
 and some home-made XHTML extensions.
 

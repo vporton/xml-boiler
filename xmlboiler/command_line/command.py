@@ -67,10 +67,10 @@ def main(argv):
                                      formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description="""Automatically process XML.\n
     To support this project:
+    - Donate at https://crypto4ngo.org/project/view/4
     - Send money to PayPal porton@narod.ru or https://paypal.me/victorporton
+    - Crypto at https://gitcoin.co/grants/178/automatic-transformation-of-xml-namespaces-and-xm
     - Send BitCoin to 1BdUaP3uRuUC1TXcLgxKXdWWfQKXL2tmqa
-    - Send Ether to 0x36A0356d43EE4168ED24EFA1CAe3198708667ac0
-    - Buy tokens at https://crypto4ngo.org/project/view/4
     
     Use http_proxy or ftp_proxy variables to specify proxy servers.""")
     subparsers = parser.add_subparsers(title='subcommands', dest='subcommand')

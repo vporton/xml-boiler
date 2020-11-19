@@ -1,5 +1,5 @@
 coverage
-git+ssh://git@github.com/vporton/python-executor
+executor
 rdflib
 dependency_injector
 ordered-set

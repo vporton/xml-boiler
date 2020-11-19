@@ -11,7 +11,7 @@ class MyBuild(DistutilsBuild):
 
 setup(
     name='xml-boiler',
-    version='0.9.13',
+    version='0.9.15',
     url='https://github.com/vporton/xml-boiler',
     license='AGPLv3',
     author='Victor Porton',
@@ -30,6 +30,17 @@ setup(
         'Topic :: Other/Nonlisted Topic',
         'Topic :: Text Processing :: Filters',
         'Topic :: Text Processing :: Markup :: XML',
+    ],
+    install_requires = [
+        'coverage',
+        'executor',
+        'rdflib',
+        'dependency_injector',
+        'ordered-set',
+        'networkx',
+        'deb-pkg-tools',
+        'defusedxml',
+        'distro',
     ],
 
     #use_scm_version=True,
