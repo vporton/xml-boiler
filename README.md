@@ -1,5 +1,7 @@
 **[Program homepage](https://mathematics21.org/xml-boiler-software-automatic-transformation-of-xml-namespaces/)**
 
+There is an ongoing [rewrite of this for hifg performance](https://github.com/vporton/xml-boiler/).
+
 Automatically transform between XML namespaces.
 
 https://en.wikiversity.org/wiki/Automatic_transformation_of_XML_namespaces
