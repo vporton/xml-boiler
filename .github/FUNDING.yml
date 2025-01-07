@@ -9,4 +9,4 @@ community_bridge: # Replace with a single Community Bridge project-name e.g., cl
 liberapay: # Replace with a single Liberapay username
 issuehunt: # Replace with a single IssueHunt username
 otechie: # Replace with a single Otechie username
-custom: ['https://gitcoin.co/grants/178/automatic-transformation-of-xml-namespaces-and-xm', 'https://crypto4ngo.org/project/view/4']
+custom: []
